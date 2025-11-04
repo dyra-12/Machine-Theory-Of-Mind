@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List, Dict
-from src.models.mental_states import MentalState, SocialAction
+
+# Relative import to keep package consistent when used as a module
+from ..models.mental_states import MentalState, SocialAction
 
 class SimpleMToMAgent:
     """Minimal MToM agent that reasons about warmth/competence"""
@@ -8,7 +10,7 @@ class SimpleMToMAgent:
     def __init__(self, warmth_weight: float = 0.5, competence_weight: float = 0.5):
         self.warmth_weight = warmth_weight
         self.competence_weight = competence_weight
-        self.mental_state = MentalState.default()
+        self.mental_state = MentalState.neutral_prior()
         
         # Simple action library - we'll expand this later
         self.actions = {

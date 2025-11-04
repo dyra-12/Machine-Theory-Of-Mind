@@ -1,30 +1,50 @@
-from dataclasses import dataclass
-from typing import Dict, List, Optional
-import numpy as np
+from dataclasses import dataclass, field
+from typing import Dict
+
 
 @dataclass
 class MentalState:
-    """Represents the AI's belief about the human's mental state"""
-    warmth: float  # 0.0 to 1.0 probability of high warmth attribution
-    competence: float  # 0.0 to 1.0 probability of high competence attribution
-    goals: List[str]  # Inferred human goals
-    beliefs: Dict[str, float]  # Inferred human beliefs with confidence
-    
+    """Tracks the agent's belief about the human's perceptions."""
+    warmth: float  # Probability of high warmth attribution (0.0 to 1.0)
+    competence: float  # Probability of high competence attribution (0.0 to 1.0)
+    goals: Dict = field(default_factory=dict)
+    beliefs: Dict = field(default_factory=dict)
+
+    @classmethod
+    def neutral_prior(cls):
+        """Start with neutral priors about what the human thinks of us."""
+        return cls(warmth=0.5, competence=0.5)
+
+    # Convenience alias used by some agents/tests
     @classmethod
     def default(cls):
-        """Start with neutral priors"""
-        return cls(warmth=0.5, competence=0.5, goals=[], beliefs={})
+        return cls.neutral_prior()
 
-@dataclass 
+    def __str__(self):
+        return f"MentalState(warmth={self.warmth:.2f}, competence={self.competence:.2f})"
+
+
+@dataclass
 class SocialAction:
-    """An action with predicted social consequences"""
+    """Simple representation of a social action and its predicted effects.
+
+    Fields:
+    - name: identifier
+    - predicted_warmth_impact: expected change to perceived warmth (can be negative)
+    - predicted_competence_impact: expected change to perceived competence
+    - task_value: a numeric estimate of how much the action advances task goals
+    """
     name: str
-    task_utility: float  # -1.0 to 1.0
-    predicted_warmth_impact: float  # -1.0 to 1.0  
-    predicted_competence_impact: float  # -1.0 to 1.0
-    
-    def total_value(self, warmth_weight: float = 0.5, competence_weight: float = 0.5) -> float:
-        """Calculate combined value of this action"""
-        social_value = (warmth_weight * self.predicted_warmth_impact + 
-                       competence_weight * self.predicted_competence_impact)
-        return self.task_utility + social_value
+    predicted_warmth_impact: float
+    predicted_competence_impact: float
+    task_value: float = 0.0
+
+    def total_value(self, warmth_weight: float, competence_weight: float) -> float:
+        """Compute a simple combined value used by the agent's chooser.
+
+        This is intentionally simple: a weighted sum of predicted social impacts
+        plus the task value.
+        """
+        return (warmth_weight * self.predicted_warmth_impact
+                + competence_weight * self.predicted_competence_impact
+                + self.task_value)
