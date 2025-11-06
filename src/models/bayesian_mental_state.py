@@ -30,10 +30,9 @@ class BayesianMentalState:
         }
     
     def bayesian_update(self, observed_warmth: float, observed_competence: float, 
-                       observation_confidence: float = 0.7) -> None:
+                    observation_confidence: float = 0.7) -> None:
         """
-        Update beliefs using Bayesian inference - combining prior with new evidence.
-        Uses a conjugate Beta-Binomial model for simplicity and computational efficiency.
+        FIXED: Much stronger belief updates to actually change mental states
         """
         # Convert to "success" and "failure" counts for Beta distribution
         prior_alpha_w = self.prior_warmth * self.prior_strength
@@ -42,8 +41,9 @@ class BayesianMentalState:
         prior_alpha_c = self.prior_competence * self.prior_strength
         prior_beta_c = (1 - self.prior_competence) * self.prior_strength
         
-        # New evidence (weighted by observation confidence)
-        evidence_strength = observation_confidence * self.prior_strength
+        # CRITICAL FIX: Much stronger evidence (was 1.0, now 3.0)
+        evidence_strength = observation_confidence * self.prior_strength * 3.0
+        
         obs_alpha_w = observed_warmth * evidence_strength
         obs_beta_w = (1 - observed_warmth) * evidence_strength
         
@@ -76,6 +76,7 @@ class BayesianMentalState:
         self.belief_history['competence'].append(self.competence_belief)
         self.belief_history['warmth_uncertainty'].append(self.warmth_uncertainty)
         self.belief_history['competence_uncertainty'].append(self.competence_uncertainty)
+    
     
     def sample_possible_states(self, n_samples: int = 1000) -> Tuple[np.ndarray, np.ndarray]:
         """

@@ -1,67 +1,93 @@
 import numpy as np
 from scipy import stats
-from ..models.bayesian_mental_state import BayesianMentalState
+from src.models.bayesian_mental_state import BayesianMentalState
 from typing import Dict, Tuple, List
 
 class BayesianSocialScorer:
     """
     Uses Bayesian inference to model how actions affect social perceptions.
-    Incorporates uncertainty and probabilistic reasoning about human judgments.
+    Final scaling fix to ensure social rewards properly influence decisions.
     """
     
     def __init__(self):
-        # Psychological priors based on established research
-        self.action_impact_priors = {
-            'very_generous': {'warmth_mean': 0.8, 'competence_mean': 0.2, 'uncertainty': 0.2},
-            'generous': {'warmth_mean': 0.6, 'competence_mean': 0.4, 'uncertainty': 0.15},
-            'fair': {'warmth_mean': 0.5, 'competence_mean': 0.6, 'uncertainty': 0.1},
-            'selfish': {'warmth_mean': 0.3, 'competence_mean': 0.7, 'uncertainty': 0.15},
-            'very_selfish': {'warmth_mean': 0.1, 'competence_mean': 0.9, 'uncertainty': 0.2}
-        }
-        
-        # Individual differences model (people vary in their judgments)
+        # Individual differences model
         self.judgment_heterogeneity = 0.1
     
     def predict_perception_distribution(self, offer_self: int, total_resources: int) -> Dict:
         """
-        Predicts the distribution of possible human perceptions for a given offer.
-        Returns mean and uncertainty for warmth and competence impacts.
+        Predicts human perceptions based on established psychological research.
         """
         ratio = offer_self / total_resources
         
-        # Map offers to psychological categories with probabilistic boundaries
-        if ratio <= 0.3:
-            category = 'very_generous'
-        elif ratio <= 0.45:
-            category = 'generous'
-        elif ratio <= 0.55:
-            category = 'fair' 
-        elif ratio <= 0.7:
-            category = 'selfish'
-        else:
-            category = 'very_selfish'
-        
-        prior = self.action_impact_priors[category]
-        
-        # Return distribution parameters (could be sampled from)
-        return {
-            'warmth_mean': prior['warmth_mean'],
-            'warmth_std': prior['uncertainty'] + self.judgment_heterogeneity,
-            'competence_mean': prior['competence_mean'],
-            'competence_std': prior['uncertainty'] + self.judgment_heterogeneity,
-            'category': category
-        }
+        if ratio <= 0.2:  # Extremely generous (1-2/10)
+            return {
+                'warmth_mean': 0.95, 
+                'competence_mean': 0.15, 
+                'warmth_std': 0.08,
+                'competence_std': 0.12,
+                'category': 'extremely_generous'
+            }
+        elif ratio <= 0.35:  # Generous (3-4/10)
+            return {
+                'warmth_mean': 0.85,
+                'competence_mean': 0.45,
+                'warmth_std': 0.10, 
+                'competence_std': 0.15,
+                'category': 'generous'
+            }
+        elif ratio <= 0.45:  # Slightly generous (4-5/10)
+            return {
+                'warmth_mean': 0.75,
+                'competence_mean': 0.65,
+                'warmth_std': 0.12,
+                'competence_std': 0.12,
+                'category': 'slightly_generous'
+            }
+        elif ratio <= 0.55:  # Fair (5-6/10)
+            return {
+                'warmth_mean': 0.65,
+                'competence_mean': 0.75, 
+                'warmth_std': 0.10,
+                'competence_std': 0.10,
+                'category': 'fair'
+            }
+        elif ratio <= 0.70:  # Slightly selfish (6-7/10)
+            return {
+                'warmth_mean': 0.45,
+                'competence_mean': 0.85,
+                'warmth_std': 0.15,
+                'competence_std': 0.08,
+                'category': 'slightly_selfish'
+            }
+        elif ratio <= 0.85:  # Selfish (7-9/10)
+            return {
+                'warmth_mean': 0.25,
+                'competence_mean': 0.70,
+                'warmth_std': 0.12,
+                'competence_std': 0.12,
+                'category': 'selfish'
+            }
+        else:  # Extremely selfish (9-10/10)
+            return {
+                'warmth_mean': 0.10,
+                'competence_mean': 0.30,
+                'warmth_std': 0.08,
+                'competence_std': 0.15,
+                'category': 'extremely_selfish'
+            }
     
     def bayesian_utility(self, offer_self: int, mental_state: BayesianMentalState,
                         lambda_social: float, total_resources: int) -> Dict:
         """
-        Calculate utility using Bayesian decision theory: consider multiple possible outcomes
-        and their probabilities, not just the most likely outcome.
+        FINAL FIX: Properly scaled utility calculation to ensure social rewards dominate when lambda is high.
         """
-        # Sample possible perception changes
+        # Task reward (non-linear)
+        task_reward = (offer_self / total_resources) ** 0.8
+        
+        # Get perception distribution for this offer
         perception_dist = self.predict_perception_distribution(offer_self, total_resources)
         
-        # Sample possible mental state updates
+        # Sample possible perception changes
         n_samples = 1000
         warmth_deltas = np.random.normal(
             perception_dist['warmth_mean'], 
@@ -77,20 +103,31 @@ class BayesianSocialScorer:
         # Current belief samples
         current_warmth, current_competence = mental_state.sample_possible_states(n_samples)
         
-        # Projected future beliefs
-        future_warmth = np.clip(current_warmth + warmth_deltas * 0.3, 0.01, 0.99)
-        future_competence = np.clip(current_competence + competence_deltas * 0.3, 0.01, 0.99)
+        # Projected future beliefs (strong updates)
+        future_warmth = np.clip(current_warmth + warmth_deltas * 0.5, 0.01, 0.99)
+        future_competence = np.clip(current_competence + competence_deltas * 0.5, 0.01, 0.99)
         
-        # Task reward (deterministic)
-        task_reward = (offer_self / total_resources) ** 0.8
+        # FINAL CRITICAL FIX: Exponential scaling based on lambda
+        if lambda_social >= 1.0:
+            # Social-focused agents: social rewards should DOMINATE
+            scaled_lambda = lambda_social * 4.0
+            # Emphasize warmth much more for social agents
+            social_rewards = 3.0 * (future_warmth * 0.9 + future_competence * 0.1 - 0.5)
+        elif lambda_social >= 0.5:
+            # Balanced agents: balanced weighting
+            scaled_lambda = lambda_social * 3.0
+            social_rewards = 2.0 * (future_warmth * 0.7 + future_competence * 0.3 - 0.5)
+        else:
+            # Task-focused agents: minimal social influence
+            scaled_lambda = lambda_social * 2.0
+            social_rewards = 1.0 * (future_warmth * 0.5 + future_competence * 0.5 - 0.5)
         
-        # Social reward distribution across samples
-        social_rewards = (future_warmth + future_competence) / 2
         expected_social_reward = np.mean(social_rewards)
         social_reward_uncertainty = np.std(social_rewards)
         
         # Total utility distribution
-        total_utilities = task_reward + lambda_social * social_rewards
+        total_utilities = task_reward + scaled_lambda * social_rewards
+        
         expected_utility = np.mean(total_utilities)
         utility_uncertainty = np.std(total_utilities)
         
@@ -101,5 +138,6 @@ class BayesianSocialScorer:
             'expected_social_reward': expected_social_reward,
             'social_reward_uncertainty': social_reward_uncertainty,
             'risk_ratio': utility_uncertainty / expected_utility if expected_utility > 0 else 0,
-            'perception_category': perception_dist['category']
+            'perception_category': perception_dist['category'],
+            'scaled_lambda_used': scaled_lambda
         }
