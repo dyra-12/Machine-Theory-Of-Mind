@@ -1,13 +1,41 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List, Optional, Tuple
 
 @dataclass
 class NegotiationState:
-    """Represents the state of a simple resource negotiation."""
-    total_resources: int  # e.g., 10 chocolates to split
-    our_offer: int  # Our proposed share for ourselves
-    their_offer: int  # Their proposed share for themselves
-    round: int = 0  # Current negotiation round
-    
-    def get_offer_for_other(self, our_offer: int) -> int:
-        """Calculate what the other party gets given our offer."""
-        return self.total_resources - our_offer
+    """Represents the state of a negotiation compatible with the
+    `NegotiationEnv` used in the tests.
+
+    Fields mirror the expected API used by `src/envs/negotiation_v1.py`:
+    - total_resources, current_turn, max_turns, current_proposer
+    - offers: list of (int,int) tuples
+    - responses: list of bools
+    - final_agreement: Optional[(int,int)]
+    """
+    total_resources: int
+    current_turn: int = 0
+    max_turns: int = 3
+    current_proposer: int = 0
+    offers: List[Tuple[int, int]] = field(default_factory=list)
+    responses: List[bool] = field(default_factory=list)
+    final_agreement: Optional[Tuple[int, int]] = None
+
+    def is_terminal(self) -> bool:
+        """Return True when negotiation has reached a terminal state.
+
+        Terminal when a final agreement exists or max turns reached.
+        """
+        if self.final_agreement is not None:
+            return True
+        return self.current_turn >= self.max_turns
+
+    def get_latest_offer(self) -> Optional[Tuple[int, int]]:
+        return self.offers[-1] if self.offers else None
+
+    def __repr__(self) -> str:  # Helpful for debugging/tests
+        return (
+            f"NegotiationState(total_resources={self.total_resources}, "
+            f"current_turn={self.current_turn}, max_turns={self.max_turns}, "
+            f"current_proposer={self.current_proposer}, offers={self.offers}, "
+            f"responses={self.responses}, final_agreement={self.final_agreement})"
+        )

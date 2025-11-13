@@ -1,0 +1,38 @@
+# Base negotiation experiment configuration
+experiment:
+  name: "negotiation_base_week1"
+  description: "Week 1 base experiment with lambda sweep"
+  num_runs: 5
+  seed: 42
+
+environment:
+  type: "negotiation_v1"
+  total_resources: 10
+  max_turns: 3
+
+agents:
+  # Will be populated in Week 2
+  agent0_type: "simple"
+  agent1_type: "simple"
+
+social_config:
+  observer_type: "simple"
+  score_type: "linear"
+  warmth_weight: 0.6
+  competence_weight: 0.4
+
+lambda_sweep:
+  values: [0.0, 0.3, 0.5, 1.0, 2.0]
+  default: 0.5
+
+metrics:
+  - "task_reward"
+  - "warmth"
+  - "competence" 
+  - "social_score"
+  - "total_utility"
+
+output:
+  format: "json"
+  directory: "results/week1/"
+  save_plots: false  # Will enable in Week 3
