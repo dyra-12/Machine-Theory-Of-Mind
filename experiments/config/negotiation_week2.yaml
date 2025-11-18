@@ -1,0 +1,42 @@
+# Week 2 Experiment Configuration
+experiment:
+  name: "week2_agent_comparison"
+  description: "Compare all agent types with lambda sweep"
+  num_runs: 10
+  seed: 42
+
+environment:
+  type: "negotiation_v1"
+  total_resources: 10
+  max_turns: 3
+
+# Test multiple agent types
+agents:
+  agent0_types: ["greedy_baseline", "social_baseline", "random_baseline", "simple_mtom", "bayesian_mtom"]
+  agent1_type: "simple_mtom"  # Fixed opponent
+  agent1_lambda: 0.5
+
+social_config:
+  observer_type: "simple"
+  score_type: "linear"
+  warmth_weight: 0.6
+  competence_weight: 0.4
+
+# Lambda sweep for MToM agents
+lambda_sweep:
+  values: [0.0, 0.3, 0.5, 1.0, 2.0]
+  default: 0.5
+
+metrics:
+  - "task_reward"
+  - "warmth"
+  - "competence"
+  - "social_score" 
+  - "total_utility"
+  - "agent0_type"
+  - "lambda_social"
+
+output:
+  format: "json"
+  directory: "results/week2/"
+  save_plots: true

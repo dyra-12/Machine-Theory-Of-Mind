@@ -1,0 +1,3781 @@
+{
+  "config": {
+    "experiment": {
+      "name": "week2_agent_comparison",
+      "description": "Compare all agent types with lambda sweep",
+      "num_runs": 10,
+      "seed": 42
+    },
+    "environment": {
+      "type": "negotiation_v1",
+      "total_resources": 10,
+      "max_turns": 3
+    },
+    "agents": {
+      "agent0_types": [
+        "greedy_baseline",
+        "social_baseline",
+        "random_baseline",
+        "simple_mtom",
+        "bayesian_mtom"
+      ],
+      "agent1_type": "simple_mtom",
+      "agent1_lambda": 0.5
+    },
+    "social_config": {
+      "observer_type": "simple",
+      "score_type": "linear",
+      "warmth_weight": 0.6,
+      "competence_weight": 0.4
+    },
+    "lambda_sweep": {
+      "values": [
+        0.0,
+        0.3,
+        0.5,
+        1.0,
+        2.0
+      ],
+      "default": 0.5
+    },
+    "metrics": [
+      "task_reward",
+      "warmth",
+      "competence",
+      "social_score",
+      "total_utility",
+      "agent0_type",
+      "lambda_social"
+    ],
+    "output": {
+      "format": "json",
+      "directory": "results/week2/",
+      "save_plots": true
+    }
+  },
+  "results": [
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 3,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 3,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.0,
+      "social_score": 0.0,
+      "total_utility": 0.0,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.0,
+      "social_score": 0.0,
+      "total_utility": 0.0,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "greedy_baseline",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.0,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.9199999999999999,
+      "competence": 0.35,
+      "social_score": 0.692,
+      "total_utility": 0.5,
+      "lambda_social": 0.0,
+      "agent0_type": "social_baseline",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.4,
+      "warmth": 0.6799999999999999,
+      "competence": 0.44,
+      "social_score": 0.584,
+      "total_utility": 0.4,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        4,
+        6
+      ],
+      "num_turns": 3,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.4,
+      "warmth": 0.6799999999999999,
+      "competence": 0.44,
+      "social_score": 0.584,
+      "total_utility": 0.4,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        4,
+        6
+      ],
+      "num_turns": 3,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.0,
+      "social_score": 0.0,
+      "total_utility": 0.0,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.86,
+      "competence": 0.26,
+      "social_score": 0.62,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.32,
+      "competence": 0.65,
+      "social_score": 0.452,
+      "total_utility": 0.7,
+      "lambda_social": 0.0,
+      "agent0_type": "random_baseline",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.214,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.014,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.014,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.014,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.014,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.014,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.214,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.214,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.214,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.014,
+      "lambda_social": 0.3,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.29000000000000004,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.98,
+      "social_score": 0.392,
+      "total_utility": 0.196,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.09,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.29000000000000004,
+      "lambda_social": 0.5,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.98,
+      "social_score": 0.392,
+      "total_utility": 0.392,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.48,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.48,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.28,
+      "lambda_social": 1.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.86,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.6600000000000001,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.0,
+      "competence": 0.98,
+      "social_score": 0.392,
+      "total_utility": 1.6840000000000002,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 3,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.86,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.6600000000000001,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.98,
+      "social_score": 0.392,
+      "total_utility": 0.784,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.86,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 1.6600000000000001,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.14,
+      "competence": 0.74,
+      "social_score": 0.38,
+      "total_utility": 0.86,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.0,
+      "competence": 0.98,
+      "social_score": 0.392,
+      "total_utility": 0.784,
+      "lambda_social": 2.0,
+      "agent0_type": "simple_mtom",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.1,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9,
+      "lambda_social": 0.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9882857142857143,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9882857142857143,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.8,
+      "warmth": 0.3392857142857143,
+      "competence": 0.6285714285714287,
+      "social_score": 0.45500000000000007,
+      "total_utility": 0.9365000000000001,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        8,
+        2
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.18828571428571428,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9882857142857143,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.18828571428571428,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9882857142857143,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.18828571428571428,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.9,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.9882857142857143,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        9,
+        1
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.24285714285714285,
+      "competence": 0.3714285714285714,
+      "social_score": 0.29428571428571426,
+      "total_utility": 0.18828571428571428,
+      "lambda_social": 0.3,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.9853571428571428,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.9853571428571428,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.9853571428571428,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.38535714285714284,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.9853571428571428,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.38535714285714284,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.9853571428571428,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.38535714285714284,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.7,
+      "warmth": 0.46785714285714286,
+      "competence": 0.725,
+      "social_score": 0.5707142857142857,
+      "total_utility": 0.9853571428571428,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        7,
+        3
+      ],
+      "num_turns": 1,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.5964285714285714,
+      "competence": 0.6607142857142857,
+      "social_score": 0.6221428571428571,
+      "total_utility": 0.8110714285714286,
+      "lambda_social": 0.5,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 1,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.7835714285714286,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.3,
+      "warmth": 0.725,
+      "competence": 0.46785714285714286,
+      "social_score": 0.6221428571428571,
+      "total_utility": 0.9221428571428572,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        3,
+        7
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.7835714285714286,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.7835714285714286,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.6835714285714285,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.3,
+      "warmth": 0.725,
+      "competence": 0.46785714285714286,
+      "social_score": 0.6221428571428571,
+      "total_utility": 0.9221428571428572,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        3,
+        7
+      ],
+      "num_turns": 1,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.7835714285714286,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.7835714285714286,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.6835714285714285,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 0.6835714285714285,
+      "lambda_social": 1.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 9
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.2671428571428571,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 1,
+      "run_id": 0
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.367142857142857,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 1
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.367142857142857,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 2
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.2671428571428571,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 3
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.367142857142857,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 4
+    },
+    {
+      "task_reward": 0.0,
+      "warmth": 0.6607142857142857,
+      "competence": 0.5964285714285714,
+      "social_score": 0.635,
+      "total_utility": 1.27,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": null,
+      "num_turns": 3,
+      "run_id": 5
+    },
+    {
+      "task_reward": 0.2,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.367142857142857,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        2,
+        8
+      ],
+      "num_turns": 1,
+      "run_id": 6
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.2671428571428571,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 7
+    },
+    {
+      "task_reward": 0.1,
+      "warmth": 0.7892857142857143,
+      "competence": 0.275,
+      "social_score": 0.5835714285714285,
+      "total_utility": 1.2671428571428571,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        1,
+        9
+      ],
+      "num_turns": 2,
+      "run_id": 8
+    },
+    {
+      "task_reward": 0.5,
+      "warmth": 0.5964285714285714,
+      "competence": 0.6607142857142857,
+      "social_score": 0.6221428571428571,
+      "total_utility": 1.7442857142857142,
+      "lambda_social": 2.0,
+      "agent0_type": "bayesian_mtom",
+      "final_agreement": [
+        5,
+        5
+      ],
+      "num_turns": 3,
+      "run_id": 9
+    }
+  ]
+}

@@ -68,6 +68,28 @@ class NegotiationEnv:
         )
         
         return new_state
+
+    def reject_offer(self, state: ExistingNegotiationState) -> ExistingNegotiationState:
+        """Reject the current offer (continue negotiation).
+
+        This appends a rejection response to the history and leaves
+        `final_agreement` as None. The proposer will alternate on the
+        next `step()` call as usual.
+        """
+        if not state.offers:
+            raise ValueError("No offer to reject")
+
+        new_state = ExistingNegotiationState(
+            total_resources=state.total_resources,
+            current_turn=state.current_turn,
+            max_turns=state.max_turns,
+            current_proposer=state.current_proposer,
+            offers=state.offers.copy(),
+            responses=state.responses + [False],
+            final_agreement=None
+        )
+
+        return new_state
     
     def get_agent_reward(self, state: ExistingNegotiationState, agent_id: int) -> float:
         """Get final reward for agent"""

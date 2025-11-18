@@ -1,70 +1,65 @@
+"""
+Enhanced MToM agent with proper lambda integration
+"""
 import numpy as np
-from ..models.mental_states import MentalState
-from ..models.negotiation_state import NegotiationState
-from ..social.social_scorer import SocialScorer
+from typing import Tuple
+from src.models.mental_states import MentalState
+from src.models.negotiation_state import NegotiationState
+from src.social.social_scorer import SocialScorer
 
 class MToM_NegotiationAgent:
     """
-    Fixed agent with better optimization and lambda sensitivity.
+    Enhanced MToM agent with configurable lambda weighting
     """
     
-    def __init__(self, lambda_social: float = 0.5, agent_type: str = "balanced"):
+    def __init__(self, lambda_social: float = 0.5, agent_id: int = 0, agent_type: str = "simple_mtom"):
         self.lambda_social = lambda_social
+        self.agent_id = agent_id
         self.agent_type = agent_type
-        self.mental_state = MentalState.neutral_prior()
+        self.mental_state = MentalState(warmth=0.5, competence=0.5)
         self.social_scorer = SocialScorer()
+    
+    def evaluate_offer(self, offer: Tuple[int, int], state: NegotiationState) -> float:
+        """Evaluate offer using dual objective with lambda weighting"""
+        task_reward = offer[self.agent_id] / state.total_resources
         
-    def evaluate_offer(self, offer_self: int, negotiation_state: NegotiationState) -> float:
-        """
-        Evaluate a specific offer using the dual objective.
-        """
-        # More balanced task reward (less aggressive)
-        task_reward = (offer_self / negotiation_state.total_resources) ** 0.8  # Reduced exponent
+        # Predict social impact
+        w_delta, c_delta = self.social_scorer.predict_perception_change(
+            offer[self.agent_id], state.total_resources)
+        predicted_warmth = np.clip(self.mental_state.warmth + 0.3 * w_delta, 0.0, 1.0)
+        predicted_competence = np.clip(self.mental_state.competence + 0.3 * c_delta, 0.0, 1.0)
         
-        # Social score
-        delta_w, delta_c = self.social_scorer.predict_perception_change(
-            offer_self, negotiation_state.total_resources)
-        social_score = self.social_scorer.compute_social_score(delta_w, delta_c)
+        temp_mental_state = MentalState(warmth=predicted_warmth, competence=predicted_competence)
+        social_score = self.social_scorer.compute_social_score(temp_mental_state)
         
-        # Combined utility with lambda weighting
+        # Dual objective with lambda weighting
         total_utility = task_reward + self.lambda_social * social_score
-        
         return total_utility
-
-    def make_offer(self, negotiation_state: NegotiationState) -> int:
-        """
-        Choose offer by evaluating all possible options.
-        """
-        best_offer = 1
+    
+    def choose_action(self, state: NegotiationState) -> Tuple[int, int]:
+        """Choose action that maximizes dual objective"""
+        available_actions = state.get_available_actions()
+        
+        best_action = None
         best_utility = -float('inf')
         
-        # Evaluate all possible offers
-        for offer in range(1, negotiation_state.total_resources):
-            utility = self.evaluate_offer(offer, negotiation_state)
+        for action in available_actions:
+            utility = self.evaluate_offer(action, state)
             if utility > best_utility:
                 best_utility = utility
-                best_offer = offer
+                best_action = action
         
-        # Update mental state based on chosen offer
-        self._update_mental_state(best_offer, negotiation_state)
-        
-        return best_offer
+        return best_action
     
-    def _update_mental_state(self, chosen_offer: int, negotiation_state: NegotiationState):
-        """Update mental state based on chosen action."""
-        delta_w, delta_c = self.social_scorer.predict_perception_change(
-            chosen_offer, negotiation_state.total_resources)
-        
-        # More substantial updates
-        self.mental_state.warmth = np.clip(
-            self.mental_state.warmth + 0.3 * delta_w, 0.05, 0.95
-        )
-        self.mental_state.competence = np.clip(
-            self.mental_state.competence + 0.3 * delta_c, 0.05, 0.95
-        )
+    def update_beliefs(self, state: NegotiationState, action: Tuple[int, int],
+                      response: bool, opponent_action: Tuple[int, int] = None):
+        """Update mental state based on interaction"""
+        w_delta, c_delta = self.social_scorer.observe_action(state, action, self.agent_id)
+        self.mental_state.warmth = np.clip(self.mental_state.warmth + 0.3 * w_delta, 0.0, 1.0)
+        self.mental_state.competence = np.clip(self.mental_state.competence + 0.3 * c_delta, 0.0, 1.0)
     
-    def get_mental_state(self) -> MentalState:
+    def get_mental_state(self):
         return self.mental_state
     
     def __str__(self):
-        return f"{self.agent_type}(λ={self.lambda_social})"
+        return f"{self.agent_type}(λ={self.lambda_social}, id={self.agent_id})"

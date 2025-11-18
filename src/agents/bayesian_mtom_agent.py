@@ -4,15 +4,16 @@ from ..models.bayesian_mental_state import BayesianMentalState
 from ..models.negotiation_state import NegotiationState
 from ..social.bayesian_social_scorer import BayesianSocialScorer
 
-class BayesianMToM_NegotiationAgent:
+class BayesianMToMAgent:
     """
     A Bayesian Theory of Mind agent that maintains probabilistic beliefs about
     human mental states and uses Bayesian decision theory for action selection.
     """
     
-    def __init__(self, lambda_social: float = 0.5, agent_type: str = "bayesian",
+    def __init__(self, lambda_social: float = 0.5, agent_id: int = 0, agent_type: str = "bayesian",
                  prior_strength: float = 10.0):
         self.lambda_social = lambda_social
+        self.agent_id = agent_id
         self.agent_type = agent_type
         self.prior_strength = prior_strength
         
@@ -76,6 +77,35 @@ class BayesianMToM_NegotiationAgent:
         })
         
         return best_offer
+
+    def choose_action(self, negotiation_state: NegotiationState):
+        """Adapter to the common agent interface: returns a (agent0_share, agent1_share) tuple."""
+        offer_for_self = self.make_offer(negotiation_state)
+        total = negotiation_state.total_resources
+        if self.agent_id == 0:
+            return (offer_for_self, total - offer_for_self)
+        else:
+            return (total - offer_for_self, offer_for_self)
+
+    def update_beliefs(self, state: NegotiationState, action, response: bool, opponent_action=None):
+        """Update Bayesian beliefs after observing an interaction."""
+        # Use the Bayesian social scorer to get an expected perception distribution
+        offer_self = action[self.agent_id]
+        perception = self.social_scorer.predict_perception_distribution(offer_self, state.total_resources)
+
+        # Use the mean perception as an observation to update beliefs
+        self.mental_state.bayesian_update(
+            observed_warmth=perception['warmth_mean'],
+            observed_competence=perception['competence_mean'],
+            observation_confidence=0.6
+        )
+
+    def get_mental_state(self):
+        """Return a simple view of current beliefs for downstream scoring."""
+        return type('ms', (object,), {
+            'warmth': self.mental_state.warmth_belief,
+            'competence': self.mental_state.competence_belief
+        })
     
     def _bayesian_mental_update(self, chosen_offer: int, negotiation_state: NegotiationState,
                               utility_analysis: Dict) -> None:

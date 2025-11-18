@@ -32,6 +32,20 @@ class NegotiationState:
     def get_latest_offer(self) -> Optional[Tuple[int, int]]:
         return self.offers[-1] if self.offers else None
 
+    def get_available_actions(self) -> List[Tuple[int, int]]:
+        """Return all possible splits of `total_resources` between two agents.
+
+        Actions are represented as tuples `(agent0_share, agent1_share)` and
+        must sum to `total_resources`.
+        """
+        actions: List[Tuple[int, int]] = []
+        # Require at least 1 resource for each agent to avoid degenerate offers
+        # (tests expect agents to offer between 1 and total_resources-1)
+        for a0 in range(1, self.total_resources):
+            a1 = self.total_resources - a0
+            actions.append((a0, a1))
+        return actions
+
     def __repr__(self) -> str:  # Helpful for debugging/tests
         return (
             f"NegotiationState(total_resources={self.total_resources}, "

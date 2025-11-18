@@ -36,12 +36,30 @@ class SocialScorer:
             delta_competence = 0.8
             
         return delta_warmth, delta_competence
+
+    def observe_action(self, state, action: Tuple[int, int], agent_id: int) -> Tuple[float, float]:
+        """Observe an action and return (warmth_delta, competence_delta).
+
+        This mirrors the interface used by `SimpleObserver.observe_action` so
+        agents can use `SocialScorer` interchangeably.
+        """
+        offer_self = action[agent_id]
+        return self.predict_perception_change(offer_self, state.total_resources)
     
-    def compute_social_score(self, delta_warmth: float, delta_competence: float) -> float:
+    def compute_social_score(self, delta_warmth, delta_competence=None) -> float:
         """
         Compute social score from perception changes.
         """
-        # Normalize to make social scores comparable across strategies
-        social_score = (self.warmth_weight * delta_warmth + 
+        # Support two calling conventions:
+        # - compute_social_score(mental_state) -> compute from MentalState attributes
+        # - compute_social_score(delta_warmth, delta_competence) -> compute from deltas
+        # If called with a single object (mental state-like), compute from attributes
+        if delta_competence is None:
+            ms = delta_warmth
+            return (self.warmth_weight * ms.warmth +
+                    self.competence_weight * ms.competence)
+
+        # Otherwise treat as two numeric deltas
+        social_score = (self.warmth_weight * delta_warmth +
                        self.competence_weight * delta_competence)
         return social_score
