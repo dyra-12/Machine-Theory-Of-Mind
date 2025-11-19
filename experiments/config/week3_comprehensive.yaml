@@ -1,0 +1,35 @@
+# Week 3 Comprehensive Experiment Configuration
+experiment:
+  name: "week3_comprehensive_analysis"
+  description: "Full parameter sweep for statistical significance"
+  num_seeds: 10                    # Different random seeds
+  runs_per_config: 20              # Episodes per configuration
+  opponent_type: "simple_mtom"     # Fixed opponent for fair comparison
+  parallel: true                   # Use parallel processing
+  max_workers: 4                   # Number of parallel processes
+
+environment:
+  type: "negotiation_v1"
+  total_resources: 10
+  max_turns: 3
+
+sweep_parameters:
+  agent_types: ["greedy_baseline", "social_baseline", "random_baseline", "simple_mtom", "bayesian_mtom"]
+  lambda_values: [0.0, 0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0]
+
+social_config:
+  observer_type: "simple"
+  score_type: "linear"
+  warmth_weight: 0.6
+  competence_weight: 0.4
+
+output:
+  directory: "results/week3"
+  save_raw_data: true
+  generate_plots: true
+  create_report: true
+
+analysis:
+  confidence_level: 0.95
+  significant_threshold: 0.05
+  plot_formats: ["png", "pdf"]
