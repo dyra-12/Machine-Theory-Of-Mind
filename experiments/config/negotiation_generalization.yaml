@@ -1,0 +1,35 @@
+# Week 4 Negotiation Generalization Configuration
+experiment:
+  name: "week4_negotiation_generalization"
+  description: "Observer, environment, and opponent generalization tests"
+  num_seeds: 3
+  runs_per_config: 10
+  parallel: false
+
+# Base negotiation environment; variants will override these fields
+environment:
+  type: "negotiation_v1"
+  total_resources: 10
+  max_turns: 3
+  stakes: "normal"        # tag only, stakes logic can be encoded in analysis
+
+# Sweeps over observers, env variants, and opponents
+sweep_parameters:
+  agent_types: ["greedy_baseline", "social_baseline", "random_baseline", "simple_mtom", "bayesian_mtom"]
+  lambda_values: [0.0, 0.3, 0.7, 1.5]
+  observer_types: ["simple", "lenient", "harsh", "competence_biased", "warmth_biased"]
+  env_variants:
+    - {name: "small_resources", total_resources: 5, max_turns: 3, stakes: "low"}
+    - {name: "large_resources", total_resources: 20, max_turns: 3, stakes: "high"}
+    - {name: "short_horizon", total_resources: 10, max_turns: 2, stakes: "normal"}
+    - {name: "long_horizon", total_resources: 10, max_turns: 10, stakes: "normal"}
+  opponent_types: ["fair", "tit_for_tat", "concession", "unpredictable"]
+
+social_config:
+  score_type: "linear"
+  warmth_weight: 0.6
+  competence_weight: 0.4
+
+output:
+  directory: "results/week4/raw/negotiation_generalization"
+  save_raw_data: true

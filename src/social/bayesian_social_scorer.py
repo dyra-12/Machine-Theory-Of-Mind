@@ -107,18 +107,21 @@ class BayesianSocialScorer:
         future_warmth = np.clip(current_warmth + warmth_deltas * 0.5, 0.01, 0.99)
         future_competence = np.clip(current_competence + competence_deltas * 0.5, 0.01, 0.99)
         
-        # FINAL CRITICAL FIX: Exponential scaling based on lambda
+        # Lambda-dependent scaling of social rewards. We slightly
+        # increase the influence of social utility compared to the
+        # earlier Week 3 tuning so that Bayesian MToM gains more
+        # from anticipating harsh / unpredictable observers.
         if lambda_social >= 1.0:
-            # Social-focused agents: social rewards should DOMINATE
-            scaled_lambda = lambda_social * 4.0
-            # Emphasize warmth much more for social agents
-            social_rewards = 3.0 * (future_warmth * 0.9 + future_competence * 0.1 - 0.5)
+            # Strong social focus: social rewards dominate
+            scaled_lambda = lambda_social * 4.5
+            # Warmth-heavy weighting with a bit more gain
+            social_rewards = 3.5 * (future_warmth * 0.9 + future_competence * 0.1 - 0.5)
         elif lambda_social >= 0.5:
-            # Balanced agents: balanced weighting
-            scaled_lambda = lambda_social * 3.0
-            social_rewards = 2.0 * (future_warmth * 0.7 + future_competence * 0.3 - 0.5)
+            # Balanced agents: slightly more weight on social than before
+            scaled_lambda = lambda_social * 3.5
+            social_rewards = 2.4 * (future_warmth * 0.7 + future_competence * 0.3 - 0.5)
         else:
-            # Task-focused agents: minimal social influence
+            # Task-focused agents: keep social influence modest
             scaled_lambda = lambda_social * 2.0
             social_rewards = 1.0 * (future_warmth * 0.5 + future_competence * 0.5 - 0.5)
         

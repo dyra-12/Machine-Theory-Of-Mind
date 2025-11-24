@@ -1,0 +1,108 @@
+{
+  "generalization_score": {
+    "greedy_baseline": 1.1609933035714284,
+    "social_baseline": 1.037109375,
+    "random_baseline": 1.0299479166666667,
+    "simple_mtom": 1.1280305588384265,
+    "bayesian_mtom": 1.069617472209409
+  },
+  "robustness_index": {
+    "greedy_baseline": 0.8658187376066188,
+    "social_baseline": 0.49296655712872967,
+    "random_baseline": 0.7477929752820635,
+    "simple_mtom": 0.8053296454904844,
+    "bayesian_mtom": 0.8008504849378761
+  },
+  "adaptation_speed": {
+    "greedy_baseline": 0.010833333333333361,
+    "social_baseline": 0.12000000000000002,
+    "random_baseline": 0.07166666666666666,
+    "simple_mtom": 0.010644791666666764,
+    "bayesian_mtom": 0.10021814043882571
+  },
+  "cross_task_transfer": {
+    "greedy_baseline": 1.2112100965107648,
+    "social_baseline": 0.9681372549019609,
+    "random_baseline": 0.9963976945244957,
+    "simple_mtom": 1.1552806037104224,
+    "bayesian_mtom": 1.087872565549529
+  },
+  "adaptation_advantage": {
+    "greedy_baseline": 0.004166666666666652,
+    "social_baseline": -0.03708333333333336,
+    "random_baseline": 0.008749999999999925,
+    "simple_mtom": 0.0041041666666667975,
+    "bayesian_mtom": 0.01127883827375753
+  },
+  "easy_hard_stats": {
+    "greedy_baseline": {
+      "easy_mean": 0.8675000000000002,
+      "hard_mean": 0.8716666666666668,
+      "delta": 0.004166666666666652
+    },
+    "social_baseline": {
+      "easy_mean": 0.27458333333333335,
+      "hard_mean": 0.2375,
+      "delta": -0.03708333333333336
+    },
+    "random_baseline": {
+      "easy_mean": 0.5700000000000001,
+      "hard_mean": 0.57875,
+      "delta": 0.008749999999999925
+    },
+    "simple_mtom": {
+      "easy_mean": 1.1065,
+      "hard_mean": 1.1106041666666668,
+      "delta": 0.0041041666666667975
+    },
+    "bayesian_mtom": {
+      "easy_mean": 0.9570237739755887,
+      "hard_mean": 0.9683026122493462,
+      "delta": 0.01127883827375753
+    }
+  },
+  "bayesian_vs_baselines": {
+    "greedy_baseline": {
+      "delta_all": 0.08189638458115389,
+      "delta_harsh": 0.0841085638259228,
+      "delta_unpredictable": 0.09426051958006398,
+      "delta_harsh_unpredictable": 0.0966359455826794
+    },
+    "social_baseline": {
+      "delta_all": 0.6722088845811538,
+      "delta_harsh": 0.6744210638259229,
+      "delta_unpredictable": 0.7284271862467306,
+      "delta_harsh_unpredictable": 0.7308026122493463
+    },
+    "random_baseline": {
+      "delta_all": 0.3720005512478205,
+      "delta_harsh": 0.37421273049258963,
+      "delta_unpredictable": 0.3871771862467307,
+      "delta_harsh_unpredictable": 0.38955261224934623
+    },
+    "simple_mtom": {
+      "delta_all": -0.164782782085513,
+      "delta_harsh": -0.1550737278407438,
+      "delta_unpredictable": -0.15225406375326944,
+      "delta_harsh_unpredictable": -0.14230155441732062
+    }
+  },
+  "bayesian_significance": {
+    "greedy_baseline": {
+      "easy_p_value": 4.648747815088389e-14,
+      "hard_p_value": 5.637068868785491e-17
+    },
+    "social_baseline": {
+      "easy_p_value": 7.446753660473472e-266,
+      "hard_p_value": 3.4559182422227806e-243
+    },
+    "random_baseline": {
+      "easy_p_value": 7.161913779444186e-135,
+      "hard_p_value": 6.242732038577353e-129
+    },
+    "simple_mtom": {
+      "easy_p_value": 6.916890894578609e-22,
+      "hard_p_value": 9.211262970020361e-21
+    }
+  }
+}

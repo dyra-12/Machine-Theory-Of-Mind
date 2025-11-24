@@ -11,7 +11,7 @@ class BayesianMToMAgent:
     """
     
     def __init__(self, lambda_social: float = 0.5, agent_id: int = 0, agent_type: str = "bayesian",
-                 prior_strength: float = 10.0):
+                 prior_strength: float = 6.0):
         self.lambda_social = lambda_social
         self.agent_id = agent_id
         self.agent_type = agent_type
@@ -53,8 +53,11 @@ class BayesianMToMAgent:
             analysis = self.evaluate_offer_bayesian(offer, negotiation_state)
             evaluations.append((offer, analysis))
             
-            # Prefer higher expected utility, with slight preference for lower risk
-            risk_adjusted_utility = analysis['expected_utility'] * (1 - 0.1 * analysis['risk_ratio'])
+            # Prefer higher expected utility, with stronger penalty on very risky
+            # options when social preferences are low. When lambda_social is high,
+            # allow more exploration of generous actions.
+            risk_weight = 0.05 if self.lambda_social >= 0.7 else 0.15
+            risk_adjusted_utility = analysis['expected_utility'] * (1 - risk_weight * analysis['risk_ratio'])
             
             if risk_adjusted_utility > best_expected_utility:
                 best_expected_utility = risk_adjusted_utility
@@ -89,15 +92,28 @@ class BayesianMToMAgent:
 
     def update_beliefs(self, state: NegotiationState, action, response: bool, opponent_action=None):
         """Update Bayesian beliefs after observing an interaction."""
-        # Use the Bayesian social scorer to get an expected perception distribution
         offer_self = action[self.agent_id]
         perception = self.social_scorer.predict_perception_distribution(offer_self, state.total_resources)
 
-        # Use the mean perception as an observation to update beliefs
+        warmth_obs = perception['warmth_mean']
+        competence_obs = perception['competence_mean']
+        confidence = 0.65
+
+        # Infer acceptance/rejection from the most recent response if available
+        last_response = state.responses[-1] if state.responses else None
+        if last_response is False:
+            # Harsh feedback: perceived warmth/competence underestimated
+            warmth_obs = max(0.01, warmth_obs - 0.15)
+            competence_obs = max(0.01, competence_obs - 0.1)
+            confidence = 0.9
+        elif last_response is True:
+            warmth_obs = min(0.99, warmth_obs + 0.05)
+            confidence = 0.7
+
         self.mental_state.bayesian_update(
-            observed_warmth=perception['warmth_mean'],
-            observed_competence=perception['competence_mean'],
-            observation_confidence=0.6
+            observed_warmth=warmth_obs,
+            observed_competence=competence_obs,
+            observation_confidence=confidence
         )
 
     def get_mental_state(self):
