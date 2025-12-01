@@ -1,0 +1,24 @@
+{
+  "best_combo": {
+    "lambda_social": 0.995,
+    "prior_strength": 4.3,
+    "risk_weight": 0.55,
+    "lambda_schedule_label": "static",
+    "n": 1920,
+    "mean": 1.200602394700396,
+    "sd": 0.14386562070978995
+  },
+  "baseline": {
+    "name": "simple_mtom",
+    "n": 1920,
+    "mean": 1.1439258854166667,
+    "sd": 0.14378839883360636
+  },
+  "difference_mean": 0.05667650928372936,
+  "95ci": [
+    0.047578195267399634,
+    0.06577482330005908
+  ],
+  "cohens_d": 0.39406024870728634,
+  "power": 1.0
+}

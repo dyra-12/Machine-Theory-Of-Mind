@@ -107,4 +107,4 @@ While Simple MToM shows strong baseline performance, **Bayesian MToM demonstrate
 
 ## Next Steps
 
-Run a targeted hyperparameter sweep (prior_strength, λ grid) to close the small aggregate-utility gap with simple MToM, generate Pareto curves, then extend the analysis to new social-dilemma tasks (trust/public goods/ultimatum) for cross-domain validation. Work on the areas of improvement.
+Run a targeted hyperparameter sweep (prior_strength, λ grid) to close the small aggregate-utility gap with simple MToM, generate Pareto curves. Work on the areas of improvement. make a short 2-page summary (figures + table). Draft docs/one_page_spec.pdf summarizing formal objective, SIQ definition (prototype).

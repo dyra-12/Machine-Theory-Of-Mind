@@ -1,0 +1,40 @@
+# Week 5 Bayesian hyperparameter sweep configuration
+experiment:
+  name: "week5_bayesian_sweep"
+  description: "Targeted prior_strength x lambda sweep for Bayesian MToM"
+  num_seeds: 3
+  runs_per_config: 8
+  parallel: false
+
+environment:
+  type: "negotiation_v1"
+  total_resources: 10
+  max_turns: 3
+  stakes: "normal"
+
+sweep_parameters:
+  agent_types: ["simple_mtom", "bayesian_mtom"]
+  lambda_values: [0.7]
+  bayesian_lambda_values: [0.985, 0.99, 0.995, 1.0]
+  bayesian_prior_strengths: [4.1, 4.2, 4.3]
+  bayesian_prior_adjustments: [0.0]
+  bayesian_risk_weights: [0.5, 0.55, 0.6]
+  bayesian_lambda_schedules:
+    - {label: "static", start_factor: 1.0, end_factor: 1.0, decay_turns: 0}
+    - {label: "burst", start_factor: 1.35, end_factor: 0.65, decay_turns: 3}
+  observer_types: ["simple", "lenient", "harsh", "competence_biased", "warmth_biased"]
+  env_variants:
+    - {name: "small_resources", total_resources: 5, max_turns: 3, stakes: "low"}
+    - {name: "large_resources", total_resources: 20, max_turns: 3, stakes: "high"}
+    - {name: "short_horizon", total_resources: 10, max_turns: 2, stakes: "normal"}
+    - {name: "long_horizon", total_resources: 10, max_turns: 10, stakes: "normal"}
+  opponent_types: ["fair", "tit_for_tat", "concession", "unpredictable"]
+
+social_config:
+  score_type: "linear"
+  warmth_weight: 0.6
+  competence_weight: 0.4
+
+output:
+  directory: "results/week5/raw/bayesian_sweep"
+  save_raw_data: true

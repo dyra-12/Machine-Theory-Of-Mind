@@ -1,0 +1,192 @@
+{
+  "generalization_score": {
+    "simple_mtom": 1.1235889258586254,
+    "bayesian_mtom": 1.072732782771583
+  },
+  "robustness_index": {
+    "simple_mtom": 0.8883641103014317,
+    "bayesian_mtom": 0.8344207373424727
+  },
+  "adaptation_speed": {
+    "simple_mtom": 0.013277708333333305,
+    "bayesian_mtom": 0.01346026668566247
+  },
+  "cross_task_transfer": {
+    "simple_mtom": 1.1370119652709103,
+    "bayesian_mtom": 1.0758686539751643
+  },
+  "simple_baseline": {
+    "best_lambda": 0.7,
+    "mean_total_utility": 1.1439258854166667
+  },
+  "bayesian_combos": [
+    {
+      "lambda_social": 0.985,
+      "prior_strength": 4.1,
+      "mean_total_utility": 1.123353005373317,
+      "utility_std": 0.20803769576804373,
+      "robustness_index": 0.8437497897061291,
+      "adaptation_speed": -0.05496395308261892,
+      "easy_mean": 1.128467013328853,
+      "hard_mean": 1.0770647643914077,
+      "hard_delta": -0.05140224893744527,
+      "utility_gap_vs_simple": -0.020572880043349784,
+      "is_pareto_utility_adapt": true,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.985,
+      "prior_strength": 4.2,
+      "mean_total_utility": 1.1306309156862255,
+      "utility_std": 0.20611643656942655,
+      "robustness_index": 0.8458131453253886,
+      "adaptation_speed": -0.058542451335912515,
+      "easy_mean": 1.1225043559890535,
+      "hard_mean": 1.10940121414257,
+      "hard_delta": -0.013103141846483535,
+      "utility_gap_vs_simple": -0.013294969730441197,
+      "is_pareto_utility_adapt": true,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.985,
+      "prior_strength": 4.3,
+      "mean_total_utility": 1.1410638684963945,
+      "utility_std": 0.1883228167352112,
+      "robustness_index": 0.8583438492342184,
+      "adaptation_speed": -0.09013881863920359,
+      "easy_mean": 1.1419008511333915,
+      "hard_mean": 1.1235822212383755,
+      "hard_delta": -0.01831862989501598,
+      "utility_gap_vs_simple": -0.0028620169202722145,
+      "is_pareto_utility_adapt": true,
+      "is_pareto_utility_robust": true
+    },
+    {
+      "lambda_social": 0.99,
+      "prior_strength": 4.1,
+      "mean_total_utility": 1.100111826602308,
+      "utility_std": 0.220267699024077,
+      "robustness_index": 0.833184528280987,
+      "adaptation_speed": 0.047105781903879596,
+      "easy_mean": 1.1060525182541414,
+      "hard_mean": 1.0517999094860988,
+      "hard_delta": -0.05425260876804261,
+      "utility_gap_vs_simple": -0.043814058814358736,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.99,
+      "prior_strength": 4.2,
+      "mean_total_utility": 1.0937592512721894,
+      "utility_std": 0.22940473202758,
+      "robustness_index": 0.8266303314258604,
+      "adaptation_speed": 0.09765969182892564,
+      "easy_mean": 1.0860320958660274,
+      "hard_mean": 1.080241753275453,
+      "hard_delta": -0.005790342590574538,
+      "utility_gap_vs_simple": -0.05016663414447731,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.99,
+      "prior_strength": 4.3,
+      "mean_total_utility": 1.1087709447993863,
+      "utility_std": 0.21184610647353175,
+      "robustness_index": 0.8395913589763381,
+      "adaptation_speed": 0.05025891078174971,
+      "easy_mean": 1.1117650869115083,
+      "hard_mean": 1.091299165092512,
+      "hard_delta": -0.020465921818996424,
+      "utility_gap_vs_simple": -0.03515494061728042,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.995,
+      "prior_strength": 4.1,
+      "mean_total_utility": 1.1022651854853844,
+      "utility_std": 0.22020296480923854,
+      "robustness_index": 0.8334969363861648,
+      "adaptation_speed": 0.044418155924573544,
+      "easy_mean": 1.1082310637805142,
+      "hard_mean": 1.0539302340647099,
+      "hard_delta": -0.0543008297158043,
+      "utility_gap_vs_simple": -0.0416606999312823,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.995,
+      "prior_strength": 4.2,
+      "mean_total_utility": 1.0960373862029873,
+      "utility_std": 0.22992617765213044,
+      "robustness_index": 0.8266031324627193,
+      "adaptation_speed": 0.09777062742177667,
+      "easy_mean": 1.0881770076982225,
+      "hard_mean": 1.0827299101823595,
+      "hard_delta": -0.00544709751586292,
+      "utility_gap_vs_simple": -0.047888499213679436,
+      "is_pareto_utility_adapt": true,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 0.995,
+      "prior_strength": 4.3,
+      "mean_total_utility": 1.1116296290235548,
+      "utility_std": 0.21183495722091397,
+      "robustness_index": 0.8399449168402976,
+      "adaptation_speed": 0.05136059998304776,
+      "easy_mean": 1.1146943873056523,
+      "hard_mean": 1.0941189644785916,
+      "hard_delta": -0.020575422827060708,
+      "utility_gap_vs_simple": -0.032296256393111955,
+      "is_pareto_utility_adapt": true,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 1.0,
+      "prior_strength": 4.1,
+      "mean_total_utility": 1.0709228075353578,
+      "utility_std": 0.22954769259442082,
+      "robustness_index": 0.8234950443657416,
+      "adaptation_speed": -0.018712539051148003,
+      "easy_mean": 1.0702688020681972,
+      "hard_mean": 1.0154300590913494,
+      "hard_delta": -0.054838742976847765,
+      "utility_gap_vs_simple": -0.07300307788130889,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 1.0,
+      "prior_strength": 4.2,
+      "mean_total_utility": 1.0621517565448513,
+      "utility_std": 0.2324991037950273,
+      "robustness_index": 0.8204219903825789,
+      "adaptation_speed": 0.017528113193838957,
+      "easy_mean": 1.0534277069408118,
+      "hard_mean": 1.0415530883706288,
+      "hard_delta": -0.011874618570183015,
+      "utility_gap_vs_simple": -0.08177412887181545,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    },
+    {
+      "lambda_social": 1.0,
+      "prior_strength": 4.3,
+      "mean_total_utility": 1.0781248185181151,
+      "utility_std": 0.21687596943694654,
+      "robustness_index": 0.8325343624329867,
+      "adaptation_speed": -0.02222091870095899,
+      "easy_mean": 1.0773590707643126,
+      "hard_mean": 1.0529487885062483,
+      "hard_delta": -0.024410282258064298,
+      "utility_gap_vs_simple": -0.06580106689855159,
+      "is_pareto_utility_adapt": false,
+      "is_pareto_utility_robust": false
+    }
+  ]
+}

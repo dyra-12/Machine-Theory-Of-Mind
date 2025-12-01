@@ -81,14 +81,14 @@ class BayesianSocialScorer:
         """
         FINAL FIX: Properly scaled utility calculation to ensure social rewards dominate when lambda is high.
         """
-        # Task reward (non-linear)
-        task_reward = (offer_self / total_resources) ** 0.8
+        # Task reward (linear weight keeps self-utility competitive)
+        task_reward = offer_self / total_resources
         
         # Get perception distribution for this offer
         perception_dist = self.predict_perception_distribution(offer_self, total_resources)
         
         # Sample possible perception changes
-        n_samples = 1000
+        n_samples = 500
         warmth_deltas = np.random.normal(
             perception_dist['warmth_mean'], 
             perception_dist['warmth_std'], 
@@ -112,18 +112,15 @@ class BayesianSocialScorer:
         # earlier Week 3 tuning so that Bayesian MToM gains more
         # from anticipating harsh / unpredictable observers.
         if lambda_social >= 1.0:
-            # Strong social focus: social rewards dominate
-            scaled_lambda = lambda_social * 4.5
-            # Warmth-heavy weighting with a bit more gain
-            social_rewards = 3.5 * (future_warmth * 0.9 + future_competence * 0.1 - 0.5)
+            # Strong social focus but cap dominance to retain task gains
+            scaled_lambda = lambda_social * 3.0
+            social_rewards = 2.8 * (future_warmth * 0.85 + future_competence * 0.15 - 0.5)
         elif lambda_social >= 0.5:
-            # Balanced agents: slightly more weight on social than before
-            scaled_lambda = lambda_social * 3.5
-            social_rewards = 2.4 * (future_warmth * 0.7 + future_competence * 0.3 - 0.5)
+            scaled_lambda = lambda_social * 2.4
+            social_rewards = 1.8 * (future_warmth * 0.7 + future_competence * 0.3 - 0.5)
         else:
-            # Task-focused agents: keep social influence modest
-            scaled_lambda = lambda_social * 2.0
-            social_rewards = 1.0 * (future_warmth * 0.5 + future_competence * 0.5 - 0.5)
+            scaled_lambda = lambda_social * 1.5
+            social_rewards = 0.8 * (future_warmth * 0.55 + future_competence * 0.45 - 0.5)
         
         expected_social_reward = np.mean(social_rewards)
         social_reward_uncertainty = np.std(social_rewards)

@@ -10,14 +10,15 @@ class BayesianMentalState:
     """
     
     def __init__(self, prior_warmth: float = 0.5, prior_competence: float = 0.5,
-                 prior_strength: float = 10.0):
+                 prior_strength: float = 10.0, adaptive_offset: float = 0.0):
         self.prior_warmth = prior_warmth
         self.prior_competence = prior_competence
         self.prior_strength = prior_strength  # Equivalent to "pseudo-observations"
+        self.adaptive_offset = adaptive_offset
         
         # Current beliefs (will be updated via Bayesian inference)
-        self.warmth_belief = prior_warmth
-        self.competence_belief = prior_competence
+        self.warmth_belief = np.clip(prior_warmth + adaptive_offset, 0.01, 0.99)
+        self.competence_belief = np.clip(prior_competence + adaptive_offset, 0.01, 0.99)
         self.warmth_uncertainty = 0.3  # Standard deviation
         self.competence_uncertainty = 0.3
         

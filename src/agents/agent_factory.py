@@ -38,7 +38,18 @@ class AgentFactory:
         elif agent_type == "bayesian_mtom":
             from .bayesian_mtom_agent import BayesianMToMAgent
             lambda_social = kwargs.get('lambda_social', 0.5)
-            return BayesianMToMAgent(lambda_social=lambda_social, agent_id=agent_id)
+            prior_strength = kwargs.get('prior_strength', 6.0)
+            adaptive_prior_offset = kwargs.get('adaptive_prior_offset')
+            risk_weight = kwargs.get('risk_weight')
+            lambda_schedule = kwargs.get('lambda_schedule')
+            return BayesianMToMAgent(
+                lambda_social=lambda_social,
+                agent_id=agent_id,
+                prior_strength=prior_strength,
+                adaptive_prior_offset=adaptive_prior_offset,
+                risk_weight=risk_weight,
+                lambda_schedule=lambda_schedule,
+            )
         
         elif agent_type == "learned_tom":
             from .enhanced_learned_agent import EnhancedLearnedAgent

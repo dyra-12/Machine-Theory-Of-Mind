@@ -12,7 +12,7 @@ Week 4 metrics (generalization, adaptation speed, robustness).
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 import numpy as np
 
 from src.utils.config import load_config
@@ -126,6 +126,11 @@ class Week4GeneralizationRunner:
         self.agent_factory = AgentFactory()
         self.base_env_cfg = config["environment"]
         self.sweep = config["sweep_parameters"]
+        self.bayesian_lambda_values = self.sweep.get("bayesian_lambda_values")
+        self.bayesian_prior_strengths = self.sweep.get("bayesian_prior_strengths")
+        self.bayesian_prior_adjustments = self.sweep.get("bayesian_prior_adjustments")
+        self.bayesian_risk_weights = self.sweep.get("bayesian_risk_weights")
+        self.bayesian_lambda_schedules = self.sweep.get("bayesian_lambda_schedules")
         self.social_cfg = config["social_config"]
         self.output_dir = Path(config["output"]["directory"])
 
@@ -158,6 +163,10 @@ class Week4GeneralizationRunner:
         observer_type: str,
         opponent_type: str,
         seed: int,
+        prior_strength: Optional[float] = None,
+        prior_adjustment: Optional[float] = None,
+        risk_weight: Optional[float] = None,
+        lambda_schedule: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         self.set_seed(seed)
         env = self._build_env(env_variant)
@@ -166,10 +175,23 @@ class Week4GeneralizationRunner:
         state = env.reset()
 
         # Agent0 (our evaluated agent) vs scripted opponent policy
+        agent_kwargs: Dict[str, Any] = {}
+        if agent_type == "bayesian_mtom":
+            if prior_strength is not None:
+                agent_kwargs["prior_strength"] = prior_strength
+            if prior_adjustment is not None:
+                agent_kwargs["adaptive_prior_offset"] = prior_adjustment
+            if risk_weight is not None:
+                agent_kwargs["risk_weight"] = risk_weight
+            if lambda_schedule is not None:
+                agent_kwargs["lambda_schedule"] = lambda_schedule
+            agent_kwargs["prior_strength"] = prior_strength
+
         agent0 = self.agent_factory.create(
             agent_type,
             agent_id=0,
             lambda_social=lambda_social,
+            **agent_kwargs,
         )
 
         opponent_policy = OpponentPolicy(policy_type=opponent_type, total_resources=env.total_resources)
@@ -236,6 +258,13 @@ class Week4GeneralizationRunner:
         result = {
             "agent_type": agent_type,
             "lambda_social": float(lambda_social),
+            "prior_strength": float(prior_strength) if prior_strength is not None else None,
+            "prior_adjustment": float(prior_adjustment) if prior_adjustment is not None else None,
+            "risk_weight": float(risk_weight) if risk_weight is not None else None,
+            "lambda_schedule_label": lambda_schedule.get("label") if lambda_schedule else None,
+            "lambda_schedule_start_factor": float(lambda_schedule["start_factor"]) if lambda_schedule else None,
+            "lambda_schedule_end_factor": float(lambda_schedule["end_factor"]) if lambda_schedule else None,
+            "lambda_schedule_decay_turns": int(lambda_schedule["decay_turns"]) if lambda_schedule else None,
             "observer_type": observer_type,
             "env_name": env_variant.get("name", "base"),
             "env_total_resources": env.total_resources,
@@ -268,6 +297,10 @@ class Week4GeneralizationRunner:
         print("🚀 Week 4 Negotiation Generalization")
         print("Agents:", agent_types)
         print("Lambdas:", lambda_values)
+        if self.bayesian_lambda_values:
+            print("Bayesian lambdas:", self.bayesian_lambda_values)
+        if self.bayesian_prior_strengths:
+            print("Bayesian priors:", self.bayesian_prior_strengths)
         print("Observers:", observer_types)
         print("Env variants:", [v["name"] for v in env_variants])
         print("Opponents:", opponent_types)
@@ -275,28 +308,61 @@ class Week4GeneralizationRunner:
         print("=" * 60)
 
         for agent_type in agent_types:
-            for lambda_val in lambda_values:
+            if agent_type == "bayesian_mtom" and self.bayesian_lambda_values:
+                lambda_list = self.bayesian_lambda_values
+            else:
+                lambda_list = lambda_values
+
+            if agent_type == "bayesian_mtom" and self.bayesian_prior_strengths:
+                prior_strengths = self.bayesian_prior_strengths
+            else:
+                prior_strengths = [None]
+
+            if agent_type == "bayesian_mtom" and self.bayesian_prior_adjustments:
+                prior_adjustments = self.bayesian_prior_adjustments
+            else:
+                prior_adjustments = [None]
+
+            if agent_type == "bayesian_mtom" and self.bayesian_risk_weights:
+                risk_weights = self.bayesian_risk_weights
+            else:
+                risk_weights = [None]
+
+            if agent_type == "bayesian_mtom" and self.bayesian_lambda_schedules:
+                lambda_schedules = self.bayesian_lambda_schedules
+            else:
+                lambda_schedules = [None]
+
+            for lambda_val in lambda_list:
                 # Only MToM agents should sweep lambda; baselines get lambda=0
                 if "baseline" in agent_type or "random" in agent_type:
                     effective_lambda = 0.0
                 else:
                     effective_lambda = lambda_val
 
-                for observer_type in observer_types:
-                    for env_variant in env_variants:
-                        for opponent_type in opponent_types:
-                            for seed_idx in range(seeds_per_config):
-                                seed = 1000 * seed_idx + 7
-                                for run_idx in range(runs_per_config):
-                                    res = self.run_single_episode(
-                                        agent_type=agent_type,
-                                        lambda_social=effective_lambda,
-                                        env_variant=env_variant,
-                                        observer_type=observer_type,
-                                        opponent_type=opponent_type,
-                                        seed=seed + run_idx,
-                                    )
-                                    all_results.append(res)
+                for prior_strength in prior_strengths:
+                    for prior_adjustment in prior_adjustments:
+                        for risk_weight in risk_weights:
+                            for lambda_schedule in lambda_schedules:
+                                for observer_type in observer_types:
+                                    for env_variant in env_variants:
+                                        for opponent_type in opponent_types:
+                                            for seed_idx in range(seeds_per_config):
+                                                seed = 1000 * seed_idx + 7
+                                                for run_idx in range(runs_per_config):
+                                                    res = self.run_single_episode(
+                                                        agent_type=agent_type,
+                                                        lambda_social=effective_lambda,
+                                                        env_variant=env_variant,
+                                                        observer_type=observer_type,
+                                                        opponent_type=opponent_type,
+                                                        seed=seed + run_idx,
+                                                        prior_strength=prior_strength,
+                                                        prior_adjustment=prior_adjustment,
+                                                        risk_weight=risk_weight,
+                                                        lambda_schedule=lambda_schedule,
+                                                    )
+                                                    all_results.append(res)
         return all_results
 
     def save_results(self, results: List[Dict[str, Any]]):
