@@ -1,0 +1,102 @@
+{
+  "episode_id": "trace_20251202_201101_5bb981",
+  "created_at": "2025-12-02T20:11:01.571973Z",
+  "metadata": {
+    "seed": 5,
+    "agent_type": "bayesian_mtom",
+    "lambda_social": 0.9,
+    "opponent_policy": "generous",
+    "total_resources": 10,
+    "max_turns": 4
+  },
+  "steps": [
+    {
+      "turn": 0,
+      "agent_id": 0,
+      "action": [
+        7,
+        3
+      ],
+      "accepted": false,
+      "beliefs": {
+        "warmth": 0.35405405405405405,
+        "competence": 0.6824324324324325
+      },
+      "social_score": 0.48540540540540544,
+      "notes": {
+        "accept_prob": 0.425,
+        "belief_source": "agent",
+        "phase": "agent_action"
+      }
+    },
+    {
+      "turn": 1,
+      "agent_id": 1,
+      "action": [
+        7,
+        3
+      ],
+      "accepted": false,
+      "beliefs": {
+        "warmth": 0.35405405405405405,
+        "competence": 0.6824324324324325
+      },
+      "social_score": 0.48540540540540544,
+      "notes": {
+        "accept_prob": 0.7249999999999999,
+        "belief_source": "agent",
+        "phase": "opponent_action"
+      }
+    },
+    {
+      "turn": 2,
+      "agent_id": 0,
+      "action": [
+        9,
+        1
+      ],
+      "accepted": false,
+      "beliefs": {
+        "warmth": 0.14243243243243242,
+        "competence": 0.28108108108108104
+      },
+      "social_score": 0.19789189189189188,
+      "notes": {
+        "accept_prob": 0.275,
+        "belief_source": "agent",
+        "phase": "agent_action"
+      }
+    },
+    {
+      "turn": 3,
+      "agent_id": 1,
+      "action": [
+        7,
+        3
+      ],
+      "accepted": true,
+      "beliefs": {
+        "warmth": 0.5,
+        "competence": 0.7370967741935484
+      },
+      "social_score": 0.5948387096774194,
+      "notes": {
+        "accept_prob": 0.7249999999999999,
+        "belief_source": "agent",
+        "phase": "opponent_action"
+      }
+    }
+  ],
+  "outcome": {
+    "final_agreement": [
+      7,
+      3
+    ],
+    "num_turns": 4,
+    "task_reward": 0.7,
+    "final_social_score": 0.5948387096774194,
+    "total_utility": 1.2353548387096773,
+    "belief_source": "agent",
+    "steps_recorded": 4
+  }
+}

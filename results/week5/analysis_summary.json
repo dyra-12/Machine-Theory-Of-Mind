@@ -32,7 +32,14 @@
       "hard_delta": -0.05140224893744527,
       "utility_gap_vs_simple": -0.020572880043349784,
       "is_pareto_utility_adapt": true,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.9033908634032545,
+      "siq_components": {
+        "social_alignment": 0.8414003482168806,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8687722419928826
+      }
     },
     {
       "lambda_social": 0.985,
@@ -46,7 +53,14 @@
       "hard_delta": -0.013103141846483535,
       "utility_gap_vs_simple": -0.013294969730441197,
       "is_pareto_utility_adapt": true,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.902943971331475,
+      "siq_components": {
+        "social_alignment": 0.8427967313151286,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8660351826792964
+      }
     },
     {
       "lambda_social": 0.985,
@@ -60,7 +74,14 @@
       "hard_delta": -0.01831862989501598,
       "utility_gap_vs_simple": -0.0028620169202722145,
       "is_pareto_utility_adapt": true,
-      "is_pareto_utility_robust": true
+      "is_pareto_utility_robust": true,
+      "siq_score": 0.9064940419836951,
+      "siq_components": {
+        "social_alignment": 0.8471323026295305,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8723498233215548
+      }
     },
     {
       "lambda_social": 0.99,
@@ -74,7 +95,14 @@
       "hard_delta": -0.05425260876804261,
       "utility_gap_vs_simple": -0.043814058814358736,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.9010807587569406,
+      "siq_components": {
+        "social_alignment": 0.8407535476865116,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8624887285843101
+      }
     },
     {
       "lambda_social": 0.99,
@@ -88,7 +116,14 @@
       "hard_delta": -0.005790342590574538,
       "utility_gap_vs_simple": -0.05016663414447731,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.8999236150633161,
+      "siq_components": {
+        "social_alignment": 0.8405115859306889,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8592592592592593
+      }
     },
     {
       "lambda_social": 0.99,
@@ -102,7 +137,14 @@
       "hard_delta": -0.020465921818996424,
       "utility_gap_vs_simple": -0.03515494061728042,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.9030765319584716,
+      "siq_components": {
+        "social_alignment": 0.8447309508889651,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8644986449864499
+      }
     },
     {
       "lambda_social": 0.995,
@@ -116,7 +158,14 @@
       "hard_delta": -0.0543008297158043,
       "utility_gap_vs_simple": -0.0416606999312823,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.901160003828625,
+      "siq_components": {
+        "social_alignment": 0.8409912829015652,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8624887285843101
+      }
     },
     {
       "lambda_social": 0.995,
@@ -130,7 +179,14 @@
       "hard_delta": -0.00544709751586292,
       "utility_gap_vs_simple": -0.047888499213679436,
       "is_pareto_utility_adapt": true,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.8997009417011098,
+      "siq_components": {
+        "social_alignment": 0.840306528807033,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8587962962962963
+      }
     },
     {
       "lambda_social": 0.995,
@@ -144,7 +200,14 @@
       "hard_delta": -0.020575422827060708,
       "utility_gap_vs_simple": -0.032296256393111955,
       "is_pareto_utility_adapt": true,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.9021938183374286,
+      "siq_components": {
+        "social_alignment": 0.8443411659427286,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8622402890695574
+      }
     },
     {
       "lambda_social": 1.0,
@@ -158,7 +221,14 @@
       "hard_delta": -0.054838742976847765,
       "utility_gap_vs_simple": -0.07300307788130889,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.8859306528829974,
+      "siq_components": {
+        "social_alignment": 0.8266407171140036,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8311512415349888
+      }
     },
     {
       "lambda_social": 1.0,
@@ -172,7 +242,14 @@
       "hard_delta": -0.011874618570183015,
       "utility_gap_vs_simple": -0.08177412887181545,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.8928132537779715,
+      "siq_components": {
+        "social_alignment": 0.836773094667248,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8416666666666667
+      }
     },
     {
       "lambda_social": 1.0,
@@ -186,7 +263,30 @@
       "hard_delta": -0.024410282258064298,
       "utility_gap_vs_simple": -0.06580106689855159,
       "is_pareto_utility_adapt": false,
-      "is_pareto_utility_robust": false
+      "is_pareto_utility_robust": false,
+      "siq_score": 0.8897386500662834,
+      "siq_components": {
+        "social_alignment": 0.8351311891528627,
+        "theory_of_mind_accuracy": NaN,
+        "cross_context_generalization": 1.0,
+        "ethical_consistency": 0.8340847610459874
+      }
     }
-  ]
+  ],
+  "siq_by_agent": {
+    "bayesian_mtom": {
+      "siq": 0.8990590069291228,
+      "social_alignment": 0.8401257871044288,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 1.0,
+      "ethical_consistency": 0.8570512336829397
+    },
+    "simple_mtom": {
+      "siq": 0.5280768196533,
+      "social_alignment": 0.5631778273809525,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 1.0,
+      "ethical_consistency": 0.021052631578947368
+    }
+  }
 }

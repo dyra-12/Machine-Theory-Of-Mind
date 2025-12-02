@@ -81,12 +81,21 @@ class BayesianMToMAgent:
             # options when social preferences are low. When lambda_social is high,
             # allow more exploration of generous actions.
             risk_adj = self.risk_weight if lambda_for_turn < 0.8 else self.risk_weight * 0.6
-            risk_adjusted_utility = analysis['expected_utility'] * (1 - risk_adj * analysis['risk_ratio'])
+            expected_util = analysis.get('expected_utility')
+            if not isinstance(expected_util, (int, float)) or np.isnan(expected_util):
+                expected_util = 0.0
+            risk_ratio = analysis.get('risk_ratio')
+            if not isinstance(risk_ratio, (int, float)) or np.isnan(risk_ratio):
+                risk_ratio = 0.0
+            risk_adjusted_utility = expected_util * (1 - risk_adj * risk_ratio)
 
             # Encourage reclaiming task reward when social incentive remains high
-            selfish_bonus = analysis['task_reward'] * max(0.0, 0.4 - lambda_for_turn * 0.2)
+            task_reward_val = analysis.get('task_reward')
+            if not isinstance(task_reward_val, (int, float)) or np.isnan(task_reward_val):
+                task_reward_val = 0.0
+            selfish_bonus = task_reward_val * max(0.0, 0.4 - lambda_for_turn * 0.2)
             if self.mental_state.warmth_belief < 0.45:
-                selfish_bonus += 0.05 * analysis['task_reward']
+                selfish_bonus += 0.05 * task_reward_val
             risk_adjusted_utility += selfish_bonus
             
             if risk_adjusted_utility > best_expected_utility:
@@ -149,8 +158,8 @@ class BayesianMToMAgent:
     def get_mental_state(self):
         """Return a simple view of current beliefs for downstream scoring."""
         return type('ms', (object,), {
-            'warmth': self.mental_state.warmth_belief,
-            'competence': self.mental_state.competence_belief
+            'warmth': float(self.mental_state.warmth_belief),
+            'competence': float(self.mental_state.competence_belief)
         })
     
     def _bayesian_mental_update(self, chosen_offer: int, negotiation_state: NegotiationState,

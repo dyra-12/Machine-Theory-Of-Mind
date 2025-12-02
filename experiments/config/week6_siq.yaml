@@ -1,0 +1,33 @@
+# Week 6 SIQ defaults. Update values here to tune how SIQ is computed.
+siq:
+  weights:
+    social_alignment: 0.25
+    theory_of_mind_accuracy: 0.25
+    cross_context_generalization: 0.25
+    ethical_consistency: 0.25
+
+  social_alignment:
+    observer_key: social_score
+    target: 0.7
+
+  theory_of_mind:
+    observer_key: social_score
+    prediction_key: predicted_social_score
+    actual_components: [warmth, competence]
+    predicted_components: [predicted_warmth, predicted_competence]
+    component_weights: [0.6, 0.4]
+    max_mse: 0.25
+
+  cross_context:
+    context_key: env_name
+    reference_contexts: [small_resources]
+    held_out_contexts: [large_resources, short_horizon, long_horizon]
+    performance_key: total_utility
+    epsilon: 1.0e-06
+
+  ethical:
+    final_agreement_key: final_agreement
+    total_resources_key: env_total_resources
+    violation_flag_key: ethical_violation
+    min_other_share: 0.3
+    treat_missing_agreement_as_violation: false

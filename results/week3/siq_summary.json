@@ -1,0 +1,39 @@
+{
+  "siq_by_agent": {
+    "bayesian_mtom": {
+      "siq": 0.7022534562211982,
+      "social_alignment": 0.7022534562211982,
+      "theory_of_mind_accuracy": null,
+      "cross_context_generalization": null,
+      "ethical_consistency": null
+    },
+    "greedy_baseline": {
+      "siq": 0.6000000000000001,
+      "social_alignment": 0.6000000000000001,
+      "theory_of_mind_accuracy": null,
+      "cross_context_generalization": null,
+      "ethical_consistency": null
+    },
+    "random_baseline": {
+      "siq": 0.6571428571428573,
+      "social_alignment": 0.6571428571428573,
+      "theory_of_mind_accuracy": null,
+      "cross_context_generalization": null,
+      "ethical_consistency": null
+    },
+    "simple_mtom": {
+      "siq": 0.7142857142857144,
+      "social_alignment": 0.7142857142857144,
+      "theory_of_mind_accuracy": null,
+      "cross_context_generalization": null,
+      "ethical_consistency": null
+    },
+    "social_baseline": {
+      "siq": 0.7142857142857144,
+      "social_alignment": 0.7142857142857144,
+      "theory_of_mind_accuracy": null,
+      "cross_context_generalization": null,
+      "ethical_consistency": null
+    }
+  }
+}

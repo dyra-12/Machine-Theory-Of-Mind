@@ -4,24 +4,66 @@ Ingests the Week 5 Bayesian sweep results and produces:
 - Classic generalization / robustness metrics (reuse of Week 4 metrics)
 - Hyperparameter grid summary per (prior_strength, lambda)
 - Pareto plots highlighting trade-offs (utility vs adaptation, utility vs robustness)
+- SIQ metrics (Week 6) using ``src.metrics.siq``
 - Summary JSON for downstream reporting
 """
 
 from __future__ import annotations
 
+import argparse
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from src.metrics.siq import SIQ, SIQConfig
+from src.experiments.siq_visualizations import (
+    collect_weekly_siq_history,
+    plot_siq_components_bar,
+    plot_siq_heatmap,
+    plot_task_vs_siq_scatter,
+    plot_weekly_siq_trend,
+)
+
 RAW_PATH = Path("results/week5/raw/bayesian_sweep/results.jsonl")
 OUT_DIR = Path("results/week5")
 PLOT_DIR = OUT_DIR / "plots"
+DEFAULT_SIQ_CONFIG = Path("experiments/config/week6_siq.yaml")
 
+
+# ---------------------------------------------------------------------------
+# CLI / configuration helpers
+# ---------------------------------------------------------------------------
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Analyze Week 5 Bayesian sweep results")
+    parser.add_argument(
+        "--siq-config",
+        type=Path,
+        default=DEFAULT_SIQ_CONFIG,
+        help="Path to SIQ YAML config (omit to use defaults)",
+    )
+    return parser.parse_args()
+
+
+def build_siq(config_path: Optional[Path]) -> SIQ:
+    if config_path is None:
+        return SIQ()
+    try:
+        return SIQ(SIQConfig.from_yaml(config_path))
+    except FileNotFoundError:
+        print(f"⚠️  SIQ config {config_path} not found, using built-in defaults")
+        return SIQ()
+
+
+# ---------------------------------------------------------------------------
+# Shared metric helpers (ported from Week 4 script so Week 5 stays standalone)
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # Shared metric helpers (ported from Week 4 script so Week 5 stays standalone)
@@ -135,6 +177,8 @@ class ComboSummary:
     utility_gap_vs_simple: float
     is_pareto_utility_adapt: bool = False
     is_pareto_utility_robust: bool = False
+    siq_score: float = float("nan")
+    siq_components: Dict[str, float] = field(default_factory=dict)
 
 
 def summarize_simple_baseline(df: pd.DataFrame) -> Dict[str, float]:
@@ -147,7 +191,15 @@ def summarize_simple_baseline(df: pd.DataFrame) -> Dict[str, float]:
     return {"best_lambda": best_lambda, "mean_total_utility": best_utility}
 
 
-def summarize_bayesian_grid(df: pd.DataFrame, simple_ref: float) -> List[ComboSummary]:
+def compute_siq_by_agent(df: pd.DataFrame, siq: SIQ) -> Dict[str, Dict[str, float]]:
+    try:
+        return siq.compute_by_group(df, group_key="agent_type")
+    except Exception as exc:  # pragma: no cover - defensive logging only
+        print(f"⚠️  Failed to compute SIQ by agent: {exc}")
+        return {}
+
+
+def summarize_bayesian_grid(df: pd.DataFrame, simple_ref: float, siq: Optional[SIQ] = None) -> List[ComboSummary]:
     bayes = df[df["agent_type"] == "bayesian_mtom"].copy()
     bayes = bayes.dropna(subset=["prior_strength"])
     summaries: List[ComboSummary] = []
@@ -159,6 +211,19 @@ def summarize_bayesian_grid(df: pd.DataFrame, simple_ref: float) -> List[ComboSu
         adapt = adaptation_speed_subset(sub)
         easy_hard = compute_easy_hard_delta(sub)
         gap_vs_simple = mean_utility - simple_ref if np.isfinite(simple_ref) else float("nan")
+        siq_score = float("nan")
+        siq_components: Dict[str, float] = {}
+        if siq is not None:
+            try:
+                siq_stats = siq.compute(sub)
+                siq_score = float(siq_stats.get("siq", float("nan")))
+                siq_components = {
+                    key: float(val)
+                    for key, val in siq_stats.items()
+                    if key != "siq"
+                }
+            except ValueError:
+                siq_score = float("nan")
 
         summaries.append(
             ComboSummary(
@@ -172,6 +237,8 @@ def summarize_bayesian_grid(df: pd.DataFrame, simple_ref: float) -> List[ComboSu
                 hard_mean=easy_hard["hard_mean"],
                 hard_delta=easy_hard["delta"],
                 utility_gap_vs_simple=gap_vs_simple,
+                siq_score=siq_score,
+                siq_components=siq_components,
             )
         )
     return summaries
@@ -241,6 +308,7 @@ def save_summary(
     transfer: Dict[str, float],
     simple_ref: Dict[str, float],
     combos: List[ComboSummary],
+    siq_by_agent: Dict[str, Dict[str, float]],
 ):
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -250,20 +318,24 @@ def save_summary(
         "cross_task_transfer": transfer,
         "simple_baseline": simple_ref,
         "bayesian_combos": [asdict(c) for c in combos],
+        "siq_by_agent": siq_by_agent,
     }
     (OUT_DIR / "analysis_summary.json").write_text(json.dumps(payload, indent=2))
 
 
 def main():
+    args = parse_args()
     df = load_results(RAW_PATH)
+    siq = build_siq(args.siq_config)
 
     generalization = compute_generalization_score(df)
     robustness = compute_robustness_index(df)
     adaptation = compute_adaptation_speed(df)
     transfer = compute_cross_task_transfer(df)
+    siq_by_agent = compute_siq_by_agent(df, siq)
 
     simple_ref = summarize_simple_baseline(df)
-    combos = summarize_bayesian_grid(df, simple_ref["mean_total_utility"])
+    combos = summarize_bayesian_grid(df, simple_ref["mean_total_utility"], siq)
 
     mark_pareto_front(combos, "mean_total_utility", "adaptation_speed", "is_pareto_utility_adapt")
     mark_pareto_front(combos, "mean_total_utility", "robustness_index", "is_pareto_utility_robust")
@@ -291,7 +363,17 @@ def main():
         title="Mean utility across priors/lambdas",
     )
 
-    save_summary(generalization, robustness, adaptation, transfer, simple_ref, combos)
+    save_summary(generalization, robustness, adaptation, transfer, simple_ref, combos, siq_by_agent)
+
+    combos_dicts = [asdict(c) for c in combos]
+    plot_task_vs_siq_scatter(combos_dicts, PLOT_DIR / "siq_task_tradeoff.png", label_key="prior_strength")
+    plot_siq_heatmap(combos_dicts, PLOT_DIR / "siq_heatmap.png")
+    if siq_by_agent:
+        plot_siq_components_bar(siq_by_agent, PLOT_DIR / "week5_siq_components.png")
+
+    history = collect_weekly_siq_history(upto_week=5)
+    plot_weekly_siq_trend(history, PLOT_DIR / "siq_trend_through_week5.png")
+
     print(f"Saved Week 5 analysis summary + plots to {OUT_DIR}")
 
 

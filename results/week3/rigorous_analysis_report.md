@@ -128,3 +128,13 @@
 - **Lambda-sensitive agents**: 5/5
 - **Multi-point Pareto agents**: 1/5
 - **✅ Bayesian MToM**: Demonstrates both lambda sensitivity AND multi-point Pareto optimization
+
+## SIQ Component Snapshot
+
+| Agent Type | SIQ | Social Alignment | ToM Accuracy | Cross-Context | Ethical |
+|------------|-----|------------------|--------------|--------------|--------|
+| bayesian_mtom | 0.702 | 0.702 | nan | nan | nan |
+| greedy_baseline | 0.600 | 0.600 | nan | nan | nan |
+| random_baseline | 0.657 | 0.657 | nan | nan | nan |
+| simple_mtom | 0.714 | 0.714 | nan | nan | nan |
+| social_baseline | 0.714 | 0.714 | nan | nan | nan |

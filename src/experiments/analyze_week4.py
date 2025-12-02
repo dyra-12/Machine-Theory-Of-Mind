@@ -1,37 +1,74 @@
 """Week 4 Analysis Script
 
 Consumes the JSONL produced by `run_week4.py` and computes
-high-level generalization / robustness metrics plus a few
+high-level generalization / robustness metrics, SIQ scores, plus a few
 visualizations.
 
 Metrics (per agent type):
 - Generalization Score: mean total utility across all conditions,
-  normalized by performance in the easiest reference condition.
+    normalized by performance in the easiest reference condition.
 - Adaptation Speed (proxy): change in total utility across
-  negotiation horizons (short vs long) and across rounds.
+    negotiation horizons (short vs long) and across rounds.
 - Robustness Index: variance-normalized utility across observers,
-  env variants, and opponents.
+    env variants, and opponents.
 - Cross-task Transfer: (placeholder) currently identical to
-  generalization over env variants, ready to plug in other games.
+    generalization over env variants, ready to plug in other games.
+- Social Intelligence Quotient (Week 6): composite metric defined in
+    ``src.metrics.siq``.
 
 Outputs:
 - `results/week4/analysis_summary.json`
 - basic plots in `results/week4/plots`.
 """
 
+import argparse
 import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 
+from src.metrics.siq import SIQ, SIQConfig
+from src.experiments.siq_visualizations import (
+    collect_weekly_siq_history,
+    plot_siq_components_bar,
+    plot_weekly_siq_trend,
+)
+
 
 RAW_PATH = Path("results/week4/raw/negotiation_generalization/results.jsonl")
 OUT_DIR = Path("results/week4")
 PLOT_DIR = OUT_DIR / "plots"
+DEFAULT_SIQ_CONFIG = Path("experiments/config/week6_siq.yaml")
+
+
+# ---------------------------------------------------------------------------
+# CLI / configuration helpers
+# ---------------------------------------------------------------------------
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Analyze Week 4 negotiation results")
+    parser.add_argument(
+        "--siq-config",
+        type=Path,
+        default=DEFAULT_SIQ_CONFIG,
+        help="Path to SIQ YAML definition (defaults to week6_siq.yaml)",
+    )
+    return parser.parse_args()
+
+
+def build_siq(config_path: Optional[Path]) -> SIQ:
+    if config_path is None:
+        return SIQ()
+    try:
+        return SIQ(SIQConfig.from_yaml(config_path))
+    except FileNotFoundError:
+        print(f"⚠️  SIQ config {config_path} not found, using defaults")
+        return SIQ()
 
 
 def load_results(path: Path) -> pd.DataFrame:
@@ -124,6 +161,14 @@ def compute_cross_task_transfer(df: pd.DataFrame) -> Dict[str, float]:
         else:
             transfer[agent] = float(other / base)
     return transfer
+
+
+def compute_siq_by_agent(df: pd.DataFrame, siq: SIQ) -> Dict[str, Dict[str, float]]:
+    try:
+        return siq.compute_by_group(df, group_key="agent_type")
+    except Exception as exc:  # pragma: no cover - defensive log only
+        print(f"⚠️  Failed to compute SIQ scores: {exc}")
+        return {}
 
 
 def compute_adaptation_advantage(df: pd.DataFrame) -> Dict[str, float]:
@@ -251,6 +296,7 @@ def save_summary_json(
     easy_hard_stats: Dict[str, Dict[str, float]],
     bayes_vs_baselines: Dict[str, Dict[str, float]],
     bayes_significance: Dict[str, Dict[str, float]],
+    siq_by_agent: Dict[str, Dict[str, float]],
 ):
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / "analysis_summary.json"
@@ -263,6 +309,7 @@ def save_summary_json(
         "easy_hard_stats": easy_hard_stats,
         "bayesian_vs_baselines": bayes_vs_baselines,
         "bayesian_significance": bayes_significance,
+        "siq_by_agent": siq_by_agent,
     }
     out.write_text(json.dumps(payload, indent=2))
 
@@ -365,20 +412,28 @@ def bayesian_significance_tests(df: pd.DataFrame) -> Dict[str, Dict[str, float]]
 
 
 def main():
+    args = parse_args()
     df = load_results(RAW_PATH)
+    siq = build_siq(args.siq_config)
 
     gen = compute_generalization_score(df)
     rob = compute_robustness_index(df)
     ada = compute_adaptation_speed(df)
     trf = compute_cross_task_transfer(df)
+    siq_scores = compute_siq_by_agent(df, siq)
     adv = compute_adaptation_advantage(df)
     easy_hard = compute_easy_hard_stats(df)
     bayes_vs = summarize_bayesian_vs_baselines(df)
     bayes_sig = bayesian_significance_tests(df)
 
-    save_summary_json(gen, rob, ada, trf, adv, easy_hard, bayes_vs, bayes_sig)
+    save_summary_json(gen, rob, ada, trf, adv, easy_hard, bayes_vs, bayes_sig, siq_scores)
     plot_generalization_curves(df)
     plot_easy_vs_hard(easy_hard)
+    if siq_scores:
+        plot_siq_components_bar(siq_scores, PLOT_DIR / "week4_siq_components.png")
+
+    history = collect_weekly_siq_history(upto_week=4)
+    plot_weekly_siq_trend(history, PLOT_DIR / "siq_trend_through_week4.png")
     print(f"Saved Week 4 analysis summary and plots to {OUT_DIR}")
 
 

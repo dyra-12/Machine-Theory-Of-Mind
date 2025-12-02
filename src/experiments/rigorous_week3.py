@@ -1,13 +1,32 @@
 """
 Rigorous Week 3 analysis with proper statistics
 """
-from src.metrics.statistical_tests_fixed import FixedStatisticalAnalyzer
-from src.metrics.pareto import ParetoAnalyzer
-from src.experiments.data_validator import DataValidator
+import argparse
 import json
+import math
 from pathlib import Path
+from typing import Dict, Optional
 
-def run_rigorous_analysis():
+import pandas as pd
+
+from src.experiments.data_validator import DataValidator
+from src.metrics.pareto import ParetoAnalyzer
+from src.metrics.siq import SIQ, SIQConfig
+from src.metrics.statistical_tests_fixed import FixedStatisticalAnalyzer
+
+DEFAULT_SIQ_CONFIG = Path("experiments/config/week6_siq.yaml")
+
+def build_siq(config_path: Optional[Path]) -> SIQ:
+    if config_path is None:
+        return SIQ()
+    try:
+        return SIQ(SIQConfig.from_yaml(config_path))
+    except FileNotFoundError:
+        print(f"⚠️  SIQ config {config_path} not found, falling back to defaults")
+        return SIQ()
+
+
+def run_rigorous_analysis(siq_config: Optional[Path] = None):
     """Run comprehensive, statistically sound analysis"""
     
     # Load results: prefer a dedicated latest_results file, otherwise auto-discover
@@ -35,6 +54,7 @@ def run_rigorous_analysis():
     # Validate data structure
     validator = DataValidator()
     valid_results = validator.validate_results_structure(all_results)
+    df = pd.DataFrame(valid_results)
     independence_checks = validator.check_independence_assumptions(valid_results)
     
     print(f"🔍 Data independence: {independence_checks}")
@@ -65,13 +85,30 @@ def run_rigorous_analysis():
     pareto_metrics = pareto_analyzer.calculate_pareto_metrics(agent_results)
     
     # Generate rigorous report
-    _generate_rigorous_report(within_lambda_tests, anova_results, pareto_metrics, 
-                            independence_checks, agent_results)
+    siq_scores = {}
+    if not df.empty:
+        siq = build_siq(siq_config or DEFAULT_SIQ_CONFIG)
+        siq_scores = siq.compute_by_group(df, group_key="agent_type")
+
+    _generate_rigorous_report(
+        within_lambda_tests,
+        anova_results,
+        pareto_metrics,
+        independence_checks,
+        agent_results,
+        siq_scores,
+    )
     
     print("✅ RIGOROUS ANALYSIS COMPLETE!")
 
-def _generate_rigorous_report(within_lambda_tests, anova_results, pareto_metrics, 
-                            independence_checks, agent_results):
+def _generate_rigorous_report(
+    within_lambda_tests,
+    anova_results,
+    pareto_metrics,
+    independence_checks,
+    agent_results,
+    siq_scores: Dict[str, Dict[str, float]],
+):
     """Generate statistically rigorous report"""
     report_path = Path("results/week3/rigorous_analysis_report.md")
     
@@ -136,5 +173,39 @@ def _generate_rigorous_report(within_lambda_tests, anova_results, pareto_metrics
         else:
             f.write("- **❌ Bayesian MToM**: Does not demonstrate expected trade-off behavior\n")
 
+        if siq_scores:
+            f.write("\n## SIQ Component Snapshot\n\n")
+            f.write("| Agent Type | SIQ | Social Alignment | ToM Accuracy | Cross-Context | Ethical |\n")
+            f.write("|------------|-----|------------------|--------------|--------------|--------|\n")
+            for agent_type, metrics in siq_scores.items():
+                f.write(
+                    f"| {agent_type} | {metrics.get('siq', float('nan')):.3f} | "
+                    f"{metrics.get('social_alignment', float('nan')):.3f} | "
+                    f"{metrics.get('theory_of_mind_accuracy', float('nan')):.3f} | "
+                    f"{metrics.get('cross_context_generalization', float('nan')):.3f} | "
+                    f"{metrics.get('ethical_consistency', float('nan')):.3f} |\n"
+                )
+
+    if siq_scores:
+        save_siq_summary(siq_scores)
+
+
+def save_siq_summary(siq_scores: Dict[str, Dict[str, float]]):
+    out_dir = Path("results/week3")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    payload = {"siq_by_agent": _sanitize_for_json(siq_scores)}
+    (out_dir / "siq_summary.json").write_text(json.dumps(payload, indent=2))
+
+
+def _sanitize_for_json(value):
+    if isinstance(value, dict):
+        return {k: _sanitize_for_json(v) for k, v in value.items()}
+    if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
+        return None
+    return value
+
 if __name__ == "__main__":
-    run_rigorous_analysis()
+    parser = argparse.ArgumentParser(description="Run rigorous Week 3 analysis with SIQ integration")
+    parser.add_argument("--siq-config", type=Path, default=DEFAULT_SIQ_CONFIG, help="Path to SIQ YAML config")
+    args = parser.parse_args()
+    run_rigorous_analysis(args.siq_config)

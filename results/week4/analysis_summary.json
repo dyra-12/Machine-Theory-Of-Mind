@@ -104,5 +104,42 @@
       "easy_p_value": 6.916890894578609e-22,
       "hard_p_value": 9.211262970020361e-21
     }
+  },
+  "siq_by_agent": {
+    "bayesian_mtom": {
+      "siq": 0.7195408380890288,
+      "social_alignment": 0.6911635442614272,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 1.0,
+      "ethical_consistency": 0.46745897000565934
+    },
+    "greedy_baseline": {
+      "siq": 0.5299945144724557,
+      "social_alignment": 0.5626726190476192,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 1.0,
+      "ethical_consistency": 0.0273109243697479
+    },
+    "random_baseline": {
+      "siq": 0.8462449485908867,
+      "social_alignment": 0.6502666666666668,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 0.9963976945244957,
+      "ethical_consistency": 0.8920704845814978
+    },
+    "simple_mtom": {
+      "siq": 0.5303830065359477,
+      "social_alignment": 0.5638380952380952,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 1.0,
+      "ethical_consistency": 0.0273109243697479
+    },
+    "social_baseline": {
+      "siq": 0.9031634103641458,
+      "social_alignment": 0.8746863095238095,
+      "theory_of_mind_accuracy": NaN,
+      "cross_context_generalization": 0.9681372549019609,
+      "ethical_consistency": 0.8666666666666667
+    }
   }
 }

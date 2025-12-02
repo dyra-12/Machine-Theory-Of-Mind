@@ -42,14 +42,18 @@ class AgentFactory:
             adaptive_prior_offset = kwargs.get('adaptive_prior_offset')
             risk_weight = kwargs.get('risk_weight')
             lambda_schedule = kwargs.get('lambda_schedule')
-            return BayesianMToMAgent(
-                lambda_social=lambda_social,
-                agent_id=agent_id,
-                prior_strength=prior_strength,
-                adaptive_prior_offset=adaptive_prior_offset,
-                risk_weight=risk_weight,
-                lambda_schedule=lambda_schedule,
-            )
+            agent_config = {
+                'lambda_social': lambda_social,
+                'agent_id': agent_id,
+                'prior_strength': prior_strength,
+            }
+            if adaptive_prior_offset is not None:
+                agent_config['adaptive_prior_offset'] = adaptive_prior_offset
+            if risk_weight is not None:
+                agent_config['risk_weight'] = risk_weight
+            if lambda_schedule is not None:
+                agent_config['lambda_schedule'] = lambda_schedule
+            return BayesianMToMAgent(**agent_config)
         
         elif agent_type == "learned_tom":
             from .enhanced_learned_agent import EnhancedLearnedAgent
