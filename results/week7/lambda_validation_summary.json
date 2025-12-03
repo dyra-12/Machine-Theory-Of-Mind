@@ -1,0 +1,31 @@
+{
+  "seeds": [
+    11,
+    17,
+    23,
+    29,
+    31
+  ],
+  "tau_assumption": 1.0,
+  "var_delta_obs": 0.0027908237447448318,
+  "rows": [
+    {
+      "lambda": 0.0,
+      "mean_social_score": 0.441741935483871,
+      "delta_social_score": 0.0,
+      "predicted_delta": 0.0
+    },
+    {
+      "lambda": 0.1,
+      "mean_social_score": 0.441741935483871,
+      "delta_social_score": 0.0,
+      "predicted_delta": 0.0002790823744744832
+    },
+    {
+      "lambda": 0.2,
+      "mean_social_score": 0.441741935483871,
+      "delta_social_score": 0.0,
+      "predicted_delta": 0.0005581647489489664
+    }
+  ]
+}

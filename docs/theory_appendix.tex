@@ -1,0 +1,72 @@
+\section*{Appendix A: Theoretical Guarantees for MToM Agents}
+
+\subsection{Bayesian consistency for discrete mental-state hypotheses}
+
+Let $\mathcal{H} = \{h_1, \ldots, h_m\}$ denote the finite hypothesis grid used by the Bayesian mental-state tracker in \texttt{src/models/bayesian\_mental\_state.py}. Observations $O_t$ correspond to warmth/competence feedback collected by \texttt{BayesianMentalState.bayesian\_update}.
+
+\begin{theorem}[Posterior concentration]
+Assume (i) identifiability: for every $h \neq h^*$ there exists $o$ with $P_h(o) \neq P_{h^*}(o)$, and (ii) nonzero likelihoods: $P_h(o) > 0$ whenever $o$ can be generated under $h^*$. For any prior $\pi$ with full support on $\mathcal{H}$,
+\begin{equation}
+\lim_{t \to \infty} P(h^* \mid O_{1:t}) = 1 \quad \text{a.s.}
+\end{equation}
+\end{theorem}
+
+\begin{lemma}[Likelihood separation]
+Under Assumption (i), for every $h \neq h^*$ there exists $c(h) > 0$ such that
+\begin{equation}
+\limsup_{t \to \infty} \frac{1}{t} \log \frac{P(O_{1:t} \mid h)}{P(O_{1:t} \mid h^*)} \le -c(h).
+\end{equation}
+\end{lemma}
+
+\paragraph{Sketch.} Apply the strong law of large numbers to the log-likelihood ratios over the finite alphabet; Assumption (ii) keeps all terms finite, while identifiability makes the expected log-ratio strictly negative (Doob, 1949; Walker, 2004). Summing the finite set of competitors yields almost-sure posterior concentration. For the implementation, it suffices to ensure every warmth/competence bin retains positive prior mass and that observation noise models never output zero density for realised bins.
+
+\paragraph{Experimental link.} Posterior trajectories already logged by \texttt{experiments/run\_week4.py} and stored in \texttt{results/week4/raw} can be extended with log-likelihood ratios to visualise the exponential decay of discarded hypotheses.
+
+\subsection{Social intelligence as multi-objective optimisation}
+
+Define $R(\pi) = \mathbb{E}_{\pi}[\text{task reward}]$ and $S(\pi) = \mathbb{E}_{\pi}[\text{SIQ(records)}]$ using \texttt{src/metrics/siq.py}. The design goal is to maximise $J(\pi) = (R(\pi), S(\pi))$.
+
+\begin{definition}[Pareto dominance]
+Policy $\pi_a$ dominates $\pi_b$ when $R(\pi_a) \ge R(\pi_b)$ and $S(\pi_a) \ge S(\pi_b)$ with at least one strict inequality. A policy is Pareto optimal if no other policy dominates it.
+\end{definition}
+
+\begin{proposition}[Scalarisation sufficiency]
+If the SIQ component weights remain strictly positive (cf. \texttt{SIQConfig}), then every Pareto-optimal policy solves
+\begin{equation}
+\max_{\pi} (1-\lambda) R(\pi) + \lambda S(\pi)
+\end{equation}
+for some $\lambda \in [0,1]$, and every maximiser of the scalarised problem is Pareto optimal (Miettinen, 1999).
+\end{proposition}
+
+\paragraph{Sketch.} The SIQ expectation is smooth and strictly increasing in each component, so convex multi-objective results apply. In practice, $\lambda$ coincides with the \texttt{lambda\_social} knob exposed by \texttt{src/agents/bayesian\_mtom\_agent.py}. Sweeping $\lambda$ via \texttt{experiments/run\_trace\_sweep\_extended.py} plus SIQ logging in \texttt{apps/week7\_trace\_dashboard.py} traces the empirical frontier.
+
+\subsection{First-order SocialScore gain under small $\lambda$}
+
+Consider the entropy-regularised objective used in \texttt{BayesianSocialScorer.bayesian\_utility}:
+\begin{equation}
+J_{\lambda}(\pi) = \mathbb{E}_{\pi}[\text{task reward}(a)] + \lambda \mathbb{E}_{\pi}[\Delta_{\text{obs}}(a)] - \tau \, \mathrm{KL}(\pi \Vert \pi_{\text{ref}}).
+\end{equation}
+
+\begin{lemma}[Correct observer model]
+If \texttt{predict\_perception\_distribution} matches the true observer, then $\Delta_{\text{obs}}(a)$ equals the marginal change in the logged \texttt{social\_score} up to a normalisation constant $\kappa > 0$ (Ortega and Braun, 2013).
+\end{lemma}
+
+\begin{theorem}[First-order gain]
+Assume (i) $\pi_{\lambda}$ is differentiable at $\lambda = 0$, (ii) there exists an action $a$ with $\Delta_{\text{obs}}(a)$ greater than its $\pi_0$ mean, and (iii) the observer model is correct. Then for sufficiently small $\lambda > 0$,
+\begin{equation}
+\text{SocialScore}(\pi_{\lambda}) \ge \text{SocialScore}(\pi_0) + \frac{\lambda}{\tau} \operatorname{Var}_{a \sim \pi_0}[\Delta_{\text{obs}}(a)] - O(\lambda^2).
+\end{equation}
+\end{theorem}
+
+\paragraph{Sketch.} The entropy-regularised best response yields the logit form $\pi_{\lambda}(a) \propto \pi_0(a) \exp(\lambda \Delta_{\text{obs}}(a) / \tau)$, giving derivative $\partial_{\lambda} \mathbb{E}_{\pi_{\lambda}}[\Delta_{\text{obs}}] |_{\lambda=0} = \operatorname{Var}_{\pi_0}(\Delta_{\text{obs}})/\tau$. Integrating over $\lambda$ and invoking Lemma 3.1 produces the bound.
+
+\paragraph{Numerical validation.} Script \texttt{scripts/lambda\_validation.py} sweeps $\lambda \in \{0, 0.1, 0.2\}$ for seeds $\{11,17,23,29,31\}$ against the fair opponent (tau $= 1$). The resulting summary, stored in \texttt{results/week7/lambda\_validation\_summary.json}, reports $\operatorname{Var}_{\pi_0}[\Delta_{\text{obs}}] = 2.79 \times 10^{-3}$ with predicted SocialScore deltas below $6 \times 10^{-4}$; observed deltas remain at zero because every run converged to the symmetric $(5,5)$ agreement. Runs against asymmetric opponents are expected to exhibit measurable positive shifts within the same first-order slope.
+
+\subsection{References}
+
+\begin{enumerate}
+    \item Doob, J. L. (1949). \textit{Application of the theory of martingales}. Le calcul des probabilit\'es et ses applications, CNRS.
+    \item Walker, S. (2004). \textit{New approaches to Bayesian consistency}. Annals of Statistics, 32(5), 2028--2052.
+    \item Miettinen, K. (1999). \textit{Nonlinear multiobjective optimization}. Springer.
+    \item Ortega, P. A., \& Braun, D. A. (2013). \textit{Thermodynamics as a theory of decision-making with information-processing costs}. Proceedings of the Royal Society A, 469.
+\end{enumerate}
