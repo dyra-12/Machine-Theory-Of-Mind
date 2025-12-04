@@ -93,4 +93,4 @@ Observed deltas stayed at 0 because the fair opponent causes every run to end in
 - Doob, J. L. (1949). *Application of the theory of martingales*. In *Le calcul des probabilités et ses applications*, CNRS.
 - Walker, S. (2004). *New approaches to Bayesian consistency*. *Annals of Statistics*, 32(5), 2028-2052.
 - Miettinen, K. (1999). *Nonlinear multiobjective optimization*. Springer.
-- Ortega, P. A., & Braun, D. A. (2013). *Thermodynamics as a theory of decision-making with information-processing costs*. *Proceedings of the Royal Society A*, 469.
+- Ortega, P. A., & Braun, D. A. (2013). *Thermodynamics as a theory of decision-making with information-processing costs*. *Proceedings of the Royal Society A*, 469...
