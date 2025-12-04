@@ -18,6 +18,7 @@ import numpy as np
 from src.utils.config import load_config
 from src.envs.negotiation_v1 import NegotiationEnv
 from src.observers.simple_observer import SimpleObserver
+from src.observers.adversarial_observer import AdversarialObserver
 from src.social.social_score import SocialScoreFactory
 from src.agents.agent_factory import AgentFactory
 
@@ -25,7 +26,29 @@ from src.agents.agent_factory import AgentFactory
 # --- Helper factories for Week 4 conditions ---
 
 
-def create_observer(observer_type: str, warmth_weight: float, competence_weight: float) -> SimpleObserver:
+DEFAULT_ADVERSARIAL_PRESETS = {
+    "adversarial_noisy": {
+        "noise_std": 0.45,
+        "deception_prob": 0.2,
+        "dropout_prob": 0.1,
+        "bias": (-0.1, 0.05),
+    },
+    "adversarial_misleading": {
+        "noise_std": 0.3,
+        "deception_prob": 0.6,
+        "inversion_strength": 1.15,
+        "bias": (-0.35, 0.15),
+        "dropout_prob": 0.15,
+    },
+}
+
+
+def create_observer(
+    observer_type: str,
+    warmth_weight: float,
+    competence_weight: float,
+    adversarial_presets: Optional[Dict[str, Dict[str, Any]]] = None,
+) -> SimpleObserver:
     """Create different observer variants.
 
     For now we implement the variants as different weightings and
@@ -59,6 +82,17 @@ def create_observer(observer_type: str, warmth_weight: float, competence_weight:
         return SimpleObserver(warmth_weight=0.3, competence_weight=0.7)
     elif observer_type == "warmth_biased":
         return SimpleObserver(warmth_weight=0.8, competence_weight=0.2)
+    elif observer_type.startswith("adversarial"):
+        params: Dict[str, Any] = {}
+        if adversarial_presets and observer_type in adversarial_presets:
+            params = dict(adversarial_presets[observer_type])
+        elif observer_type in DEFAULT_ADVERSARIAL_PRESETS:
+            params = dict(DEFAULT_ADVERSARIAL_PRESETS[observer_type])
+        return AdversarialObserver(
+            warmth_weight=warmth_weight,
+            competence_weight=competence_weight,
+            **params,
+        )
     else:
         raise ValueError(f"Unknown observer_type: {observer_type}")
 
@@ -147,6 +181,7 @@ class Week4GeneralizationRunner:
             observer_type,
             warmth_weight=self.social_cfg["warmth_weight"],
             competence_weight=self.social_cfg["competence_weight"],
+            adversarial_presets=self.social_cfg.get("adversarial_presets"),
         )
         social_score = SocialScoreFactory.create(
             self.social_cfg["score_type"],
@@ -208,6 +243,7 @@ class Week4GeneralizationRunner:
         while not state.is_terminal() and state.current_turn < state.max_turns:
             if state.current_proposer == 0:
                 action = agent0.choose_action(state)
+                channel_feedback = observer.observe_action(state, action, agent_id=0)
                 state = env.step(state, action)
 
                 # Opponent (policy) decides to accept/reject based on what it receives
@@ -217,7 +253,13 @@ class Week4GeneralizationRunner:
                     state = env.reject_offer(state)
 
                 # Update beliefs for our agent from its own action
-                agent0.update_beliefs(state, action, True)
+                agent0.update_beliefs(
+                    state,
+                    action,
+                    True,
+                    observer_feedback=channel_feedback,
+                    feedback_reliability=getattr(observer, "reliability", 1.0),
+                )
                 opponent_policy.observe_opponent_action(action, opponent_id=1)
             else:
                 # Opponent proposes according to its policy

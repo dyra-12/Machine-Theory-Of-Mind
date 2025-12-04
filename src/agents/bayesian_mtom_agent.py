@@ -19,6 +19,8 @@ class BayesianMToMAgent:
         adaptive_prior_offset: float = 0.0,
         risk_weight: float = 0.15,
         lambda_schedule: Optional[Dict[str, float]] = None,
+        cultural_template: str = "neutral",
+        cultural_overrides: Optional[Dict[str, float]] = None,
     ):
         self.lambda_social = lambda_social
         self.agent_id = agent_id
@@ -27,15 +29,25 @@ class BayesianMToMAgent:
         self.adaptive_prior_offset = adaptive_prior_offset or 0.0
         self.risk_weight = risk_weight
         self.lambda_schedule = lambda_schedule
+        self.cultural_profile = BayesianMentalState.get_cultural_template(
+            cultural_template,
+            cultural_overrides,
+        )
+        self.cultural_template = self.cultural_profile['name']
         
         # Probabilistic mental state
         self.mental_state = BayesianMentalState(
             prior_strength=prior_strength,
             adaptive_offset=self.adaptive_prior_offset,
+            cultural_template=cultural_template,
+            cultural_overrides=cultural_overrides,
         )
         
         # Bayesian social reasoning
-        self.social_scorer = BayesianSocialScorer()
+        self.social_scorer = BayesianSocialScorer(
+            fairness_anchor=self.cultural_profile['fairness_anchor'],
+            warmth_bias=self.cultural_profile['warmth_bias'],
+        )
         
         # Decision history for analysis
         self.decision_history = []
@@ -129,7 +141,15 @@ class BayesianMToMAgent:
         else:
             return (total - offer_for_self, offer_for_self)
 
-    def update_beliefs(self, state: NegotiationState, action, response: bool, opponent_action=None):
+    def update_beliefs(
+        self,
+        state: NegotiationState,
+        action,
+        response: bool,
+        opponent_action=None,
+        observer_feedback=None,
+        feedback_reliability: Optional[float] = None,
+    ):
         """Update Bayesian beliefs after observing an interaction."""
         offer_self = action[self.agent_id]
         perception = self.social_scorer.predict_perception_distribution(offer_self, state.total_resources)
@@ -137,6 +157,15 @@ class BayesianMToMAgent:
         warmth_obs = perception['warmth_mean']
         competence_obs = perception['competence_mean']
         confidence = 0.65
+
+        if observer_feedback is not None:
+            fb_w, fb_c = observer_feedback
+            channel_w = np.clip(0.5 + 0.25 * fb_w, 0.01, 0.99)
+            channel_c = np.clip(0.5 + 0.25 * fb_c, 0.01, 0.99)
+            rel = np.clip(feedback_reliability if feedback_reliability is not None else 0.5, 0.0, 1.0)
+            warmth_obs = rel * channel_w + (1 - rel) * warmth_obs
+            competence_obs = rel * channel_c + (1 - rel) * competence_obs
+            confidence = 0.45 + 0.45 * rel
 
         # Infer acceptance/rejection from the most recent response if available
         last_response = state.responses[-1] if state.responses else None
@@ -245,4 +274,7 @@ class BayesianMToMAgent:
         }
     
     def __str__(self):
-        return f"BayesianMToM(λ={self.lambda_social}, prior_strength={self.prior_strength})"
+        return (
+            f"BayesianMToM(λ={self.lambda_social}, prior_strength={self.prior_strength}, "
+            f"culture={self.cultural_template})"
+        )

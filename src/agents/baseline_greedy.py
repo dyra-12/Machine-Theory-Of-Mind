@@ -2,7 +2,7 @@
 Greedy baseline agent - maximizes only task reward
 """
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from src.models.negotiation_state import NegotiationState
 
 class GreedyBaseline:
@@ -20,8 +20,15 @@ class GreedyBaseline:
         best_action = max(available_actions, key=lambda a: a[self.agent_id])
         return best_action
     
-    def update_beliefs(self, state: NegotiationState, action: Tuple[int, int], 
-                      response: bool, opponent_action: Tuple[int, int] = None):
+    def update_beliefs(
+        self,
+        state: NegotiationState,
+        action: Tuple[int, int],
+        response: bool,
+        opponent_action: Tuple[int, int] = None,
+        observer_feedback=None,
+        feedback_reliability: Optional[float] = None,
+    ):
         """Greedy agent doesn't update beliefs about others"""
         pass
     

@@ -42,6 +42,8 @@ class AgentFactory:
             adaptive_prior_offset = kwargs.get('adaptive_prior_offset')
             risk_weight = kwargs.get('risk_weight')
             lambda_schedule = kwargs.get('lambda_schedule')
+            cultural_template = kwargs.get('cultural_template')
+            cultural_overrides = kwargs.get('cultural_overrides')
             agent_config = {
                 'lambda_social': lambda_social,
                 'agent_id': agent_id,
@@ -53,6 +55,10 @@ class AgentFactory:
                 agent_config['risk_weight'] = risk_weight
             if lambda_schedule is not None:
                 agent_config['lambda_schedule'] = lambda_schedule
+            if cultural_template is not None:
+                agent_config['cultural_template'] = cultural_template
+            if cultural_overrides is not None:
+                agent_config['cultural_overrides'] = cultural_overrides
             return BayesianMToMAgent(**agent_config)
         
         elif agent_type == "learned_tom":

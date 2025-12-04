@@ -2,7 +2,7 @@
 Random baseline agent - chooses actions randomly
 """
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from src.models.negotiation_state import NegotiationState
 
 class RandomBaseline:
@@ -21,8 +21,15 @@ class RandomBaseline:
         idx = self.rng.choice(len(available_actions))
         return available_actions[int(idx)]
     
-    def update_beliefs(self, state: NegotiationState, action: Tuple[int, int],
-                      response: bool, opponent_action: Tuple[int, int] = None):
+    def update_beliefs(
+        self,
+        state: NegotiationState,
+        action: Tuple[int, int],
+        response: bool,
+        opponent_action: Tuple[int, int] = None,
+        observer_feedback=None,
+        feedback_reliability: Optional[float] = None,
+    ):
         """Random agent doesn't update beliefs"""
         pass
     

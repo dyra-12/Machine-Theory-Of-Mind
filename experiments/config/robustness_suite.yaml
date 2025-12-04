@@ -1,0 +1,65 @@
+experiment:
+  name: "robustness_suite"
+  num_seeds: 1
+  runs_per_config: 3
+
+environment:
+  type: "negotiation_v1"
+  total_resources: 10
+  max_turns: 3
+
+channels:
+  - name: "clean_reference"
+    type: "simple"
+    params: {}
+  - name: "noisy_channel"
+    type: "adversarial"
+    params:
+      noise_std: 0.45
+      deception_prob: 0.2
+      dropout_prob: 0.15
+      bias: [-0.1, 0.05]
+  - name: "misleading_feedback"
+    type: "adversarial"
+    params:
+      noise_std: 0.3
+      deception_prob: 0.65
+      inversion_strength: 1.2
+      bias: [-0.35, 0.15]
+      dropout_prob: 0.2
+
+domain_shifts:
+  - name: "scarce_resources"
+    total_resources: 6
+    max_turns: 4
+    stakes: "low"
+  - name: "abundant_long"
+    total_resources: 18
+    max_turns: 8
+    stakes: "high"
+  - name: "imbalanced"
+    total_resources: 12
+    max_turns: 5
+    stakes: "shifted"
+
+opponents:
+  pure_types: ["fair", "concession"]
+  mixes:
+    - name: "mixed_unstable"
+      pool: ["fair", "tit_for_tat", "unpredictable"]
+    - name: "chaotic"
+      pool: ["concession", "unpredictable"]
+
+agents:
+  types: ["simple_mtom", "bayesian_mtom"]
+  lambda_social: [0.5, 1.2]
+  bayesian_prior_strengths: [6.0, 12.0]
+  cultural_template: "collectivist"
+
+social_config:
+  score_type: "linear"
+  warmth_weight: 0.6
+  competence_weight: 0.4
+
+output:
+  directory: "results/week7/robustness_suite"

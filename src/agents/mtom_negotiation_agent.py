@@ -2,7 +2,7 @@
 Enhanced MToM agent with proper lambda integration
 """
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Optional
 from src.models.mental_states import MentalState
 from src.models.negotiation_state import NegotiationState
 from src.social.social_scorer import SocialScorer
@@ -50,13 +50,29 @@ class MToM_NegotiationAgent:
                 best_action = action
         
         return best_action
+
+    def make_offer(self, state: NegotiationState) -> int:
+        """Compatibility shim: return the integer share for this agent (used in tests)."""
+        action = self.choose_action(state)
+        return int(action[self.agent_id])
     
-    def update_beliefs(self, state: NegotiationState, action: Tuple[int, int],
-                      response: bool, opponent_action: Tuple[int, int] = None):
+    def update_beliefs(
+        self,
+        state: NegotiationState,
+        action: Tuple[int, int],
+        response: bool,
+        opponent_action: Tuple[int, int] = None,
+        observer_feedback=None,
+        feedback_reliability: Optional[float] = None,
+    ):
         """Update mental state based on interaction"""
-        w_delta, c_delta = self.social_scorer.observe_action(state, action, self.agent_id)
-        self.mental_state.warmth = np.clip(self.mental_state.warmth + 0.3 * w_delta, 0.0, 1.0)
-        self.mental_state.competence = np.clip(self.mental_state.competence + 0.3 * c_delta, 0.0, 1.0)
+        if observer_feedback is not None:
+            w_delta, c_delta = observer_feedback
+        else:
+            w_delta, c_delta = self.social_scorer.observe_action(state, action, self.agent_id)
+        gain = 0.3 * (0.5 + 0.5 * (feedback_reliability if feedback_reliability is not None else 1.0))
+        self.mental_state.warmth = np.clip(self.mental_state.warmth + gain * w_delta, 0.0, 1.0)
+        self.mental_state.competence = np.clip(self.mental_state.competence + gain * c_delta, 0.0, 1.0)
     
     def get_mental_state(self):
         return self.mental_state

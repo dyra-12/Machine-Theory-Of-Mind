@@ -19,6 +19,19 @@ class NegotiationState:
     offers: List[Tuple[int, int]] = field(default_factory=list)
     responses: List[bool] = field(default_factory=list)
     final_agreement: Optional[Tuple[int, int]] = None
+    # Backwards-compatible constructor args used in some tests/scripts
+    our_offer: Optional[int] = None
+    their_offer: Optional[int] = None
+
+    def __post_init__(self):
+        # If legacy convenience args provided, populate the offers list
+        if self.our_offer is not None and self.their_offer is not None:
+            # Avoid duplicating if offers already provided
+            if not self.offers:
+                self.offers = [(int(self.our_offer), int(self.their_offer))]
+            # If final_agreement was not set, set it from the provided pair
+            if self.final_agreement is None:
+                self.final_agreement = (int(self.our_offer), int(self.their_offer))
 
     def is_terminal(self) -> bool:
         """Return True when negotiation has reached a terminal state.

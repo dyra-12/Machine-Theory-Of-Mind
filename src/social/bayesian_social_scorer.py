@@ -9,58 +9,62 @@ class BayesianSocialScorer:
     Final scaling fix to ensure social rewards properly influence decisions.
     """
     
-    def __init__(self):
+    def __init__(self, fairness_anchor: float = 0.5, warmth_bias: float = 0.0):
         # Individual differences model
         self.judgment_heterogeneity = 0.1
+        self.fairness_anchor = float(np.clip(fairness_anchor, 0.05, 0.95))
+        self.warmth_bias = float(np.clip(warmth_bias, -0.3, 0.3))
     
     def predict_perception_distribution(self, offer_self: int, total_resources: int) -> Dict:
         """
         Predicts human perceptions based on established psychological research.
         """
         ratio = offer_self / total_resources
+        # Shift what counts as "fair" based on culturally-informed fairness anchor.
+        adjusted_ratio = np.clip(ratio - (self.fairness_anchor - 0.5), 0.0, 1.0)
         
-        if ratio <= 0.2:  # Extremely generous (1-2/10)
-            return {
+        if adjusted_ratio <= 0.2:  # Extremely generous (1-2/10)
+            dist = {
                 'warmth_mean': 0.95, 
                 'competence_mean': 0.15, 
                 'warmth_std': 0.08,
                 'competence_std': 0.12,
                 'category': 'extremely_generous'
             }
-        elif ratio <= 0.35:  # Generous (3-4/10)
-            return {
+        elif adjusted_ratio <= 0.35:  # Generous (3-4/10)
+            dist = {
                 'warmth_mean': 0.85,
                 'competence_mean': 0.45,
                 'warmth_std': 0.10, 
                 'competence_std': 0.15,
                 'category': 'generous'
             }
-        elif ratio <= 0.45:  # Slightly generous (4-5/10)
-            return {
+        elif adjusted_ratio <= 0.45:  # Slightly generous (4-5/10)
+            dist = {
                 'warmth_mean': 0.75,
                 'competence_mean': 0.65,
                 'warmth_std': 0.12,
                 'competence_std': 0.12,
                 'category': 'slightly_generous'
             }
-        elif ratio <= 0.55:  # Fair (5-6/10)
-            return {
+        elif adjusted_ratio <= 0.55:  # Fair (5-6/10)
+            dist = {
                 'warmth_mean': 0.65,
                 'competence_mean': 0.75, 
                 'warmth_std': 0.10,
                 'competence_std': 0.10,
                 'category': 'fair'
             }
-        elif ratio <= 0.70:  # Slightly selfish (6-7/10)
-            return {
+        elif adjusted_ratio <= 0.70:  # Slightly selfish (6-7/10)
+            dist = {
                 'warmth_mean': 0.45,
                 'competence_mean': 0.85,
                 'warmth_std': 0.15,
                 'competence_std': 0.08,
                 'category': 'slightly_selfish'
             }
-        elif ratio <= 0.85:  # Selfish (7-9/10)
-            return {
+        elif adjusted_ratio <= 0.85:  # Selfish (7-9/10)
+            dist = {
                 'warmth_mean': 0.25,
                 'competence_mean': 0.70,
                 'warmth_std': 0.12,
@@ -68,13 +72,17 @@ class BayesianSocialScorer:
                 'category': 'selfish'
             }
         else:  # Extremely selfish (9-10/10)
-            return {
+            dist = {
                 'warmth_mean': 0.10,
                 'competence_mean': 0.30,
                 'warmth_std': 0.08,
                 'competence_std': 0.15,
                 'category': 'extremely_selfish'
             }
+        dist['warmth_mean'] = float(np.clip(dist['warmth_mean'] + self.warmth_bias, 0.01, 0.99))
+        dist['raw_ratio'] = ratio
+        dist['adjusted_ratio'] = adjusted_ratio
+        return dist
     
     def bayesian_utility(self, offer_self: int, mental_state: BayesianMentalState,
                         lambda_social: float, total_resources: int) -> Dict:

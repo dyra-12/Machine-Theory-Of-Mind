@@ -1,7 +1,28 @@
 import numpy as np
 import pymc as pm
 import arviz as az
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
+
+CULTURAL_PRIOR_TEMPLATES = {
+    'neutral': {
+        'prior_warmth': 0.5,
+        'prior_competence': 0.5,
+        'fairness_anchor': 0.5,
+        'warmth_bias': 0.0
+    },
+    'individualist': {
+        'prior_warmth': 0.45,
+        'prior_competence': 0.58,
+        'fairness_anchor': 0.6,
+        'warmth_bias': -0.03
+    },
+    'collectivist': {
+        'prior_warmth': 0.58,
+        'prior_competence': 0.5,
+        'fairness_anchor': 0.47,
+        'warmth_bias': 0.04
+    }
+}
 
 class BayesianMentalState:
     """
@@ -9,26 +30,46 @@ class BayesianMentalState:
     Models warmth and competence as probability distributions with uncertainty.
     """
     
-    def __init__(self, prior_warmth: float = 0.5, prior_competence: float = 0.5,
-                 prior_strength: float = 10.0, adaptive_offset: float = 0.0):
-        self.prior_warmth = prior_warmth
-        self.prior_competence = prior_competence
+    def __init__(self, prior_warmth: Optional[float] = None, prior_competence: Optional[float] = None,
+                 prior_strength: float = 10.0, adaptive_offset: float = 0.0,
+                 cultural_template: str = 'neutral', cultural_overrides: Optional[Dict[str, float]] = None):
+        self.cultural_profile = self.get_cultural_template(cultural_template, cultural_overrides)
+
+        resolved_warmth = self.cultural_profile['prior_warmth'] if prior_warmth is None else prior_warmth
+        resolved_competence = self.cultural_profile['prior_competence'] if prior_competence is None else prior_competence
+
+        self.prior_warmth = float(np.clip(resolved_warmth, 0.01, 0.99))
+        self.prior_competence = float(np.clip(resolved_competence, 0.01, 0.99))
         self.prior_strength = prior_strength  # Equivalent to "pseudo-observations"
         self.adaptive_offset = adaptive_offset
+        self.fairness_anchor = float(np.clip(self.cultural_profile['fairness_anchor'], 0.05, 0.95))
+        self.warmth_bias = float(np.clip(self.cultural_profile['warmth_bias'], -0.25, 0.25))
         
         # Current beliefs (will be updated via Bayesian inference)
-        self.warmth_belief = np.clip(prior_warmth + adaptive_offset, 0.01, 0.99)
-        self.competence_belief = np.clip(prior_competence + adaptive_offset, 0.01, 0.99)
+        self.warmth_belief = np.clip(self.prior_warmth + adaptive_offset, 0.01, 0.99)
+        self.competence_belief = np.clip(self.prior_competence + adaptive_offset, 0.01, 0.99)
         self.warmth_uncertainty = 0.3  # Standard deviation
         self.competence_uncertainty = 0.3
         
         # Track belief history
         self.belief_history = {
-            'warmth': [prior_warmth],
-            'competence': [prior_competence],
+            'warmth': [self.prior_warmth],
+            'competence': [self.prior_competence],
             'warmth_uncertainty': [0.3],
             'competence_uncertainty': [0.3]
         }
+
+    @classmethod
+    def get_cultural_template(cls, template_name: str, overrides: Optional[Dict[str, float]] = None) -> Dict[str, float]:
+        """Resolve a cultural template with optional overrides for experiments."""
+        normalized = (template_name or 'neutral').lower()
+        if normalized not in CULTURAL_PRIOR_TEMPLATES:
+            normalized = 'neutral'
+        template = {**CULTURAL_PRIOR_TEMPLATES[normalized]}
+        if overrides:
+            template.update(overrides)
+        template['name'] = normalized
+        return template
     
     def bayesian_update(self, observed_warmth: float, observed_competence: float, 
                     observation_confidence: float = 0.7) -> None:

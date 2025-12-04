@@ -55,3 +55,17 @@ class SimpleObserver:
     def create_initial_mental_state(self) -> MentalState:
         """Create initial mental state using your existing model"""
         return MentalState(warmth=0.5, competence=0.5)
+
+    @property
+    def reliability(self) -> float:
+        """Channel reliability score used to scale observation confidence."""
+        return 1.0
+
+    def describe_channel(self) -> dict:
+        return {
+            'noise_std': 0.0,
+            'deception_prob': 0.0,
+            'dropout_prob': 0.0,
+            'reliability': self.reliability,
+            'type': 'simple'
+        }
