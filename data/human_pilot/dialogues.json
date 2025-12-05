@@ -1,0 +1,62 @@
+[
+  {
+    "id": "MTOM-01",
+    "agent_type": "MToM",
+    "text": "Human: I really need two of the shared components by Tuesday so my team can test.\nAgent: I hear that urgency. I can take on the lead integration task and deliver by Monday, then follow with documentation before your deadline.\nHuman: That would help us stay on track."
+  },
+  {
+    "id": "BASE-01",
+    "agent_type": "Baseline",
+    "text": "Human: Can we split the design work tonight?\nAgent: I can draft a plan and send it after my shift.\nHuman: Thanks."
+  },
+  {
+    "id": "MTOM-02",
+    "agent_type": "MToM",
+    "text": "Human: I’m worried about the other team dismissing our proposal.\nAgent: I can highlight the shared benefits and suggest a quick checkpoint with their lead to align interests before the review.\nHuman: That reassurance is useful."
+  },
+  {
+    "id": "BASE-02",
+    "agent_type": "Baseline",
+    "text": "Human: We have to choose between two vendors.\nAgent: The second vendor offers lower cost.\nHuman: Okay, let’s go with them."
+  },
+  {
+    "id": "MTOM-03",
+    "agent_type": "MToM",
+    "text": "Human: The negotiation flow keeps hitting a wall on priorities.\nAgent: Let me reframe the options by ranking the shared goals, then we can swap concessions that keep the other person’s win intact.\nHuman: That reframing makes the discussion calmer."
+  },
+  {
+    "id": "BASE-03",
+    "agent_type": "Baseline",
+    "text": "Human: I need a follow-up summary with numbers.\nAgent: I’ll email you the summary tonight.\nHuman: Perfect."
+  },
+  {
+    "id": "MTOM-04",
+    "agent_type": "MToM",
+    "text": "Human: I feel like I’m being cut off in this multi-party call.\nAgent: I can signal for a pause, suggest each party share a concern, and then recap to keep everyone in sync.\nHuman: Please do that."
+  },
+  {
+    "id": "BASE-04",
+    "agent_type": "Baseline",
+    "text": "Human: Can you remind me of the earliest deadline?\nAgent: The deadline is Friday.\nHuman: Thanks."
+  },
+  {
+    "id": "MTOM-05",
+    "agent_type": "MToM",
+    "text": "Human: The other negotiator seems defensive about resources.\nAgent: I’ll acknowledge their limits, suggest a small shared task to build trust, and then revisit the resource split.\nHuman: That might ease the tension."
+  },
+  {
+    "id": "BASE-05",
+    "agent_type": "Baseline",
+    "text": "Human: I’m not sure which bullet point to add.\nAgent: Add the first bullet point.\nHuman: Done."
+  },
+  {
+    "id": "MTOM-06",
+    "agent_type": "MToM",
+    "text": "Human: If I give up the timeline, I need more clarity on the next steps.\nAgent: I can write a follow-up path with milestones and share it now so you can confirm the version and stay confident.\nHuman: That detail helps."
+  },
+  {
+    "id": "BASE-06",
+    "agent_type": "Baseline",
+    "text": "Human: What’s our status on that report?\nAgent: We are on track.\nHuman: Great."
+  }
+]
