@@ -20,7 +20,7 @@ Under Assumption (i), for every $h \neq h^*$ there exists $c(h) > 0$ such that
 
 \paragraph{Sketch.} Apply the strong law of large numbers to the log-likelihood ratios over the finite alphabet; Assumption (ii) keeps all terms finite, while identifiability makes the expected log-ratio strictly negative (Doob, 1949; Walker, 2004). Summing the finite set of competitors yields almost-sure posterior concentration. For the implementation, it suffices to ensure every warmth/competence bin retains positive prior mass and that observation noise models never output zero density for realised bins.
 
-\paragraph{Experimental link.} Posterior trajectories already logged by \texttt{experiments/run\_week4.py} and stored in \texttt{results/week4/raw} can be extended with log-likelihood ratios to visualise the exponential decay of discarded hypotheses.
+\paragraph{Experimental link.} Posterior trajectories already logged by \texttt{experiments/run\_week4.py} and archived in \texttt{docs/internal/results/week4/analysis\_report.md} can be extended with log-likelihood ratios to visualise the exponential decay of discarded hypotheses.
 
 \subsection{Social intelligence as multi-objective optimisation}
 
@@ -38,7 +38,7 @@ If the SIQ component weights remain strictly positive (cf. \texttt{SIQConfig}), 
 for some $\lambda \in [0,1]$, and every maximiser of the scalarised problem is Pareto optimal (Miettinen, 1999).
 \end{proposition}
 
-\paragraph{Sketch.} The SIQ expectation is smooth and strictly increasing in each component, so convex multi-objective results apply. In practice, $\lambda$ coincides with the \texttt{lambda\_social} knob exposed by \texttt{src/agents/bayesian\_mtom\_agent.py}. Sweeping $\lambda$ via \texttt{experiments/run\_trace\_sweep\_extended.py} plus SIQ logging in \texttt{apps/week7\_trace\_dashboard.py} traces the empirical frontier.
+\paragraph{Sketch.} The SIQ expectation is smooth and strictly increasing in each component, so convex multi-objective results apply. In practice, $\lambda$ coincides with the \texttt{lambda\_social} knob exposed by \texttt{src/agents/bayesian\_mtom\_agent.py}. Sweeping $\lambda$ via \texttt{experiments/run\_trace\_sweep\_extended.py} plus SIQ logging in \texttt{demo/trace\_dashboard.py} traces the empirical frontier.
 
 \subsection{First-order SocialScore gain under small $\lambda$}
 
@@ -60,7 +60,7 @@ Assume (i) $\pi_{\lambda}$ is differentiable at $\lambda = 0$, (ii) there exists
 
 \paragraph{Sketch.} The entropy-regularised best response yields the logit form $\pi_{\lambda}(a) \propto \pi_0(a) \exp(\lambda \Delta_{\text{obs}}(a) / \tau)$, giving derivative $\partial_{\lambda} \mathbb{E}_{\pi_{\lambda}}[\Delta_{\text{obs}}] |_{\lambda=0} = \operatorname{Var}_{\pi_0}(\Delta_{\text{obs}})/\tau$. Integrating over $\lambda$ and invoking Lemma 3.1 produces the bound.
 
-\paragraph{Numerical validation.} Script \texttt{scripts/lambda\_validation.py} sweeps $\lambda \in \{0, 0.1, 0.2\}$ for seeds $\{11,17,23,29,31\}$ against the fair opponent (tau $= 1$). The resulting summary, stored in \texttt{results/week7/lambda\_validation\_summary.json}, reports $\operatorname{Var}_{\pi_0}[\Delta_{\text{obs}}] = 2.79 \times 10^{-3}$ with predicted SocialScore deltas below $6 \times 10^{-4}$; observed deltas remain at zero because every run converged to the symmetric $(5,5)$ agreement. Runs against asymmetric opponents are expected to exhibit measurable positive shifts within the same first-order slope.
+\paragraph{Numerical validation.} Script \texttt{tools/validate\_lambda.py} sweeps $\lambda \in \{0, 0.1, 0.2\}$ for seeds $\{11,17,23,29,31\}$ against the fair opponent (tau $= 1$). The resulting summary, stored in \texttt{results/week7/lambda\_validation\_summary.json}, reports $\operatorname{Var}_{\pi_0}[\Delta_{\text{obs}}] = 2.79 \times 10^{-3}$ with predicted SocialScore deltas below $6 \times 10^{-4}$; observed deltas remain at zero because every run converged to the symmetric $(5,5)$ agreement. Runs against asymmetric opponents are expected to exhibit measurable positive shifts within the same first-order slope.
 
 \subsection{References}
 

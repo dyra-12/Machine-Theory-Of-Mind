@@ -20,7 +20,7 @@ limsup_{t -> infinity} (1 / t) log [ P(O_1:t | h) / P(O_1:t | h*) ] <= -c(h).
 
 **Proof sketch.** The lemma follows from the strong law of large numbers applied to log-likelihood ratios with finite alphabet observations. Nonzero likelihoods rule out divisions by zero, while identifiability makes the expected log-ratio negative for h \neq h\*. Summing the finite number of competitors bounds the posterior denominator, yielding almost-sure concentration on h\* by standard Bayesian consistency (e.g., Doob, 1949). For our agents, H can index discrete warmth/competence bins inside `src/models/bayesian_mental_state.py`, so the conditions reduce to requiring that every bin retains strictly positive weight in the prior and the observation channel used in `BayesianMentalState.bayesian_update` never assigns zero likelihood to realised bins.
 
-**Experimental hook.** `experiments/config/week5_bayesian_sweep.yaml` and `src/experiments/run_week4.py` already log posterior trajectories; to verify the statement we can log likelihood ratios per hypothesis ID and confirm exponential decay for rejected bins during the week3/4 replay ablations in `results/week3/raw` and `results/week4/raw`.
+**Experimental hook.** `experiments/config/week5_bayesian_sweep.yaml` and `src/experiments/run_week4.py` already log posterior trajectories; to verify the statement we can log likelihood ratios per hypothesis ID and confirm exponential decay for rejected bins during the week3/4 replay ablations archived in `docs/internal/results/week3/analysis_report.md` and `docs/internal/results/week4/analysis_report.md`.
 
 ## 2. Social Intelligence as Multi-Objective Optimization
 
@@ -42,7 +42,7 @@ max_pi  (1 - lambda) R(pi) + lambda S(pi)
 
 for some lambda in [0, 1], and conversely every optimizer of the scalarized problem is Pareto optimal.
 
-**Proof sketch.** Standard convex multi-objective arguments apply once SIQ is treated as a smooth expectation over episodic traces. Positivity of SIQ weights ensures strict monotonicity, preventing flat faces where scalarization could miss extreme points. In practice lambda corresponds to `lambda_social` in `src/agents/bayesian_mtom_agent.py`, with S(pi) approximated by the logged SIQ components stored by `apps/week7_trace_dashboard.py`. Choosing lambda from `{0.1, 0.3, 0.5, 0.7}` traces the empirical Pareto frontier when we run `experiments/run_experiment.py` or the week7 trace sweeps.
+**Proof sketch.** Standard convex multi-objective arguments apply once SIQ is treated as a smooth expectation over episodic traces. Positivity of SIQ weights ensures strict monotonicity, preventing flat faces where scalarization could miss extreme points. In practice lambda corresponds to `lambda_social` in `src/agents/bayesian_mtom_agent.py`, with S(pi) approximated by the logged SIQ components stored by `demo/trace_dashboard.py`. Choosing lambda from `{0.1, 0.3, 0.5, 0.7}` traces the empirical Pareto frontier when we run `experiments/run_experiment.py` or the week7 trace sweeps.
 
 **Experimental hook.** `experiments/run_trace_sweep_extended.py` already sweeps opponent policies; adding a lambda grid and logging `(R, S)` pairs lets us build Pareto plots in `results/week7/plots`. Scripts `results/week5/final_combined_report.md` and `results/week5/stats_summary.json` provide templates for summarizing dominated policies.
 
@@ -72,7 +72,7 @@ In particular SocialScore(pi_lambda) > SocialScore(pi_0) whenever the variance t
 
 ### Numerical validation (lambda in {0, 0.1, 0.2})
 
-The utility script `scripts/lambda_validation.py` now automates the requested micro-sweep by calling `run_traceable_episode` for seeds {11, 17, 23, 29, 31} against the fair opponent and persisting summaries to `results/week7/lambda_validation_summary.json`. The latest run (tau = 1.0 assumption) produced
+The utility script `tools/validate_lambda.py` now automates the requested micro-sweep by calling `run_traceable_episode` for seeds {11, 17, 23, 29, 31} against the fair opponent and persisting summaries to `results/week7/lambda_validation_summary.json`. The latest run (tau = 1.0 assumption) produced
 
 ```
 Var_{pi_0}[Delta_obs] = 2.79e-3,
@@ -86,7 +86,7 @@ Observed deltas stayed at 0 because the fair opponent causes every run to end in
 
 ---
 
-**Next Steps.** (1) Instrument `BayesianMentalState` to export per-hypothesis likelihood ratios so the convergence guarantee is visible in `results/week4/analysis_report.md`. (2) Extend the dashboard in `apps/week7_trace_dashboard.py` to overlay the `(R, S)` Pareto front. (3) Automate the lambda micro-sweep to validate Theorem 3.2 before uploading the preprint.
+**Next Steps.** (1) Instrument `BayesianMentalState` to export per-hypothesis likelihood ratios so the convergence guarantee is visible in `docs/internal/results/week4/analysis_report.md`. (2) Extend the dashboard in `demo/trace_dashboard.py` to overlay the `(R, S)` Pareto front. (3) Automate the lambda micro-sweep to validate Theorem 3.2 before uploading the preprint.
 
 ## References
 

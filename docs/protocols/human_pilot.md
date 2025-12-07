@@ -1,7 +1,7 @@
 # Human Pilot Survey Protocol
 
 ## Overview
-This pilot invites participants to read short dialogues between a human and two versions of an agent (MToM vs baseline) and rate each in terms of warmth, competence, and trust. The interface is served by `apps/human_pilot_survey.py`, which randomizes dialogue order per participant, collects the three sliders, and records each response with a completion code for Prolific verification.
+This pilot invites participants to read short dialogues between a human and two versions of an agent (MToM vs baseline) and rate each in terms of warmth, competence, and trust. The interface is served by `demo/human_pilot_app.py`, which randomizes dialogue order per participant, collects the three sliders, and records each response with a completion code for Prolific verification.
 
 ## Consent text
 Participants see this text before the survey begins:
@@ -30,7 +30,7 @@ Responses are appended to `data/human_pilot/pilot_ratings.csv` with the followin
 - `warmth`, `competence`, `trust` – slider values (1–7)
 - `completion_code` – generated code used for participant verification
 
-A copy of the dataset is written to `results/week10/pilot_ratings_combined.csv` and the averages by agent type are stored in `results/week10/agent_means.csv`. `scripts/analyze_human_pilot_responses.py` reloads the saved CSV, recomputes averages, and produces a bar chart (`results/week10/agent_comparison.png`).
+A copy of the dataset is written to `results/week10/pilot_ratings_combined.csv` and the averages by agent type are stored in `results/week10/agent_means.csv`. `tools/analyze_human_pilot.py` reloads the saved CSV, recomputes averages, and produces a bar chart (`results/week10/agent_comparison.png`).
 
 ## Ethical considerations
 - The study logs no personal identifiers. Only timestamps, dialogue IDs, and generated completion codes are stored.

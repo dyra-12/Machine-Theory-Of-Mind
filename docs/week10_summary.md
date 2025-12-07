@@ -15,4 +15,4 @@ The averages above are saved as `results/week10/agent_means.csv`, and the bar ch
 
 ## Next steps
 1. Share the `results/week10/agent_comparison.png` image alongside the pilot write-up so stakeholders can visually confirm the performance gap.
-2. When real participants are collected, rerun `scripts/analyze_human_pilot_responses.py` to refresh the results and PoC the differences documented here.
+2. When real participants are collected, rerun `tools/analyze_human_pilot.py` to refresh the results and PoC the differences documented here.
