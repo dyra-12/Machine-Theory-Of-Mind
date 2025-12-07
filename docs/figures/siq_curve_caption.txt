@@ -1,0 +1,7 @@
+SIQ Curve: Social Intelligence Quotient (SIQ) as a function of social weight \u03bb.
+
+This visualization shows how the composite SIQ metric varies with the
+scalarization parameter \u03bb used in the agent's objective. The curve
+summarizes mean SIQ across multiple seeds and opponent types.
+
+Source: `results/week5/plots/siq_task_tradeoff.png`

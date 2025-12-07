@@ -1,0 +1,8 @@
+Pareto Frontier: Trade-off between task reward and Social Intelligence Quotient (SIQ).
+
+This figure shows the empirical Pareto frontier computed from the Week 5
+Bayesian sweep. Each point corresponds to a policy configuration (scalarized
+by \u03bb social weight) and plots task utility on the x-axis vs SIQ on the
+y-axis. Publication-quality figure: 1200x800 px, vector-friendly colors.
+
+Source: `results/week5/plots/pareto_utility_vs_adaptation.png`

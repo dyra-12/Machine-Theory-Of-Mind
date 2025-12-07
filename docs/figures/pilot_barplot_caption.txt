@@ -1,0 +1,8 @@
+Human Pilot Bar Plot: Mean ratings (Warmth, Competence, Trust) by agent type.
+
+Bar plot shows averaged 7-point Likert scores collected in the Week 10 pilot
+study (N = 25). Error bars are standard error of the mean. This plot is used
+to validate whether MToM agents are perceived significantly differently from
+baseline agents.
+
+Source: `results/week10/agent_comparison.png`
