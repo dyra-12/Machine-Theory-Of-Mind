@@ -9,7 +9,9 @@
 
 ## Saved responses
 - Every participant session produces a set of rows that are timestamped in UTC; the script also creates a completion code of the form `HUMTOMXXXX`.
-- Participant count: the current pilot snapshot contains **25** responses (see `results/week10/pilot_ratings_combined.csv` for cleaned data). Future runs will increase this count as new sessions are collected.
+- <!-- PILOT_COUNT:START -->
+Participant count: the current pilot snapshot contains **25** responses (last updated: 2025-12-07 19:43:52 UTC).
+<!-- PILOT_COUNT:END -->
 - Rating scales: participants rated each dialogue on three 7-point Likert scales: **Warmth**, **Competence**, and **Trust** (1 = lowest, 7 = highest).
 - No raw free-text from participants is stored in the published dataset; only the structured slider ratings and anonymized metadata (timestamp, dialogue id, agent type, completion code) are retained.
 - The dataset currently contains 25 synthetic yet human-like responses created via helper scripts in the repo (see `tools/analyze_human_pilot.py` for the exact pipeline that rebuilds/aggregates the dataset).

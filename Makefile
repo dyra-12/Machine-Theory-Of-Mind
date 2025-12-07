@@ -3,6 +3,8 @@ PIP ?= pip
 
 .PHONY: install test reproduce demo
 
+.PHONY: update-pilot
+
 install:
 	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
@@ -18,3 +20,7 @@ reproduce:
 demo:
 	# Launch interactive trace dashboard (Streamlit)
 	streamlit run demo/trace_dashboard.py
+
+update-pilot:
+	# Update the human pilot README with the current participant count
+	$(PY) tools/update_human_pilot_readme.py
