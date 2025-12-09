@@ -322,6 +322,37 @@ class Week4GeneralizationRunner:
             "final_agreement": state.final_agreement,
             "num_turns": state.current_turn,
         }
+        # Attempt to log agent's predicted perceptions so SIQ TOM can be computed.
+        try:
+            # Preferred API: agent provides current beliefs with uncertainty
+            if hasattr(agent0, "get_current_beliefs"):
+                cb = agent0.get_current_beliefs()
+                pw = cb.get("warmth", {}).get("mean")
+                pc = cb.get("competence", {}).get("mean")
+                if pw is not None:
+                    result["predicted_warmth"] = float(pw)
+                if pc is not None:
+                    result["predicted_competence"] = float(pc)
+            else:
+                # Fallback: use agent mental state view if available
+                ms = agent0.get_mental_state()
+                if ms is not None:
+                    try:
+                        result["predicted_warmth"] = float(ms.warmth)
+                        result["predicted_competence"] = float(ms.competence)
+                    except Exception:
+                        pass
+
+            # Also synthesize a predicted social score using the same social scorer
+            if "predicted_warmth" in result and "predicted_competence" in result:
+                pred_ms = type("MS", (object,), {"warmth": result["predicted_warmth"], "competence": result["predicted_competence"]})
+                try:
+                    result["predicted_social_score"] = float(social_score.compute(pred_ms))
+                except Exception:
+                    pass
+        except Exception:
+            # Non-critical: continue even if prediction logging fails
+            pass
         return result
 
     def run(self) -> List[Dict[str, Any]]:

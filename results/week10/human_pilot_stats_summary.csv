@@ -1,0 +1,4 @@
+metric,n_pairs,mean_a,mean_b,mean_diff,t_stat,p_t,w_stat,p_w,cohens_d,ci_lower,ci_upper
+warmth,0,,,,,,,,,,
+competence,0,,,,,,,,,,
+trust,0,,,,,,,,,,
