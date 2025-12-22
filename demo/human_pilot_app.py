@@ -1,8 +1,8 @@
 """
-Human Pilot Survey App
-======================
-A Gradio-based survey for collecting warmth, competence, and trust ratings
-on short human-agent dialogues.
+Human Pilot Survey App - Enhanced UI
+=====================================
+A beautifully designed Gradio-based survey for collecting warmth, competence, 
+and trust ratings on short human-agent dialogues.
 """
 import csv
 import json
@@ -68,9 +68,10 @@ def save_response(
 def format_dialogue(text: str) -> str:
     """Format dialogue text with clear line breaks and speaker labels."""
     formatted = text.strip()
-    formatted = formatted.replace("Human:", "\n\n👤 **Human:**")
-    formatted = formatted.replace("Agent:", "\n\n🤖 **Agent:**")
-    return formatted.strip()
+    formatted = formatted.replace("Human:", '<div style="margin: 20px 0;"><span style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;">👤 Human</span><div style="background: #f8f9ff; padding: 20px; border-radius: 12px; margin-top: 8px; line-height: 1.8; color: #1e293b; border-left: 4px solid #667eea;">')
+    formatted = formatted.replace("Agent:", '</div></div><div style="margin: 20px 0;"><span style="display: inline-block; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;">🤖 Agent</span><div style="background: #fff5f7; padding: 20px; border-radius: 12px; margin-top: 8px; line-height: 1.8; color: #1e293b; border-left: 4px solid #f093fb;">')
+    formatted += '</div></div>'
+    return formatted
 
 
 def start_study() -> tuple:
@@ -89,7 +90,7 @@ def start_study() -> tuple:
         gr.update(value=4),        # Reset warmth
         gr.update(value=4),        # Reset competence
         gr.update(value=4),        # Reset trust
-        gr.update(value=""),     # Clear thank-you message
+        gr.update(value=""),       # Clear thank-you message
         session,
     )
 
@@ -125,34 +126,22 @@ def record_and_next(
     # Check if we're done
     if next_index >= len(order):
         completion_message = f"""
----
-
-### 🎊 Congratulations!
-
-You have completed all **{len(order)} dialogues**.
-
----
-
-**Your completion code:**
-
-<div style="
-    background: #ffffff;
-    border: 2px dashed #28a745;
-    border-radius: 8px;
-    padding: 16px 32px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-family: monospace;
-    color: #155724;
-    display: inline-block;
-    margin: 16px 0;
-">{session['completion_code']}</div>
-
----
-
-*Please copy this code and paste it in Prolific to confirm your participation.*
-
-Thank you for your valuable contribution to our research! 🙏
+<div style="text-align: center; padding: 40px 20px;">
+    <div style="font-size: 4rem; margin-bottom: 20px;">🎊</div>
+    <h1 style="color: #1e293b; font-size: 2.5rem; margin-bottom: 16px; font-weight: 700;">Congratulations!</h1>
+    <p style="font-size: 1.2rem; color: #475569; margin-bottom: 32px;">You have completed all <strong style="color: #0f172a;">{len(order)} dialogues</strong>.</p>
+    
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; border-radius: 20px; margin: 32px auto; max-width: 500px; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);">
+        <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Your Completion Code</p>
+        <div style="background: white; padding: 20px 32px; border-radius: 12px; font-size: 2rem; font-weight: 800; color: #667eea; font-family: 'Courier New', monospace; letter-spacing: 3px;">{session['completion_code']}</div>
+    </div>
+    
+    <p style="font-size: 1rem; color: #475569; max-width: 500px; margin: 0 auto; line-height: 1.6;">Please copy this code and paste it in Prolific to confirm your participation.</p>
+    
+    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e2e8f0;">
+        <p style="font-size: 1.1rem; color: #1e293b;">Thank you for your valuable contribution to our research! 🙏</p>
+    </div>
+</div>
 """
         return (
             gr.update(value=""),
@@ -182,187 +171,418 @@ Thank you for your valuable contribution to our research! 🙏
 
 
 CUSTOM_CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Force light background */
+body, .gradio-container {
+    background: #f8fafc !important;
+}
+
+/* Global container styling */
+.gradio-container {
+    width: 1400px !important;
+    max-width: 98% !important;
+    margin: 0 auto !important;
+    padding: 16px !important;
+}
+
+/* Force consistent width for all columns */
+.gradio-container > div {
+    width: 100% !important;
+}
+
+/* Study layout - side by side */
+.study-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 20px !important;
+    min-height: 450px !important;
+}
+
+.study-left-panel {
+    flex: 0 0 380px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.study-right-panel {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+}
+
 /* Welcome section */
 .welcome-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white !important;
-    padding: 32px;
-    border-radius: 16px;
+    padding: 48px 32px;
+    border-radius: 24px;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 32px;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
 }
 
-.welcome-box h1, .welcome-box h2, .welcome-box h3, .welcome-box p {
+.welcome-box h1 {
+    font-size: 3rem !important;
+    font-weight: 800 !important;
+    margin: 0 0 12px 0 !important;
     color: white !important;
-    margin: 0;
+}
+
+.welcome-box p {
+    font-size: 1.2rem !important;
+    opacity: 0.95;
+    margin: 0 !important;
+    color: white !important;
+    font-weight: 500;
 }
 
 /* Info cards */
 .info-card {
-    background: #f0f5ff;
-    border: 2px solid #d4e0ff;
-    border-radius: 12px;
-    padding: 16px;
-    margin: 8px 0;
-    color: #1a1a1a !important;
+    background: white;
+    border: none;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 16px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 .info-card strong {
-    color: #0066cc !important;
+    color: #667eea !important;
+    font-size: 1.1rem;
 }
 
 /* Dialogue display */
 .dialogue-container {
-    background: #ffffff;
-    border: 2px solid #d4e0ff;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 12px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     font-size: 1.05rem;
     line-height: 1.7;
-    color: #1a1a1a !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    flex: 1 !important;
+    overflow-y: auto !important;
 }
 
-/* Progress badge */
-.progress-badge {
-    background: #d4e0ff;
-    color: #0050cc !important;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    display: inline-block;
-    margin-bottom: 12px;
-    border: 1px solid #a8c5ff;
-    font-size: 0.9rem;
+/* Progress section */
+.progress-display {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white !important;
+    padding: 16px 32px;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(240, 147, 251, 0.3);
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+}
+
+.progress-display p, .progress-display strong {
+    color: white !important;
+    margin: 0 !important;
+    font-size: 1.6rem !important;
 }
 
 /* Rating section */
-.rating-card {
-    background: #f8faff;
-    border: 2px solid #e0ecff;
-    border-radius: 12px;
-    padding: 16px;
-    margin: 10px 0;
+.rating-section {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    margin: 32px 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.rating-header {
+    text-align: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f4f8;
+}
+
+.rating-header h2 {
+    font-size: 1.2rem !important;
+    color: #1e293b !important;
+    margin: 0 0 2px 0 !important;
+    font-weight: 700 !important;
+}
+
+.rating-header p {
+    color: #475569 !important;
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+}
+
+.rating-item {
+    background: white;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 8px 0;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.rating-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
 }
 
 .rating-label {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #0050cc !important;
-    margin-bottom: 2px;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin-bottom: 10px !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.rating-hint {
-    font-size: 0.8rem;
-    color: #404040 !important;
-    margin-bottom: 8px;
+.rating-label span {
+    color: #0f172a !important;
+}
+
+.rating-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 0 4px;
+}
+
+.rating-scale span {
+    font-size: 0.75rem;
+    color: #64748b;
     font-weight: 500;
+}
+
+/* Slider styling */
+input[type="range"] {
+    height: 6px !important;
+    border-radius: 6px !important;
+    background: #e2e8f0 !important;
+    margin: 8px 0 !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 2px 16px rgba(102, 126, 234, 0.4) !important;
+    cursor: pointer !important;
+    border: 4px solid white !important;
+    transition: all 0.2s !important;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6) !important;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 2px 16px rgba(102, 126, 234, 0.4) !important;
+    cursor: pointer !important;
+    border: 4px solid white !important;
+    transition: all 0.2s !important;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6) !important;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    background: #e2e8f0 !important;
+    border-radius: 6px !important;
+}
+
+input[type="range"]::-moz-range-track {
+    background: #e2e8f0 !important;
+    border-radius: 6px !important;
+}
+
+/* Buttons */
+button {
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    padding: 12px 32px !important;
+    border-radius: 10px !important;
+    transition: all 0.3s !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25) !important;
+    color: #0f172a !important;
+}
+
+.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
 
 /* Thank you section */
 .thankyou-container {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    color: white !important;
-    padding: 32px;
-    border-radius: 16px;
-    text-align: center;
+    background: white;
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
-.thankyou-container h1, .thankyou-container h2, .thankyou-container h3 {
-    color: white !important;
-    margin: 4px 0;
+/* Spacing improvements */
+.block {
+    margin: 16px 0 !important;
 }
 
-/* Scale labels */
-.scale-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: #404040 !important;
-    margin-top: -6px;
-    padding: 0 8px;
-    font-weight: 600;
+/* Remove default Gradio label styling */
+label {
+    display: none !important;
 }
+"""
+
+CUSTOM_JS = """
+<script>
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Add event listeners to buttons after a short delay to ensure they're loaded
+setTimeout(function() {
+    // Find all buttons and add scroll to top on click
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        const buttonText = button.textContent;
+        if (buttonText.includes('Start the Study') || buttonText.includes('Next Dialogue')) {
+            button.addEventListener('click', function() {
+                setTimeout(scrollToTop, 100);
+            });
+        }
+    });
+}, 1000);
+</script>
 """
 
 
 def build_interface() -> gr.Blocks:
     """Build the complete Gradio interface."""
-    demo = gr.Blocks()
+    theme = gr.themes.Soft(
+        primary_hue="indigo",
+        secondary_hue="pink",
+        neutral_hue="slate",
+    ).set(
+        body_background_fill="#f8fafc",
+        body_background_fill_dark="#f8fafc",
+    )
     
-    with demo:
-        # Add custom CSS
-        gr.HTML(f"<style>{CUSTOM_CSS}</style>")
-
+    with gr.Blocks(css=CUSTOM_CSS, theme=theme) as demo:
+        # Add JavaScript for auto-scroll
+        gr.HTML(CUSTOM_JS)
+        
         # ═══════════════════════════════════════════════════════════════
         # WELCOME / CONSENT SCREEN
         # ═══════════════════════════════════════════════════════════════
-        instructions_column = gr.Column()
+        instructions_column = gr.Column(visible=True)
         with instructions_column:
-            gr.HTML(
-                """
+            gr.HTML("""
                 <div class="welcome-box">
-                    <h1 style="margin: 0 0 4px 0; font-size: 2.2rem; color: white !important;">👋 Welcome!</h1>
-                    <p style="font-size: 1.05rem; opacity: 0.95; margin: 0; color: white !important;">
-                        Human-Agent Dialogue Rating Study
+                    <h1>👋 Welcome!</h1>
+                    <p>Human-Agent Dialogue Rating Study</p>
+                </div>
+            """)
+
+            gr.HTML("""
+                <div class="info-card">
+                    <strong>📖 What You'll Do</strong>
+                    <p style="margin-top: 12px; line-height: 1.7; color: #475569; font-size: 1rem;">
+                        You'll read <strong style="color: #334155;">12 short dialogues</strong> between humans and AI agents. 
+                        For each dialogue, you'll rate the agent on three dimensions using simple sliders.
                     </p>
                 </div>
-                """
-            )
+            """)
 
-            gr.HTML(
-                """
-                <div class="info-card">
-                    <strong style="font-size: 1rem; color: #0050cc !important;">What You'll Do</strong>
-                    <div style="font-size: 0.95rem; line-height: 1.5; margin-top: 6px; color: #1a1a1a !important;">
-                        Read short dialogues and rate each agent on <strong>warmth</strong>, <strong>competence</strong>, and <strong>trust</strong>.
+            gr.HTML("""
+                <div class="info-card" style="background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);">
+                    <strong style="color: #1e293b !important; display: block; margin-bottom: 16px;">Rating Dimensions</strong>
+                    <div style="display: grid; gap: 16px;">
+                        <div style="display: flex; align-items: start; gap: 16px;">
+                            <span style="font-size: 2rem;">🤝</span>
+                            <div>
+                                <strong style="color: #667eea !important; font-size: 1rem;">Warmth</strong>
+                                <p style="margin: 4px 0 0 0; color: #475569; font-size: 0.95rem;">How friendly and empathetic is the agent?</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 16px;">
+                            <span style="font-size: 2rem;">🧠</span>
+                            <div>
+                                <strong style="color: #667eea !important; font-size: 1rem;">Competence</strong>
+                                <p style="margin: 4px 0 0 0; color: #475569; font-size: 0.95rem;">How capable and intelligent does the agent seem?</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 16px;">
+                            <span style="font-size: 2rem;">🔒</span>
+                            <div>
+                                <strong style="color: #667eea !important; font-size: 1rem;">Trust</strong>
+                                <p style="margin: 4px 0 0 0; color: #475569; font-size: 0.95rem;">Would you trust this agent with important tasks?</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                """
-            )
+            """)
 
-            gr.HTML(
-                """
-                <div class="info-card" style="background: #f0f8ff; border-color: #4da6ff;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
-                        <tr>
-                            <td style="padding: 6px 8px; width: 30px; vertical-align: top; color: #1a1a1a;">🤝</td>
-                            <td style="padding: 6px 8px; color: #1a1a1a;"><strong style="color: #0050cc !important;">Warmth</strong> — Friendly & empathetic?</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 8px; vertical-align: top; color: #1a1a1a;">🧠</td>
-                            <td style="padding: 6px 8px; color: #1a1a1a;"><strong style="color: #0050cc !important;">Competence</strong> — Capable & intelligent?</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 8px; vertical-align: top; color: #1a1a1a;">🔒</td>
-                            <td style="padding: 6px 8px; color: #1a1a1a;"><strong style="color: #0050cc !important;">Trust</strong> — Would you trust them?</td>
-                        </tr>
-                    </table>
+            gr.HTML("""
+                <div class="info-card" style="background: linear-gradient(135deg, #fef5e7 0%, #fff9e6 100%); border-left: 4px solid #f6ad55;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <span style="font-size: 1.5rem;">⏱️</span>
+                        <strong style="color: #7c2d12 !important;">Quick Study Info</strong>
+                    </div>
+                    <div style="display: grid; gap: 8px; color: #0f172a;">
+                        <p style="margin: 0; line-height: 1.6;"><strong style="color: #0f172a;">Duration:</strong> <span style="color: #0f172a;">~7 minutes</span></p>
+                        <p style="margin: 0; line-height: 1.6;"><strong style="color: #0f172a;">Dialogues:</strong> <span style="color: #0f172a;">12 total</span></p>
+                        <p style="margin: 0; line-height: 1.6;"><strong style="color: #0f172a;">Privacy:</strong> <span style="color: #0f172a;">Completely anonymous</span></p>
+                        <p style="margin: 0; line-height: 1.6;"><strong style="color: #0f172a;">Data:</strong> <span style="color: #0f172a;">Only ratings collected (no personal info)</span></p>
+                    </div>
                 </div>
-                """
-            )
+            """)
 
-            gr.HTML(
-                """
-                <div class="info-card" style="background: #fff8e6; border-color: #ffcc00; font-size: 0.9rem; line-height: 1.6; color: #1a1a1a !important;">
-                    <strong style="color: #cc8800 !important;">📋 Study Info:</strong> ~7 min • Anonymous • No data collected • 12 dialogues
+            gr.HTML("""
+                <div class="info-card" style="background: linear-gradient(135deg, #e6f7e6 0%, #f0fff4 100%); border-left: 4px solid #48bb78;">
+                    <p style="margin: 0; color: #1e293b; line-height: 1.7; font-size: 0.95rem;">
+                        ✅ By clicking <strong style="color: #0f172a;">Start</strong>, you confirm that you are 18 years or older 
+                        and agree to participate voluntarily in this research study.
+                    </p>
                 </div>
-                """
-            )
-
-            gr.HTML(
-                """
-                <div class="info-card" style="background: #e6f7e6; border-color: #28a745; font-size: 0.85rem; line-height: 1.5; color: #1a1a1a !important;">
-                    ✅ By clicking <strong>Start</strong>, you confirm you are 18+ and agree to participate voluntarily.
-                </div>
-                """
-            )
+            """)
 
             start_button = gr.Button(
                 "🚀 Start the Study",
                 variant="primary",
                 size="lg",
+                elem_classes=["primary"]
             )
 
         # ═══════════════════════════════════════════════════════════════
@@ -370,66 +590,73 @@ def build_interface() -> gr.Blocks:
         # ═══════════════════════════════════════════════════════════════
         study_column = gr.Column(visible=False)
         with study_column:
-            # Progress indicator
-            progress_text = gr.Markdown("**Dialogue 1 of 12**")
+            # Progress indicator at top
+            progress_text = gr.Markdown("**Dialogue 1 of 12**", elem_classes=["progress-display"])
+            
+            # Side-by-side layout
+            with gr.Row(elem_classes=["study-layout"]):
+                # LEFT PANEL - Rating sliders
+                with gr.Column(scale=1, elem_classes=["study-left-panel"]):
+                    gr.HTML("""
+                        <div class="rating-header">
+                            <h2>📊 Rate This Agent</h2>
+                            <p>Use the sliders (1 = low, 7 = high)</p>
+                        </div>
+                    """)
 
-            gr.Markdown("### 💬 Read the dialogue:")
-            dialogue_display = gr.Markdown("", elem_classes=["dialogue-container"])
+                    # Warmth Rating
+                    gr.HTML('<div class="rating-item"><div class="rating-label"><span style="font-size: 1.4rem;">🤝</span> <span style="color: #0f172a; font-weight: 700;">Warmth</span></div>')
+                    warmth_slider = gr.Slider(
+                        minimum=1,
+                        maximum=7,
+                        value=4,
+                        step=1,
+                        show_label=False,
+                    )
+                    gr.HTML('<div class="rating-scale"><span>Not friendly</span><span>Neutral</span><span>Very friendly</span></div></div>')
 
-            gr.Markdown("---")
-            gr.Markdown("### 📊 Rate this assistant")
-            gr.Markdown("*Use the sliders (1 = low, 7 = high):*")
+                    # Competence Rating
+                    gr.HTML('<div class="rating-item"><div class="rating-label"><span style="font-size: 1.4rem;">🧠</span> <span style="color: #0f172a; font-weight: 700;">Competence</span></div>')
+                    competence_slider = gr.Slider(
+                        minimum=1,
+                        maximum=7,
+                        value=4,
+                        step=1,
+                        show_label=False,
+                    )
+                    gr.HTML('<div class="rating-scale"><span>Not capable</span><span>Neutral</span><span>Very capable</span></div></div>')
 
-            # Warmth Rating
-            gr.Markdown("**🤝 Warmth** — Friendly & empathetic?")
-            warmth_slider = gr.Slider(
-                minimum=1,
-                maximum=7,
-                value=4,
-                step=1,
-                label="",
-                show_label=False,
-            )
+                    # Trust Rating
+                    gr.HTML('<div class="rating-item"><div class="rating-label"><span style="font-size: 1.4rem;">🔒</span> <span style="color: #0f172a; font-weight: 700;">Trust</span></div>')
+                    trust_slider = gr.Slider(
+                        minimum=1,
+                        maximum=7,
+                        value=4,
+                        step=1,
+                        show_label=False,
+                    )
+                    gr.HTML('<div class="rating-scale"><span>No trust</span><span>Neutral</span><span>Full trust</span></div></div>')
 
-            # Competence Rating
-            gr.Markdown("**🧠 Competence** — Capable & intelligent?")
-            competence_slider = gr.Slider(
-                minimum=1,
-                maximum=7,
-                value=4,
-                step=1,
-                label="",
-                show_label=False,
-            )
+                    gr.HTML('<div style="margin-top: 8px;"></div>')
 
-            # Trust Rating
-            gr.Markdown("**🔒 Trust** — Would you trust them?")
-            trust_slider = gr.Slider(
-                minimum=1,
-                maximum=7,
-                value=4,
-                step=1,
-                label="",
-                show_label=False,
-            )
+                    next_button = gr.Button(
+                        "Next Dialogue ➡️",
+                        variant="primary",
+                        size="md",
+                        elem_classes=["primary"]
+                    )
 
-            gr.Markdown("---")
-
-            next_button = gr.Button(
-                "Next Dialogue ➡️",
-                variant="primary",
-                size="lg",
-            )
+                # RIGHT PANEL - Dialogue display
+                with gr.Column(scale=2, elem_classes=["study-right-panel"]):
+                    gr.HTML('<div style="text-align: center; margin-bottom: 12px;"><h2 style="color: #1e293b; font-size: 1.4rem; font-weight: 700; margin: 0;">💬 Read the Dialogue</h2></div>')
+                    dialogue_display = gr.HTML("", elem_classes=["dialogue-container"])
 
         # ═══════════════════════════════════════════════════════════════
         # THANK YOU SCREEN
         # ═══════════════════════════════════════════════════════════════
         thankyou_column = gr.Column(visible=False)
         with thankyou_column:
-            gr.HTML('<div class="thankyou-container">')
-            gr.Markdown("# 🎉 Thank You!")
-            gr.HTML("</div>")
-            thankyou_message = gr.Markdown("")
+            thankyou_message = gr.HTML("")
 
         # ═══════════════════════════════════════════════════════════════
         # SESSION STATE & EVENT HANDLERS
