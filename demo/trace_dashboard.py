@@ -41,6 +41,15 @@ def to_dataframe(trace: Dict) -> pd.DataFrame:
     if not steps:
         return pd.DataFrame()
     df = pd.json_normalize(steps)
+    # If actions are stored as a list (e.g., [agent0_share, agent1_share]),
+    # split them into separate columns for easier analysis.
+    if "action" in df.columns and "agent0_share" not in df.columns and "agent1_share" not in df.columns:
+        df["agent0_share"] = df["action"].apply(
+            lambda a: a[0] if isinstance(a, (list, tuple)) and len(a) > 0 else None
+        )
+        df["agent1_share"] = df["action"].apply(
+            lambda a: a[1] if isinstance(a, (list, tuple)) and len(a) > 1 else None
+        )
     # Rename useful columns for clarity
     rename_map = {
         "beliefs.warmth": "warmth",
@@ -163,7 +172,11 @@ def main():
         if st.button("Refresh traces"):
             list_traces.clear()
             load_trace.clear()
-            st.experimental_rerun()
+            # Streamlit 1.32+ uses `st.rerun`; fall back for older versions.
+            if hasattr(st, "rerun"):
+                st.rerun()
+            else:
+                st.experimental_rerun()
 
     trace = load_trace(str(options[selected]))
     df = to_dataframe(trace)
@@ -172,7 +185,10 @@ def main():
 
     if not df.empty:
         max_step = len(df) - 1
-        step_idx = st.slider("Step index", 0, max_step, value=0)
+        if max_step > 0:
+            step_idx = st.slider("Step index", 0, max_step, value=0)
+        else:
+            step_idx = 0
         render_step_details(df, step_idx)
     else:
         st.warning("Trace has no steps to display.")
@@ -184,20 +200,21 @@ def main():
     render_social_score_chart(df)
 
     st.subheader("All Steps")
-    st.dataframe(
-        df[[
-            "turn",
-            "agent_id",
-            "agent0_share",
-            "agent1_share",
-            "accepted",
-            "warmth",
-            "competence",
-            "social_score",
-        ]]
-        if not df.empty
-        else df
-    )
+    desired_cols = [
+        "turn",
+        "agent_id",
+        "agent0_share",
+        "agent1_share",
+        "accepted",
+        "warmth",
+        "competence",
+        "social_score",
+    ]
+    if not df.empty:
+        available_cols = [c for c in desired_cols if c in df.columns]
+        st.dataframe(df[available_cols])
+    else:
+        st.dataframe(df)
 
     with st.expander("Raw trace JSON"):
         st.json(trace)
