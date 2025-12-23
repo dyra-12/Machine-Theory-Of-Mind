@@ -10,10 +10,14 @@ from typing import Dict, Optional
 import pandas as pd
 
 from src.metrics.pareto import ParetoAnalyzer
+from src.metrics.visualization import ResultVisualizer
 from src.metrics.siq import SIQ, SIQConfig
 from src.metrics.statistical_tests import StatisticalAnalyzer
+from src.utils.config import load_config
+from src.experiments.run_week4 import Week4GeneralizationRunner
 
 DEFAULT_SIQ_CONFIG = Path("experiments/config/week6_siq.yaml")
+DEFAULT_WEEK3_CONFIG = Path("experiments/config/week3_comprehensive.yaml")
 
 def build_siq(config_path: Optional[Path]) -> SIQ:
     if config_path is None:
@@ -46,6 +50,15 @@ def fix_and_rerun_analysis(siq_config: Optional[Path] = None):
             all_results.append(json.loads(line))
     
     print(f"📊 Loaded {len(all_results)} results for re-analysis")
+
+    if not all_results:
+        print("⚠️  latest_results.jsonl is empty; generating Week 3 raw results now...")
+        all_results = _generate_week3_raw_results()
+        _write_latest_results_jsonl(all_results)
+        print(f"✅ Generated {len(all_results)} episode results")
+
+    all_results = _normalize_week3_result_schema(all_results)
+
     df = pd.DataFrame(all_results)
     
     # FIXED: Statistical analysis
@@ -68,6 +81,14 @@ def fix_and_rerun_analysis(siq_config: Optional[Path] = None):
         agent_results[agent_type].append(result)
     
     pareto_metrics = pareto_analyzer.calculate_pareto_metrics(agent_results)
+
+    # Regenerate plots
+    print("🎨 Regenerating Week 3 plots...")
+    plots_dir = Path("results/week3/plots")
+    visualizer = ResultVisualizer(plots_dir)
+    visualizer.create_pareto_plot(pareto_metrics, all_results)
+    visualizer.create_performance_comparison(agent_metrics, significance_results)
+    visualizer.create_lambda_sensitivity_plot(all_results)
     
     # Generate fixed report
     print("📋 Generating FIXED analysis report...")
@@ -88,6 +109,85 @@ def fix_and_rerun_analysis(siq_config: Optional[Path] = None):
         save_siq_summary(siq_scores)
     
     print("✅ Week 3 fixes applied successfully!")
+
+
+def _normalize_week3_result_schema(results):
+    """Normalize keys so Week 3 analyzers work across runner variants."""
+    normalized = []
+    for r in results:
+        row = dict(r)
+        # Week4 runner uses `warmth`/`competence`; Week3 analysis expects `*_final`.
+        if "warmth_final" not in row and "warmth" in row:
+            row["warmth_final"] = row["warmth"]
+        if "competence_final" not in row and "competence" in row:
+            row["competence_final"] = row["competence"]
+
+        # Ensure required numeric fields exist (avoid KeyError downstream)
+        for k in ("task_reward", "social_score", "total_utility"):
+            if k in row and row[k] is None:
+                row[k] = 0.0
+
+        normalized.append(row)
+    return normalized
+
+
+def _write_latest_results_jsonl(results) -> None:
+    raw_dir = Path("results/week3/raw")
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    out_path = raw_dir / "latest_results.jsonl"
+    with open(out_path, "w") as f:
+        for row in results:
+            f.write(json.dumps(row) + "\n")
+
+
+def _generate_week3_raw_results():
+    """Generate a small but sufficient Week 3 dataset to enable plotting."""
+    # Load the Week 3 config if present, but run a smaller sweep for speed.
+    if DEFAULT_WEEK3_CONFIG.exists():
+        base_cfg = load_config(str(DEFAULT_WEEK3_CONFIG))
+    else:
+        base_cfg = {
+            "experiment": {"num_seeds": 3, "runs_per_config": 5},
+            "environment": {"type": "negotiation_v1", "total_resources": 10, "max_turns": 3},
+            "sweep_parameters": {
+                "agent_types": ["greedy_baseline", "social_baseline", "random_baseline", "simple_mtom", "bayesian_mtom"],
+                "lambda_values": [0.0, 0.5, 1.0],
+            },
+            "social_config": {"score_type": "linear", "warmth_weight": 0.6, "competence_weight": 0.4},
+            "output": {"directory": "results/week3"},
+        }
+
+    agent_types = base_cfg.get("sweep_parameters", {}).get("agent_types", [])
+    lambda_values = base_cfg.get("sweep_parameters", {}).get("lambda_values", [0.0, 0.5, 1.0])
+
+    # Keep a small set of lambdas for speed, but include both 0 and >0.
+    chosen_lambdas = []
+    for v in lambda_values:
+        if v in (0.0, 0.5, 1.0):
+            chosen_lambdas.append(float(v))
+    if not chosen_lambdas:
+        chosen_lambdas = [0.0, 0.5, 1.0]
+
+    exp_cfg = {
+        "experiment": {
+            "num_seeds": int(min(3, base_cfg.get("experiment", {}).get("num_seeds", 3))),
+            "runs_per_config": int(min(5, base_cfg.get("experiment", {}).get("runs_per_config", 5))),
+        },
+        "environment": base_cfg.get("environment", {"total_resources": 10, "max_turns": 3}),
+        "sweep_parameters": {
+            "agent_types": agent_types,
+            "lambda_values": chosen_lambdas,
+            "observer_types": ["simple"],
+            "env_variants": [{"name": "base"}],
+            "opponent_types": ["fair"],
+        },
+        "social_config": base_cfg.get("social_config", {"score_type": "linear", "warmth_weight": 0.6, "competence_weight": 0.4}),
+        "output": {"directory": "results/week3"},
+    }
+
+    runner = Week4GeneralizationRunner(exp_cfg)
+    results = runner.run()
+    return results
 
 
 def save_siq_summary(siq_scores: Dict[str, Dict[str, float]]):

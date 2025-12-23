@@ -53,28 +53,44 @@ class ResultVisualizer:
         """Create performance comparison box plots"""
         fig, axes = plt.subplots(2, 2, figsize=(15, 12))
         axes = axes.flatten()
-        
-        metrics_to_plot = ['task_rewards', 'social_scores', 'total_utilities', 'warmth_values']
-        titles = ['Task Reward', 'Social Score', 'Total Utility', 'Warmth']
-        
+
+        metric_specs = [
+            ('task_rewards', 'Task Reward'),
+            ('social_scores', 'Social Score'),
+            ('total_utilities', 'Total Utility'),
+            ('warmth_values', 'Warmth'),
+        ]
+
         # Prepare data for plotting
-        plot_data = []
+        plot_rows = []
         for agent_type, metrics in agent_metrics.items():
-            for metric_name in metrics_to_plot:
-                for value in metrics[metric_name]:
-                    plot_data.append({
+            for metric_key, metric_title in metric_specs:
+                values = metrics.get(metric_key)
+                if values is None:
+                    continue
+                for value in values:
+                    plot_rows.append({
                         'agent_type': agent_type,
-                        'metric': metric_name.replace('_', ' ').title(),
-                        'value': value
+                        'metric_key': metric_key,
+                        'metric_title': metric_title,
+                        'value': value,
                     })
-        
-        df = pd.DataFrame(plot_data)
-        
+
+        df = pd.DataFrame(plot_rows)
+
         # Create box plots
-        for i, (metric, title) in enumerate(zip(metrics_to_plot, titles)):
-            metric_data = df[df['metric'] == title.replace(' ', '')]
+        for i, (metric_key, metric_title) in enumerate(metric_specs):
+            metric_data = df[df['metric_key'] == metric_key] if not df.empty else df
+            if metric_data.empty:
+                axes[i].set_title(f'{metric_title} by Agent Type')
+                axes[i].set_xlabel('agent_type')
+                axes[i].set_ylabel('value')
+                axes[i].text(0.5, 0.5, 'No data', ha='center', va='center', transform=axes[i].transAxes)
+                axes[i].set_xticks([])
+                continue
+
             sns.boxplot(data=metric_data, x='agent_type', y='value', ax=axes[i])
-            axes[i].set_title(f'{title} by Agent Type')
+            axes[i].set_title(f'{metric_title} by Agent Type')
             axes[i].tick_params(axis='x', rotation=45)
         
         plt.tight_layout()
