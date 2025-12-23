@@ -220,7 +220,6 @@ class Week4GeneralizationRunner:
                 agent_kwargs["risk_weight"] = risk_weight
             if lambda_schedule is not None:
                 agent_kwargs["lambda_schedule"] = lambda_schedule
-            agent_kwargs["prior_strength"] = prior_strength
 
         agent0 = self.agent_factory.create(
             agent_type,
@@ -342,6 +341,13 @@ class Week4GeneralizationRunner:
                         result["predicted_competence"] = float(ms.competence)
                     except Exception:
                         pass
+
+            # If the agent does not expose predictions, use a neutral default.
+            # This prevents SIQ ToM from becoming NaN for non-ToM baselines.
+            if "predicted_warmth" not in result:
+                result["predicted_warmth"] = 0.5
+            if "predicted_competence" not in result:
+                result["predicted_competence"] = 0.5
 
             # Also synthesize a predicted social score using the same social scorer
             if "predicted_warmth" in result and "predicted_competence" in result:
