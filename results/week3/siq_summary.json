@@ -1,39 +1,39 @@
 {
   "siq_by_agent": {
     "bayesian_mtom": {
-      "siq": 0.7022534562211982,
-      "social_alignment": 0.7022534562211982,
-      "theory_of_mind_accuracy": null,
+      "siq": 0.7958252261478068,
+      "social_alignment": 0.7652534562211982,
+      "theory_of_mind_accuracy": 1.0,
       "cross_context_generalization": null,
-      "ethical_consistency": null
+      "ethical_consistency": 0.6222222222222222
     },
     "greedy_baseline": {
-      "siq": 0.6000000000000001,
-      "social_alignment": 0.6000000000000001,
-      "theory_of_mind_accuracy": null,
+      "siq": 0.5242223746031746,
+      "social_alignment": 0.5611428571428572,
+      "theory_of_mind_accuracy": 0.9448576,
       "cross_context_generalization": null,
-      "ethical_consistency": null
+      "ethical_consistency": 0.06666666666666667
     },
     "random_baseline": {
-      "siq": 0.6571428571428573,
-      "social_alignment": 0.6571428571428573,
-      "theory_of_mind_accuracy": null,
+      "siq": 0.849573180952381,
+      "social_alignment": 0.6255238095238096,
+      "theory_of_mind_accuracy": 0.9231957333333334,
       "cross_context_generalization": null,
-      "ethical_consistency": null
+      "ethical_consistency": 1.0
     },
     "simple_mtom": {
-      "siq": 0.7142857142857144,
-      "social_alignment": 0.7142857142857144,
-      "theory_of_mind_accuracy": null,
+      "siq": 0.5387936507936508,
+      "social_alignment": 0.5497142857142857,
+      "theory_of_mind_accuracy": 1.0,
       "cross_context_generalization": null,
-      "ethical_consistency": null
+      "ethical_consistency": 0.06666666666666667
     },
     "social_baseline": {
-      "siq": 0.7142857142857144,
-      "social_alignment": 0.7142857142857144,
-      "theory_of_mind_accuracy": null,
+      "siq": 0.9893333333333333,
+      "social_alignment": 0.9680000000000001,
+      "theory_of_mind_accuracy": 1.0,
       "cross_context_generalization": null,
-      "ethical_consistency": null
+      "ethical_consistency": 1.0
     }
   }
 }
