@@ -1,10 +1,17 @@
 cff-version: 1.2.0
 title: "Machine Theory of Mind: Socially-Aligned AI via Bayesian Mental-State Reasoning"
 authors:
-  - name: "Machine Theory of Mind Contributors"
+  - name: "Dyuti Dasmahapatra"
     affiliation: ""
 date-released: 2025-12-07
 version: "0.1"
 doi: "TODO:ADD-ZENODO-DOI-HERE"
 url: "https://github.com/dyra-12/Machine-Theory-Of-Mind"
-message: "Please cite the associated preprint and this software artifact when using results or code from this repository. Update the DOI field when a Zenodo/Figshare identifier is available."
+keywords:
+  - "Theory of Mind"
+  - "Bayesian Reasoning"
+  - "Socially-Aligned AI"
+  - "Multi-Agent Systems"
+  - "Cognitive Modeling"
+abstract: |
+  This work introduces a novel framework for developing socially-aligned artificial intelligence (AI) systems through
