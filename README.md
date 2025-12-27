@@ -16,17 +16,17 @@ Modern AI systems increasingly interact with humans in social settings, yet most
 - **Multi‑Objective Decision Framework:** Formalizes social decision‑making as joint optimization of task reward and social intelligence, controlled by a social‑weight parameter (λ).
 - **Social Intelligence Quotient (SIQ):** A composite, interpretable metric capturing social alignment, Theory‑of‑Mind accuracy, cross‑context generalization, and ethical consistency.
 - **Theoretical Guarantees:** Proof sketches for Bayesian posterior concentration, Pareto‑optimal scalarization, and first‑order social improvement under small λ.
-- **Empirical Validation:** Extensive simulation studies (parameter sweeps, ablations, robustness, generalization) and a human‑in‑the‑loop pilot study (N = 25).
+- **Empirical Validation:** Simulation studies (parameter sweeps, robustness suites) and a human‑in‑the‑loop pilot study (N = 25 total; unpaired groups n=11 vs n=14 in the stored Week 10 stats artifacts).
 
 ## Key Results (Highlights)
 
-- **Highest SIQ:** MToM achieves the highest SIQ (0.73) among tested agents.
-- **Ethical consistency:** Perfect consistency (100%) under fairness constraints.
-- **Robustness:** Strong performance under noisy, biased, and adversarial observers.
+- **SIQ (artifact-backed):** Week-specific SIQ summaries are stored under `results/` (e.g., Week 3 reports `bayesian_mtom` SIQ ≈ 0.796; see `results/week3/siq_summary.json`).
+- **Ethical consistency (no “perfect” claim):** Ethical consistency varies by suite/configuration and is not universally 1.0 in the committed artifacts.
+- **Robustness (explicit, small-budget suite):** Evaluated under noisy/adversarial observer channels and domain shifts with an explicit run budget (`num_seeds=1`, `runs_per_config=3`) in the Week 7 robustness suite.
 
 ### Human Evaluation
 
-- **Perceived qualities:** MToM agents rated significantly higher in warmth, competence, and trust than baselines.
+- **Perceived qualities:** In the Week 10 pilot artifacts, unpaired comparisons show higher warmth, competence, and trust for MToM than baseline dialogues.
 - **Effect sizes:** Large effects (Cohen’s d = 0.99–1.83).
 
 ## Why This Matters
@@ -66,7 +66,7 @@ This work demonstrates that explicit belief modeling—not imitation or reward s
 
 - **Paper:** Included in this repository.
 - **Full documentation:** See [docs/README.md](docs/README.md).
-- **Reproducible experiments:** Configuration‑driven with deterministic seeds.
+- **Reproducible experiments:** Configuration‑driven with seeds specified per config/artifact.
 
 ## Intended Audience
 
@@ -78,4 +78,4 @@ This work demonstrates that explicit belief modeling—not imitation or reward s
 
 ---
 
-For full theoretical details, experimental protocols, and reproducibility instructions, see [docs/README.md](docs/README.md).
+For reviewer-safe, artifact-backed results, see [docs/Results.md](docs/Results.md). For full theoretical details, experimental protocols, and reproducibility instructions, see [docs/README.md](docs/README.md).

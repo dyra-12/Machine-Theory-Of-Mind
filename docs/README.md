@@ -3,9 +3,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-<!-- DOI badge: replace DOI_PLACEHOLDER with actual DOI after minting on Zenodo/Figshare -->
-![DOI](https://zenodo.org/badge/DOI_PLACEHOLDER.svg)
-
 **A Bayesian framework for endowing AI agents with computational Theory of Mind to optimize both task performance and perceived social attributes (warmth & competence).**
 
 ---
@@ -16,7 +13,7 @@ Human social intelligence relies on *Theory of Mind* (ToM)—the capacity to rea
 
 1. **Probabilistic belief updating** over warmth/competence representations derived from social psychology literature.
 2. **Multi-objective optimization** that balances task-level utility (e.g., negotiation payoffs) with social perception scores measured via a novel **Social Intelligence Quotient (SIQ)** metric.
-3. **Human validation**: a pilot study (N=25) demonstrating that MToM agents are rated significantly higher on warmth (+0.78), competence (+1.89), and trust (+1.75) compared to baseline non-social agents.
+3. **Human validation**: a pilot study (N=25 total; unpaired groups n=11 vs n=14) where MToM dialogues are rated higher on warmth (+0.78), competence (+1.89), and trust (+1.75) than baseline dialogues (see `results/week10/human_pilot_unpaired_stats.csv`).
 
 We provide full source code, datasets, reproducible experiments, interactive demos, and formal theoretical proofs establishing Bayesian consistency and first-order social-score improvements under the MToM framework. This work bridges cognitive science, probabilistic AI, and human-AI alignment research.
 
@@ -38,10 +35,11 @@ Define agent policy π with objectives:
 - **Task reward**: R(π) = E_π[task utility]
 - **Social intelligence**: S(π) = E_π[SIQ(records)]
 
-We optimize the scalarized objective:
+In the simulation runners, the commonly logged scalarized objective is:
 ```
-J(π) = (1 - λ) R(π) + λ S(π)
+total_utility = task_reward + λ * social_score
 ```
+SIQ is computed from logged records and summarized in week-specific artifacts.
 
 **Theorem 3.2** (proven in `docs/theory.md`) guarantees first-order social-score improvements for small λ > 0 under accurate observer models.
 
@@ -81,8 +79,8 @@ Machine-Theory-Of-Mind/
 │       ├── dialogues.json               # Human evaluation stimuli (N=12)
 │       ├── pilot_ratings.csv            # Collected ratings (warmth/competence/trust)
 │       └── README.md
-├── demo/
-│   ├── trace_dashboard.py               # Interactive Streamlit visualization
+├── apps/
+│   ├── trace_dashboard.py               # Interactive visualization
 │   └── human_pilot_app.py               # Gradio interface for human studies
 ├── docs/
 │   ├── theory.md                        # Formal proofs & mathematical statements
@@ -115,8 +113,8 @@ Machine-Theory-Of-Mind/
 ## Experimental Design
 
 ### Simulation Tasks
-- **Negotiation Game**: 2-player resource allocation with 10 rounds, generating Pareto-optimal agreements.
-- **Opponent Types**: Greedy, Fair, Concession, Random—testing generalization across strategic profiles.
+- **Negotiation Game**: 2-player discrete resource splitting. Default settings in the core environment are `total_resources=10` and `max_turns=3` (configurable in YAML).
+- **Opponent Types**: Multiple opponent policies are used across weeks/configs (e.g., fair/concession and mixed profiles in the robustness suite).
 
 ### Baselines
 1. **Greedy**: Pure task-reward maximization (λ = 0).
@@ -124,13 +122,13 @@ Machine-Theory-Of-Mind/
 3. **Random**: Uniform action sampling (sanity check).
 
 ### Week-Based Protocol
-- **Week 3–5**: Bayesian agent development, SIQ metric validation, parameter sweeps (λ ∈ {0.1, 0.3, 0.5, 0.7}).
-- **Week 6**: Cross-context robustness suite across 4 opponent types × 3 cultural templates.
-- **Week 7**: Trace logging and dashboard development for belief trajectory analysis.
-- **Week 10**: Human pilot study with dialogue rating interface.
+- **Week 3**: SIQ snapshot summaries (see `results/week3/siq_summary.json`).
+- **Week 5**: Bayesian sweep summaries, including an effect-size/CI artifact for a best-combo vs baseline comparison (see `results/week5/stats_summary.json`).
+- **Week 7**: Robustness suite under noisy/adversarial observer channels and domain shifts (see `experiments/config/robustness_suite.yaml` and `results/week7/robustness_suite/robustness_results.jsonl`).
+- **Week 10**: Human pilot study artifacts and summary statistics (see `results/week10/`).
 
 ### Reproducibility
-- **Fixed seeds**: All experiments use deterministic random seeds (11, 17, 23, 29, 31).
+- **Seeds**: Seeds are specified per experiment/config. For example, the small-λ validation summary records seeds `[11, 17, 23, 29, 31]`, while Week 2 uses `seed=42` in its config.
 - **Configuration files**: YAML-based experiment configs in `experiments/config/`.
 - **Version control**: Full git history and tagged releases.
 
@@ -139,7 +137,7 @@ Machine-Theory-Of-Mind/
 ## Datasets and Human Evaluation
 
 ### Human Pilot Study
-- **N = 25 responses** collected via Gradio interface (`demo/human_pilot_app.py`).
+- **N = 25 responses** collected via Gradio interface (`apps/human_pilot_app.py`).
 - **Stimuli**: 12 negotiation dialogue snippets (6 MToM, 6 Baseline), counterbalanced across participants.
 - **Measures**: 7-point Likert scales for Warmth, Competence, Trust.
 - **Ethics**: Non-clinical observational study; informed consent via app interface; anonymized data storage.
@@ -148,11 +146,11 @@ Machine-Theory-Of-Mind/
 ### Results Summary
 | Metric     | Baseline | MToM | Δ (MToM − Baseline) | Cohen's *d* |
 |------------|----------|------|---------------------|-------------|
-| Warmth     | 4.86     | 5.64 | **+0.78**           | 0.52        |
-| Competence | 3.93     | 5.82 | **+1.89**           | 1.23        |
-| Trust      | 4.43     | 6.18 | **+1.75**           | 1.15        |
+| Warmth     | 4.86     | 5.64 | **+0.78**           | 0.99        |
+| Competence | 3.93     | 5.82 | **+1.89**           | 1.83        |
+| Trust      | 4.43     | 6.18 | **+1.75**           | 1.62        |
 
-*All differences p < 0.05 (two-tailed t-test); see `results/week10/README.md` for details.*
+*All differences p < 0.05 in the stored unpaired tests (see `results/week10/human_pilot_unpaired_stats.csv`).*
 
 ---
 
@@ -200,6 +198,11 @@ python src/main.py --agent bayesian --opponent fair --lambda-social 0.3 --seed 4
 
 ### Reproduce Main Results
 
+Run everything below in one shot (recommended):
+```bash
+make reproduce-main-figures
+```
+
 **Week 5 Bayesian Sweep** (Figure 3 in paper):
 ```bash
 python experiments/run_experiment.py --config experiments/config/week5_bayesian_sweep.yaml
@@ -209,7 +212,7 @@ python src/experiments/analyze_week5.py  # Generate plots in results/week5/plots
 **Week 7 Trace Analysis** (Belief trajectory visualizations):
 ```bash
 python experiments/run_trace_sweep_extended.py
-streamlit run demo/trace_dashboard.py
+streamlit run apps/trace_dashboard.py
 ```
 
 **SIQ Validation** (Table 2):
@@ -221,7 +224,7 @@ python src/experiments/siq_visualizations.py
 ### Human Pilot Interface
 ```bash
 # Launch rating interface (requires Gradio)
-python demo/human_pilot_app.py
+python apps/human_pilot_app.py
 # Access at http://localhost:7860
 ```
 
@@ -230,14 +233,15 @@ python demo/human_pilot_app.py
 ## Results Summary
 
 ### Quantitative Findings
+Supported, artifact-backed summaries (see `docs/Results.md`):
 
-1. **Social-Score Gains**: MToM agents achieve **15-20% higher SIQ** than baselines across opponent types (p < 0.01).
+1. **SIQ snapshot (Week 3)**: Example aggregated SIQ values include `bayesian_mtom` ≈ 0.796 vs `greedy_baseline` ≈ 0.524 (see `results/week3/siq_summary.json`).
 
-2. **Task Performance**: MToM maintains **≥95% of greedy-baseline task rewards** while improving social metrics (Pareto dominance).
+2. **Week 5 best-combo vs baseline**: `difference_mean ≈ 0.0567` with 95% CI `[0.0476, 0.0658]` and Cohen’s d `≈ 0.394` against baseline `simple_mtom` (see `results/week5/stats_summary.json`).
 
-3. **Generalization**: Cross-context SIQ component shows **<8% degradation** when tested on novel opponent strategies.
+3. **Robustness suite (Week 7)**: Evaluated under explicit noisy/adversarial channels and domain shifts with a small, explicit run budget (`num_seeds=1`, `runs_per_config=3`) (see `experiments/config/robustness_suite.yaml`).
 
-4. **Human Validation**: Pilot study (N=25) confirms **strong preference for MToM dialogues** (1.5× effect size on competence/trust).
+4. **Human pilot (Week 10)**: Unpaired group comparisons show higher warmth/competence/trust for MToM with large effect sizes (see `results/week10/human_pilot_unpaired_stats.csv`).
 
 ### Key Visualizations
 - **Pareto Frontiers**: `results/week5/plots/pareto_front.png`
@@ -246,18 +250,16 @@ python demo/human_pilot_app.py
 
 Below are representative figures generated by the analysis pipelines (relative paths):
 
-![Agent Comparison — Human Ratings](results/week10/agent_comparison.png)
+![Agent Comparison — Human Ratings](../results/week10/agent_comparison.png)
 
-![Pareto Utility vs Adaptation](results/week5/plots/pareto_utility_vs_adaptation.png)
+![Pareto Utility vs Adaptation](../results/week5/plots/pareto_utility_vs_adaptation.png)
 
-![SIQ Task vs Tradeoff](results/week5/plots/siq_task_tradeoff.png)
+![SIQ Task vs Tradeoff](../results/week5/plots/siq_task_tradeoff.png)
 
-![Social Score over Turns (example trace)](results/week7/plots/social_score_vs_turn.png)
+![Social Score over Turns (example trace)](../results/week7/plots/social_score_vs_turn.png)
 
 ### Ablation Studies
-- **λ-sweep**: Social-score improvement monotonic in λ ∈ [0, 0.7] (theory validated).
-- **Prior strength**: Performance stable for α ∈ [4, 10] (weak prior-dependence).
-- **Cultural templates**: SIQ gains generalize across neutral/individualist/collectivist settings.
+- **Small-λ validation (Week 7)**: In the committed summary, the mean social score is identical for λ ∈ {0.0, 0.1, 0.2} (see `results/week7/lambda_validation_summary.json`).
 
 *Full numerical results and statistical tests in `results/week{3..10}/README.md` and `docs/week10_summary.md`.*
 
@@ -323,8 +325,6 @@ If you use this work in your research, please cite:
 }
 ```
 
-**Preprint**: [arXiv link — coming soon]  
-**DOI**: [Zenodo DOI — coming soon]
 
 ---
 
@@ -344,7 +344,7 @@ We welcome contributions from the research community! Please see [`CONTRIBUTING.
   - Multi-agent systems with ToM reasoning
   - Human evaluation methodologies
 
-**For German lab outreach**: See `docs/one_page_spec.pdf` (1-page project brief) — coming soon.
+**For German lab outreach**: See `docs/one_page_spec.pdf` (1-page project brief) 
 
 ---
 
@@ -369,7 +369,7 @@ Special thanks to the open-source community for tools: PyMC, PyTorch, Streamlit,
 
 ## Quick Links
 
-- 📊 **Interactive Demo**: `streamlit run demo/trace_dashboard.py`
+- 📊 **Interactive Demo**: `streamlit run apps/trace_dashboard.py`
 - 📈 **Results Dashboard**: `results/week{3..10}/plots/`
 - 📚 **Theory Document**: [`docs/theory.md`](docs/theory.md)
 - 🧪 **Run Tests**: `pytest tests/ -v`

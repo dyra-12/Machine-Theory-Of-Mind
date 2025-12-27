@@ -1,6 +1,8 @@
 # Reproducibility Guide
 
-> **For Reviewers**: This document provides complete, step-by-step instructions to reproduce all experimental results from the paper. Estimated total time: 4–6 hours for core experiments (parallelizable to ~2 hours with appropriate hardware).
+This reproducibility guide supports a novel pilot research project intended to demonstrate feasibility, methodological rigor, and reproducible experimentation, rather than a finalized or clinically validated system.
+
+> **For Reviewers**: This document provides complete, step-by-step instructions to reproduce all experimental results from the paper. Estimated total time: several hours depending on hardware; a minimal verification run takes ~5 minutes.
 
 ---
 
@@ -49,6 +51,8 @@ python src/main.py --agent bayesian --opponent fair --lambda-social 0.3 --seed 4
 
 This document describes how to reproduce **all experimental results reported in the paper** associated with this repository.
 
+The goal of this guide is to enable independent verification of a new research direction at an early stage, consistent with German standards for transparent scientific inquiry.
+
 **In scope**
 
 - **Simulation experiments (Weeks 2–7)**
@@ -79,8 +83,6 @@ This reproducibility guide supports verification of the following claims **made 
 ❌ **Real-world deployment**: Results are from controlled simulation environments only  
 ❌ **Long-term effects**: Study covers short negotiation episodes, not longitudinal outcomes  
 ❌ **Population generalization**: Human pilot is a convenience sample, not representative of general population  
-
-**Academic and legal protection**: Reviewers reproducing this work are validating **computational and statistical claims only**, not endorsing any clinical, therapeutic, or deployment-readiness assertions.
 
 ---
 
@@ -325,7 +327,7 @@ python experiments/run_trace_sweep.py
 python experiments/run_trace_sweep_extended.py
 
 # Launch interactive dashboard (optional)
-streamlit run demo/trace_dashboard.py
+streamlit run apps/trace_dashboard.py
 ```
 
 **Runtime**: ~20 minutes for trace generation
@@ -354,7 +356,7 @@ results/week10/
 └── human_pilot_paired_*.png       # Supplementary plots
 ```
 
-**Important**: This analyzes the **pre-collected** data in `data/human_pilot/pilot_ratings.csv`. The live collection interface (`demo/human_pilot_app.py`) is provided for transparency but not required for reproduction.
+**Important**: This analyzes the **pre-collected** data in `data/human_pilot/pilot_ratings.csv`. The live collection interface (`apps/human_pilot_app.py`) is provided for transparency but not required for reproduction.
 
 ### 4.7 Running All Experiments (Complete Reproduction)
 
@@ -536,7 +538,7 @@ cat results/week5/stats_summary.json | grep -A 5 '"siq'
 
 ### 8.1 Data Collection Protocol
 
-**Collection interface**: Gradio app (`demo/human_pilot_app.py`)
+**Collection interface**: Gradio app (`apps/human_pilot_app.py`)
 
 **Stimuli**: 12 negotiation dialogue snippets
 - 6 from MToM agent
@@ -770,6 +772,8 @@ If issues persist:
 
 Cite this repository using the metadata in `CITATION.cff`:
 
+If citing for evaluation or application purposes, please treat this as a pre-publication research artifact.
+
 ```bibtex
 @software{mtom2025,
   author = {[Author Names from CITATION.cff]},
@@ -810,6 +814,10 @@ git checkout tags/v1.0.0
 **Primary contact**: [Insert contact from CITATION.cff or README]
 
 ---
+
+## Appendix A: Scope and Legal Notes
+
+Academic and legal protection: Reviewers reproducing this work are validating computational and statistical claims only, not endorsing any clinical, therapeutic, or deployment-readiness assertions.
 
 ## Appendix: File Verification Checklist
 
