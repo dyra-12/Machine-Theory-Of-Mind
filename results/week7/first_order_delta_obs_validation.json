@@ -1,0 +1,75 @@
+{
+  "config": {
+    "agent_type": "bayesian_mtom",
+    "opponent_type": "fair",
+    "total_resources": 10,
+    "max_turns": 4,
+    "tau": 1.0,
+    "epsilon": 0.1,
+    "seeds": [
+      11,
+      17,
+      23,
+      29,
+      31
+    ],
+    "delta_samples": 400,
+    "belief_update_scale": 0.5
+  },
+  "var_pi0_delta_obs": 0.008024266431726183,
+  "tau": 1.0,
+  "predicted_slope": 0.008024266431726183,
+  "observed_slope": 0.007982675120589052,
+  "relative_error_percent": -0.5183191696213826,
+  "num_decision_points": 6,
+  "per_decision": [
+    {
+      "seed": 11,
+      "turn_index": 0,
+      "step_index": 0,
+      "mean_pi0": 0.27277068614029465,
+      "second_pi0": 0.08230552049754394,
+      "mean_pieps": 0.27355678078144036
+    },
+    {
+      "seed": 17,
+      "turn_index": 0,
+      "step_index": 0,
+      "mean_pi0": 0.2718702148236613,
+      "second_pi0": 0.08197482989400202,
+      "mean_pieps": 0.2726722809276594
+    },
+    {
+      "seed": 23,
+      "turn_index": 0,
+      "step_index": 0,
+      "mean_pi0": 0.2739026550965691,
+      "second_pi0": 0.0832775068396824,
+      "mean_pieps": 0.27472370275859476
+    },
+    {
+      "seed": 23,
+      "turn_index": 2,
+      "step_index": 2,
+      "mean_pi0": 0.27116676749361873,
+      "second_pi0": 0.08136776699107552,
+      "mean_pieps": 0.2719463192320251
+    },
+    {
+      "seed": 29,
+      "turn_index": 0,
+      "step_index": 0,
+      "mean_pi0": 0.2713510261874902,
+      "second_pi0": 0.08180012711966259,
+      "mean_pieps": 0.27216372063141947
+    },
+    {
+      "seed": 31,
+      "turn_index": 0,
+      "step_index": 0,
+      "mean_pi0": 0.2712954746494935,
+      "second_pi0": 0.08152380241428782,
+      "mean_pieps": 0.2720836251323418
+    }
+  ]
+}
