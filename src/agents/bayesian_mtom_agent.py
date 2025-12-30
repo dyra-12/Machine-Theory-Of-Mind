@@ -21,6 +21,7 @@ class BayesianMToMAgent:
         lambda_schedule: Optional[Dict[str, float]] = None,
         cultural_template: str = "neutral",
         cultural_overrides: Optional[Dict[str, float]] = None,
+        min_lambda: float = 0.15,
     ):
         self.lambda_social = lambda_social
         self.agent_id = agent_id
@@ -34,6 +35,8 @@ class BayesianMToMAgent:
             cultural_overrides,
         )
         self.cultural_template = self.cultural_profile['name']
+
+        self.min_lambda = float(min_lambda)
         
         # Probabilistic mental state
         self.mental_state = BayesianMentalState(
@@ -221,7 +224,7 @@ class BayesianMToMAgent:
 
         interaction_factor = self._interaction_lambda_factor(negotiation_state)
         lambda_val = self.lambda_social * schedule_factor * interaction_factor
-        return max(0.15, min(lambda_val, self.lambda_social * 1.6))
+        return max(self.min_lambda, min(lambda_val, self.lambda_social * 1.6))
 
     def _interaction_lambda_factor(self, negotiation_state: NegotiationState) -> float:
         """Adaptive scaling that reduces social weight when opponent seems cold or turns are low."""

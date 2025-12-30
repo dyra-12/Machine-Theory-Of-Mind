@@ -149,3 +149,73 @@ class BayesianSocialScorer:
             'perception_category': perception_dist['category'],
             'scaled_lambda_used': scaled_lambda
         }
+
+    def expected_delta_obs(
+        self,
+        offer_self: int,
+        mental_state: BayesianMentalState,
+        *,
+        total_resources: int,
+        warmth_weight: float = 0.6,
+        competence_weight: float = 0.4,
+        update_scale: float = 0.5,
+        n_samples: int = 500,
+        rng: np.random.Generator | None = None,
+    ) -> float:
+        """Return the expected per-action social response delta Δ_obs(offer_self).
+
+        This is a *clean* quantity for theoretical validation:
+        - Uses the current belief distribution in `mental_state`.
+        - Computes expected change in (warmth_weight * warmth + competence_weight * competence).
+        - No clipping, no normalization, no SIQ aggregation.
+
+        Args:
+            offer_self: Proposed share for the acting agent.
+            mental_state: Current Bayesian belief state.
+            total_resources: Total resources in the negotiation.
+            warmth_weight / competence_weight: Linear social score weights.
+            update_scale: Linear belief update scale applied to sampled perception deltas.
+            n_samples: Monte Carlo sample count.
+            rng: Optional NumPy RNG for reproducibility.
+        """
+        generator = rng if rng is not None else np.random.default_rng()
+
+        task_total = int(total_resources)
+        offer_val = int(offer_self)
+        if task_total <= 0:
+            raise ValueError("total_resources must be positive")
+        if offer_val <= 0 or offer_val >= task_total:
+            raise ValueError("offer_self must be in [1, total_resources-1]")
+        if n_samples <= 0:
+            raise ValueError("n_samples must be positive")
+
+        perception_dist = self.predict_perception_distribution(offer_val, task_total)
+
+        warmth_deltas = generator.normal(
+            perception_dist['warmth_mean'],
+            perception_dist['warmth_std'],
+            n_samples,
+        )
+        competence_deltas = generator.normal(
+            perception_dist['competence_mean'],
+            perception_dist['competence_std'],
+            n_samples,
+        )
+
+        # Sample current belief states *without* clipping.
+        alpha_w = float(mental_state.warmth_belief) * float(mental_state.prior_strength)
+        beta_w = (1.0 - float(mental_state.warmth_belief)) * float(mental_state.prior_strength)
+        alpha_c = float(mental_state.competence_belief) * float(mental_state.prior_strength)
+        beta_c = (1.0 - float(mental_state.competence_belief)) * float(mental_state.prior_strength)
+
+        current_warmth = generator.beta(alpha_w, beta_w, n_samples)
+        current_competence = generator.beta(alpha_c, beta_c, n_samples)
+
+        future_warmth = current_warmth + float(update_scale) * warmth_deltas
+        future_competence = current_competence + float(update_scale) * competence_deltas
+
+        current_social = float(warmth_weight) * current_warmth + float(competence_weight) * current_competence
+        future_social = float(warmth_weight) * future_warmth + float(competence_weight) * future_competence
+
+        delta_obs = future_social - current_social
+        return float(np.mean(delta_obs))

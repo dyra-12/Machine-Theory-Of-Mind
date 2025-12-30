@@ -44,6 +44,7 @@ class AgentFactory:
             lambda_schedule = kwargs.get('lambda_schedule')
             cultural_template = kwargs.get('cultural_template')
             cultural_overrides = kwargs.get('cultural_overrides')
+            min_lambda = kwargs.get('min_lambda')
             agent_config = {
                 'lambda_social': lambda_social,
                 'agent_id': agent_id,
@@ -59,6 +60,8 @@ class AgentFactory:
                 agent_config['cultural_template'] = cultural_template
             if cultural_overrides is not None:
                 agent_config['cultural_overrides'] = cultural_overrides
+            if min_lambda is not None:
+                agent_config['min_lambda'] = min_lambda
             return BayesianMToMAgent(**agent_config)
         
         elif agent_type == "learned_tom":
