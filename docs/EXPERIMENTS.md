@@ -1,202 +1,232 @@
-# Experiments: Design, Execution, and Reproducibility
+# Experimental Design for Bayesian Machine Theory of Mind (MToM)
 
-## 1. Purpose
+This document describes the experimental design used to evaluate the Bayesian Machine Theory of Mind (MToM) framework. The experiments are designed to assess whether explicit belief-based social reasoning improves social alignment, robustness, and interpretability, and to characterize trade-offs between task performance and social intelligence.
 
-This document describes the experimental design, execution protocol, and reproducibility guarantees for the Machine Theory of Mind (MToM) framework. All experiments reported in the paper are derived from the procedures documented here.
+---
 
-The goals of the experimental program are to:
+## 1. Experimental Goals
 
-- compare MToM agents against baseline agents,
-- evaluate trade-offs between task performance and social intelligence,
-- test robustness and generalization,
-- and validate theoretical predictions empirically.
+The experiments address four core questions:
 
-## 2. Experimental Environment
+1. Does belief-based social reasoning improve social intelligence relative to non-social and heuristic baselines?
+2. How does the task–social trade-off parameter (λ) shape behavior and performance?
+3. Does Bayesian belief modeling improve robustness and adaptation under uncertainty and norm shifts?
+4. Do simulated social intelligence gains translate into human-perceived warmth, competence, and trust?
 
-All experiments are conducted in a controlled negotiation environment designed to isolate social reasoning effects.
+**Important:** No experiment optimizes for the Social Intelligence Quotient (SIQ). All social metrics are computed post hoc for evaluation and diagnosis.
 
-**Key properties:**
+---
 
-- Two-agent interaction
-- Finite horizon
-- Discrete action space
-- Observable social feedback (warmth, competence)
+## 2. Environment
 
-Environment variants differ only in:
+### 2.1 Negotiation Task
 
-- total resource size,
-- interaction horizon,
-- or opponent behavior.
+All experiments are conducted in a controlled two-agent negotiation environment:
 
-These variants are used to assess robustness and cross-context generalization, not to introduce new task mechanics.
+- **Total divisible resources:** R (default: 10)
+- **Maximum turns per episode:** T (default: 3)
+- **Agents alternate proposer roles**
+- **Episodes terminate upon agreement or timeout**
+
+### 2.2 Action Space
+
+An action corresponds to a proposed resource split:
+
+```
+(x₀, x₁) such that x₀ + x₁ = R
+```
+
+To avoid degenerate solutions, agents enumerate all valid splits allocating at least one unit to each agent.
+
+### 2.3 Rewards and Termination
+
+**If an agreement is reached:**
+```
+rᵢ = xᵢ / R
+```
+
+**If no agreement is reached:** reward = 0
+
+- No shaping rewards or auxiliary penalties are used
+
+### 2.4 Acceptance Model
+
+For simulation-based experiments, accept/reject behavior is modeled stochastically using a fixed acceptance function that increases with the receiver's share. This ensures controlled comparability across agent types.
+
+---
 
 ## 3. Agent Configurations
 
-The following agent classes are evaluated:
+### 3.1 Baselines
 
-- **Random baseline** — stochastic action selection
-- **Greedy baseline** — task reward maximization
-- **Social baseline** — heuristic social optimization
-- **Simple MToM** — dual-objective social + task reasoning
-- **Bayesian MToM** — belief-based inference with priors
-- **Learned ToM** — neural prediction of social perception
+The following baselines establish performance and social reasoning controls:
 
-All agents operate under identical environment conditions and differ only in their internal decision-making mechanisms.
+- **Greedy baseline:** maximizes self-share only
+- **Random baseline:** uniformly samples valid splits
+- **Social baseline:** maximizes observer-derived social score using a fixed heuristic mental state
 
-## 4. Evaluation Metrics
+### 3.2 MToM Agents
 
-### 4.1 Primary Metrics
+**Simple MToM:**
+- Uses a point-estimate social belief and linear task–social scalarization
 
-- **Task Reward:** normalized payoff from final agreement
-- **Social Score:** perceived warmth and competence
-- **Total Utility:** task reward + λ·social utility
+**Bayesian MToM:**
+- Maintains probabilistic beliefs over perceived warmth and competence
+- Estimates expected utility via Monte Carlo sampling
+- Applies uncertainty-aware, risk-adjusted action selection
 
-### 4.2 Composite Metric
+**Note:** No agent learns a policy online. Behavioral adaptation arises solely from belief updates.
 
-**Social Intelligence Quotient (SIQ):**
+---
+
+## 4. Observer Models
+
+Observers evaluate agent actions along two dimensions:
+
+- **Warmth** (intent, cooperativeness)
+- **Competence** (capability, efficiency)
+
+### Observer Profiles
+
+Multiple observer profiles are used to test robustness:
+
+- Lenient (forgiving)
+- Harsh (punitive)
+- Warmth-biased
+- Competence-biased
+- Adversarial (noisy, inverted, or dropped signals)
+
+Bayesian agents receive both social feedback and a channel reliability estimate, enabling uncertainty-aware belief updates.
+
+---
+
+## 5. Evaluation Metrics
+
+### 5.1 Task Performance
+
+- Mean task reward per episode
+- Mean total utility (task + social)
+
+### 5.2 Social Intelligence Quotient (SIQ)
+
+SIQ is a **diagnostic evaluation metric**, not an optimization objective. It decomposes social intelligence into:
 
 - Social alignment
 - Theory-of-Mind accuracy
 - Cross-context generalization
 - Ethical consistency
 
-SIQ is used exclusively for evaluation, not optimization.
+Each component is normalized to [0, 1] and aggregated post hoc from interaction logs.
 
-## 5. Experimental Phases
+---
 
-### 5.1 Trade-off Exploration (Weeks 2–3)
+## 6. Hyperparameter Sweeps
 
-**Purpose:**
+### 6.1 Social Trade-off Parameter (λ)
 
-- characterize reward–social trade-offs,
-- identify Pareto-efficient regions,
-- compare baseline and MToM agents.
+The social weighting parameter λ is swept over:
 
-**Method:**
+```
+λ ∈ {0.0, 0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0}
+```
 
-- λ swept over a wide range,
-- multiple random seeds per configuration,
-- Pareto frontiers constructed for each agent.
+This sweep traces empirical Pareto frontiers between task performance and social alignment.
 
-### 5.2 Bayesian Hyperparameter Sweep (Week 5)
+### 6.2 Bayesian Prior Strength
 
-**Purpose:**
+Bayesian prior concentration is varied to assess:
 
-- analyze interaction between Bayesian prior strength and social weighting λ.
+- Belief stability
+- Adaptation speed
+- Robustness to noise
 
-**Method:**
+---
 
-- grid search over prior strength × λ,
-- aggregation across seeds,
-- evaluation via SIQ and total utility.
+## 7. Robustness Experiments
 
-**Outcome:**
+### 7.1 Adversarial Perception Channels
 
-- identification of stable performance ridge,
-- avoidance of over-regularization regimes.
+Agents are evaluated under:
 
-### 5.3 Robustness Battery (Week 6–7)
+- Noisy feedback
+- Inverted social signals
+- Unreliable observer channels
 
-**Purpose:**
+Performance degradation is compared relative to clean conditions.
 
-- test stability under noisy, biased, or adversarial perception.
+### 7.2 Norm-Shift Sensitivity
 
-**Conditions:**
+Observer norms are systematically altered (e.g., warmth-biased vs competence-biased) to test whether agents adapt rationally to changing social expectations.
 
-- lenient observers
-- harsh observers
-- competence-biased observers
-- warmth-biased observers
-- adversarial observers with noise and inversion
+---
 
-**Metrics:**
+## 8. Ablation Studies
 
-- performance degradation
-- SIQ stability
-- variance across conditions
+Controlled ablations isolate component contributions:
 
-### 5.4 Generalization Tests (Week 7)
+- **No MToM (λ = 0):** removes social reasoning
+- **No Bayesian priors:** removes belief uncertainty
+- **Over-socialized (λ = 2.0):** tests excessive social weighting
 
-**Purpose:**
+Each ablation is compared against the full Bayesian MToM agent.
 
-- assess transfer across unseen environments.
+---
 
-**Test cases:**
+## 9. Generalization Tests
 
-- new opponents
-- altered resource sizes
-- shorter and longer horizons
-- multi-party extensions
+Agents are evaluated on held-out environment variants:
 
-Performance is compared relative to baseline environments.
+- Smaller and larger resource pools
+- Shorter and longer negotiation horizons
 
-### 5.5 Human Pilot Evaluation (Week 10)
+Generalization is assessed using:
 
-**Purpose:**
+- Mean task utility
+- Adaptation speed
+- SIQ cross-context stability
 
-- validate whether simulated social intelligence aligns with human perception.
+---
 
-**Method:**
+## 10. Human Evaluation
 
-- short dialogue evaluation,
-- 7-point Likert ratings (warmth, competence, trust),
-- randomized within-subject design.
+A pilot human-in-the-loop study evaluates whether simulated social reasoning translates into human perception.
 
-This evaluation is perceptual, not behavioral or clinical.
+**Study Design:**
+- **Participants:** N = 25
+- **Interface:** Gradio-based web UI
+- **Ratings:** 7-point Likert scales for Warmth, Competence, Trust
+- **Conditions:** MToM vs reward-only baseline
+- **Analysis:** Paired tests with effect size reporting
 
-## 6. Statistical Analysis
+**Note:** No demographic data are collected to preserve anonymity.
 
-Analyses include:
+---
 
-- Welch's t-tests for agent comparisons,
-- effect size estimation (Cohen's d),
-- one-way ANOVA for λ sensitivity,
-- Pareto dominance analysis,
-- confidence interval reporting where applicable.
+## 11. Statistical Analysis
 
-Significance thresholds are fixed at **α = 0.05** (two-tailed).
+- Episode-level comparisons use **Welch's t-tests**
+- Effect sizes reported via **Cohen's d**
+- λ-sensitivity analyzed using **one-way ANOVA**
+- Pareto trade-offs summarized descriptively (frontiers, hypervolume)
+- Human ratings analyzed at participant level
 
-## 7. Reproducibility
+---
 
-To ensure reproducibility:
+## 12. Reproducibility
 
-- All experiments are configuration-driven.
-- Random seeds are logged and controlled.
-- Results are stored in structured directories by week.
-- Aggregated metrics and plots are regenerated deterministically.
+- All experiments are configured via **YAML files**
+- Random seeds are explicitly controlled
+- Simulation sweeps are parallelized
+- SIQ is computed offline from logged traces
 
-Independent replication requires only:
+---
 
-1. cloning the repository,
-2. installing dependencies,
-3. executing the documented experiment runners.
+## 13. Experimental Scope and Limitations
 
-No proprietary data or services are required.
-
-## 8. Scope and Constraints
-
-These experiments are designed as a proof of concept.
-
-They do not claim:
-
-- ecological completeness,
-- real-world deployment readiness,
-- or clinical validity.
-
-The experimental scope is intentionally constrained to support clear causal interpretation and theoretical validation.
-
-## 9. Relation to the Paper
-
-This document underpins:
-
-- the Methods section,
-- the Experimental Results section,
-- and the Reproducibility statement of the paper.
-
-Figures, tables, and claims in the paper correspond directly to the experiments described here.
+The experiments are intentionally conducted in a **stylized environment** to isolate the role of belief-based social reasoning. Results demonstrate mechanistic plausibility and structured trade-offs, not guarantees of real-world social alignment.
 
 ---
 
 ## Summary
 
-The experimental program systematically evaluates Machine Theory of Mind agents across trade-offs, robustness, generalization, and human perception. The design prioritizes interpretability, fairness, and reproducibility, enabling rigorous comparison between belief-based social reasoning and baseline decision-making approaches.
+Together, these experiments demonstrate that explicit, probabilistic social belief modeling yields agents that are more socially aligned, robust, and interpretable than reward-only or heuristic baselines, while exposing transparent trade-offs between efficiency and social intelligence.

@@ -1,188 +1,190 @@
-# Theory: Machine Theory of Mind (MToM)
+# Theoretical Foundations: Machine Theory of Mind (MToM)
 
-## 1. Overview
+This document summarizes the theoretical foundations underlying the Machine Theory of Mind (MToM) framework. The goal is not to provide formal guarantees for the implemented system, but to justify architectural design choices, clarify assumptions, and motivate empirical analyses.
 
-This document formalizes the theoretical foundations of the proposed Machine Theory of Mind (MToM) framework. The goal of MToM is to equip artificial agents with explicit, interpretable models of how humans form beliefs, infer intentions, and evaluate social behavior, and to incorporate these models directly into decision-making.
+**Important:** All theoretical results are stated for idealized abstractions of the system and are used to guide interpretation of experimental behavior.
 
-Unlike purely behavioral or reward-driven approaches, MToM treats social reasoning as a latent inference problem: agents maintain and update beliefs about human mental states and optimize actions with respect to both task performance and social intelligence.
+---
 
-## 2. Problem Setting
+## 1. Social Intelligence as Belief-Conditioned Decision-Making
 
-We consider sequential interaction settings involving:
+We formalize social intelligence as the capacity of an agent to reason about how its actions are perceived by others, and to incorporate these inferred perceptions into decision-making.
 
-- an artificial agent $A$,
-- one or more human or simulated observers $H$,
-- and an environment $E$ producing observable outcomes.
+**Let:**
+- **s_t** denote the observed environment state
+- **a_t ∈ A(s_t)** denote a feasible action
+- **h_t** denote a latent social-perception state (e.g., perceived warmth and competence)
 
-At each time step $t$:
+The agent does not observe h_t directly. Instead, it maintains a belief distribution over possible values of h_t, updated through interaction.
 
-- the agent selects an action $a_t \in A$,
-- observers update their internal beliefs about the agent,
-- and the agent receives both task-related and social feedback.
+**Key Principle:** Socially intelligent behavior emerges when action selection is conditioned on beliefs about social perception, rather than optimized solely for task reward.
 
-The agent's objective is not only to succeed at the task, but to reason about how its actions are interpreted.
+---
 
-## 3. Mental-State Hypothesis Space
+## 2. Bayesian Modeling of Social Perception
 
-Let
+### 2.1 Latent Mental-State Representation
 
-$$H = \{h_1, \ldots, h_m\}$$
+We model social perception as a latent variable **h** describing how the agent is interpreted along socially meaningful dimensions. In the implemented system, h is continuous (warmth and competence), but for theoretical analysis we consider a finite hypothesis space:
 
-be a finite hypothesis space representing latent human mental states. In this work, hypotheses correspond to discrete bins or continuous regions over interpretable social dimensions such as:
+```
+H = {h₁, ..., h_m}
+```
 
-- **Warmth** (perceived cooperativeness, benevolence),
-- **Competence** (perceived capability, effectiveness).
+This abstraction allows the application of standard Bayesian consistency results while remaining conceptually compatible with continuous belief representations.
 
-Each hypothesis $h \in H$ induces a likelihood model
+### 2.2 Bayesian Belief Updating
 
-$$P(o \mid h, a),$$
+Given a sequence of observations O₁:t (e.g., offers, accept/reject outcomes, or social feedback), the agent maintains a posterior:
 
-describing how a human observer would respond to agent action $a$.
+```
+P(h | O₁:t) ∝ P(O_t | h) · P(h | O₁:t₋₁)
+```
 
-## 4. Bayesian Theory of Mind
+**Interpretation:** This belief update represents social inference—the agent revises its expectations about how it is perceived based on observed reactions.
 
-### 4.1 Belief Representation
+### 2.3 Idealized Bayesian Consistency
 
-The agent maintains a belief distribution
+**Proposition 1 (Posterior Concentration)**
 
-$$P_t(h) = P(h \mid o_{1:t}),$$
+**Assume:**
+1. The hypothesis space H is identifiable (distinct hypotheses induce distinct observation likelihoods)
+2. All likelihoods assign positive probability to feasible observations
+3. The prior has full support on H
+4. Observations satisfy standard regularity conditions (e.g., i.i.d. or ergodic)
 
-updated after each observation $o_t$.
+**Then,** if h* is the true data-generating hypothesis:
 
-### 4.2 Belief Updates
+```
+lim_(t→∞) P(h* | O₁:t) = 1  almost surely
+```
 
-Beliefs are updated via Bayes' rule:
+**Interpretation:** Under idealized assumptions, Bayesian social belief tracking converges to the correct region of the social-perception space over repeated interaction.
 
-$$P_{t+1}(h) \propto P(o_t \mid h, a_t) \, P_t(h),$$
+**Scope:** This result applies to an idealized discrete model with correctly specified likelihoods. The implemented system uses continuous beliefs and predictive updates, so this proposition is used as **motivation**, not as a formal guarantee.
 
-with priors initialized to have full support over $H$.
+---
 
-This enables explicit tracking of uncertainty and interpretability of social inference.
+## 3. Social Intelligence as Multi-Objective Optimization
 
-## 5. Posterior Consistency
+### 3.1 Task and Social Objectives
 
-**Theorem 1 (Posterior Concentration)**
+**Let:**
+- **R(π) = E_π[R_task]** denote expected task reward
+- **S(π) = E_π[S_social]** denote expected social utility
 
-Let $H$ be finite. Suppose:
+The agent faces a multi-objective decision problem, trading off instrumental performance and social alignment.
 
-1. The observation model is identifiable: for any $h \neq h^*$, there exists an observation $o$ such that $P(o \mid h) \neq P(o \mid h^*)$.
-2. All hypotheses assign nonzero probability to feasible observations.
-3. The prior has full support.
+### 3.2 Scalarization and Pareto Optimality
 
-Then, if observations are generated by the true hypothesis $h^*$,
+In an idealized setting where the set of achievable outcome pairs (R(π), S(π)) is convex:
 
-$$\lim_{t \to \infty} P(h^* \mid o_{1:t}) = 1 \quad \text{almost surely}.$$
+**Proposition 2 (Scalarization Sufficiency)**
 
-**Interpretation**
+For any Pareto-optimal policy π*, there exists λ ≥ 0 such that:
 
-Under standard assumptions, the agent's social beliefs converge to the correct mental-state hypothesis. This establishes epistemic validity of the Bayesian ToM module.
+```
+π* ∈ argmax_π [R(π) + λS(π)]
+```
 
-**Empirical Hook**
+Conversely, any maximizer of the scalarized objective corresponds to a Pareto-optimal solution.
 
-Posterior trajectories logged in Week 4 and Week 7 experiments show exponential decay of incorrect hypotheses, consistent with this result.
+**Interpretation:** A single trade-off parameter λ is sufficient to trace the supported Pareto frontier between task performance and social alignment.
 
-## 6. Social Decision-Making as Multi-Objective Optimization
+**Relation to Implementation:** The implemented MToM agent does not optimize a global objective. Instead, it performs local, per-action evaluations using an analogous scalarized utility. This proposition motivates the use of λ as an interpretable control parameter.
 
-### 6.1 Objectives
+---
 
-Define:
+## 4. First-Order Effects of Social Weighting
 
-- $R(\pi)$: expected task reward under policy $\pi$,
-- $S(\pi)$: expected Social Intelligence Quotient (SIQ).
+To analyze the introduction of social reasoning, we consider an entropy-regularized surrogate objective:
 
-The agent seeks to optimize:
+```
+J_λ(π) = E_π[R_task] + λE_π[Δ_obs] - τ·KL(π || π_ref)
+```
 
-$$J(\pi) = (R(\pi), S(\pi)).$$
+**Where:**
+- **Δ_obs(a)** denotes predicted social impact
+- **τ** is a temperature parameter
 
-### 6.2 Pareto Optimality
+### 4.1 First-Order Social Utility Gain
 
-A policy $\pi_a$ dominates $\pi_b$ if:
+**Theorem 1 (First-Order Improvement)**
 
-$$R(\pi_a) \geq R(\pi_b), \quad S(\pi_a) \geq S(\pi_b),$$
+Under standard differentiability and interior-optimum assumptions, and assuming at least one action exhibits above-average predicted social impact:
 
-with at least one strict inequality.
+```
+S(π_λ) ≥ S(π_0) + (λ/τ)·Var_{a~π_0}[Δ_obs(a)] - O(λ²)  for small λ > 0
+```
 
-A policy is **Pareto optimal** if no other policy dominates it.
+**Interpretation:** Introducing a small social weighting yields a linear improvement in social performance, proportional to the variance of predicted observer responses.
 
-## 7. Scalarization Sufficiency
+**Empirical Relevance:** This result motivates the λ micro-sweep experiments, which empirically validate the predicted linear regime for small λ.
 
-**Proposition 2 (Scalarization)**
+---
 
-Assume SIQ is monotone in its components. Then every Pareto-optimal policy is a solution to:
+## 5. Separation of Belief Updating and Action Selection
 
-$$\max_\pi (1 - \lambda) R(\pi) + \lambda S(\pi)$$
+A key architectural commitment of MToM is the separation between belief updating and action selection:
 
-for some $\lambda \in [0, 1]$.
+- **Belief updates** encode social learning
+- **Action selection** applies a fixed, transparent decision rule
 
-Conversely, every optimizer of the scalarized objective is Pareto optimal.
+**This separation enables:**
+- Interpretability of social inference
+- Controlled trade-off analysis
+- Ablation of belief uncertainty independently of policy learning
 
-**Interpretation**
+From a theoretical perspective, this design isolates the contribution of social inference dynamics from confounding effects introduced by adaptive policies.
 
-The social-weight parameter $\lambda$ traces the empirical Pareto frontier between task performance and social intelligence.
+---
 
-**Empirical Hook**
+## 6. Social Intelligence Quotient (SIQ) as an Evaluation Mapping
 
-Week 3 and Week 5 Pareto plots demonstrate this trade-off explicitly, with Bayesian MToM policies occupying the efficient frontier.
+The Social Intelligence Quotient (SIQ) is a **diagnostic metric**, not a training objective.
 
-## 8. First-Order Social Improvement
+Formally, SIQ is a mapping:
 
-### Setup
+```
+SIQ: {interaction traces} → [0, 1]
+```
 
-Consider an entropy-regularized objective:
+**Decomposed into:**
+- Social alignment
+- Theory-of-Mind accuracy
+- Cross-context generalization
+- Ethical consistency
 
-$$J_\lambda(\pi) = \mathbb{E}_\pi[R(a)] + \lambda \mathbb{E}_\pi[\Delta_{\text{obs}}(a)] - \tau \, \text{KL}(\pi \| \pi_0),$$
+This design avoids reward hacking and preserves SIQ as an interpretive lens rather than a control signal.
 
-where:
+---
 
-- $\Delta_{\text{obs}}(a)$ denotes predicted social impact,
-- $\tau > 0$ controls policy smoothness.
+## 7. Theory–Implementation Gap
 
-**Theorem 3 (Small-$\lambda$ Improvement)**
+Theoretical results in this framework serve three purposes:
 
-If:
+1. **Justification** of Bayesian belief tracking for social inference
+2. **Interpretation** of empirical trade-offs induced by λ
+3. **Prediction** of qualitative trends (e.g., small-λ behavior)
 
-1. The observer model is correct,
-2. $\Delta_{\text{obs}}$ has nonzero variance under $\pi_0$,
-3. The policy is differentiable at $\lambda = 0$,
+They do **not** constitute formal guarantees for the implemented system, which includes:
 
-then for sufficiently small $\lambda$:
+- Greedy per-step decisions
+- Uncertainty penalties
+- Predictive belief updates under partial observability
 
-$$S(\pi_\lambda) \geq S(\pi_0) + \frac{\lambda}{\tau} \text{Var}_{\pi_0}[\Delta_{\text{obs}}] - O(\lambda^2).$$
+**Empirical validation is therefore essential and explicitly reported.**
 
-**Interpretation**
+---
 
-Even a small social incentive yields a guaranteed first-order increase in social intelligence, provided the agent's observer model is accurate.
+## 8. Summary
 
-**Empirical Hook**
+The theoretical framework underlying MToM supports the view that:
 
-Week 7 λ-micro-sweep experiments confirm the predicted linear regime.
+1. Social intelligence is fundamentally **belief-conditioned decision-making**
+2. Bayesian inference provides a **principled mechanism** for modeling social perception
+3. Scalarized objectives **expose interpretable trade-offs** rather than hiding them
+4. Modest social weighting yields **predictable first-order gains**
+5. Evaluation should remain **diagnostic rather than prescriptive**
 
-## 9. Role of Priors and Norms
-
-Social-norm priors encode cultural and contextual expectations over mental states. These priors:
-
-- regularize belief updates,
-- stabilize behavior under noisy or adversarial feedback,
-- and improve robustness and ethical consistency.
-
-Empirically, moderate prior strength maximizes both utility and SIQ, as shown in Week 5 sweeps.
-
-## 10. Interpretability and Explainability
-
-Because beliefs are explicit probability distributions over interpretable dimensions, the MToM framework supports:
-
-- inspection of belief trajectories,
-- counterfactual reasoning ("what belief led to this action?"),
-- and transparent explanation of social decisions.
-
-This distinguishes MToM from purely neural or behavior-cloning approaches.
-
-## 11. Summary
-
-The Machine Theory of Mind framework formalizes social reasoning as Bayesian belief inference + multi-objective optimization. Theoretical guarantees establish:
-
-- consistency of belief updates,
-- sufficiency of scalarized objectives,
-- and guaranteed first-order social gains.
-
-Together with empirical validation, this theory provides a principled foundation for socially intelligent, interpretable AI systems.
+Together, these principles motivate the MToM architecture as a transparent, analyzable, and human-aligned approach to social reasoning in artificial agents.

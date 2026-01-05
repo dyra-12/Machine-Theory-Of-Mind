@@ -22,8 +22,14 @@ pip install -r requirements.txt
 # Run tests to verify installation
 python -m pytest tests/ -q
 
-# Quick validation: single negotiation episode (~30 seconds)
-python src/main.py --agent bayesian --opponent fair --lambda-social 0.3 --seed 42
+# Quick validation A: print reproducibility identifiers (~1 second)
+python -m src.main --version
+
+# Quick validation B: run a single traceable negotiation episode (~5–15 seconds)
+python -c "from src.experiments.week7_trace_runner import run_traceable_episode; print(run_traceable_episode(seed=42))"
+
+# Quick validation C (optional): generate a small trace sweep plot (~30–60 seconds)
+python experiments/run_trace_sweep.py
 ```
 
 **Expected output**: Console logs showing negotiation turns, final utilities, and social scores. If this completes without errors, your environment is correctly configured.
@@ -179,8 +185,8 @@ python -m pytest tests/ -q  # Should show all tests passing
 # ✓ Import core modules
 python -c "from src.agents.bayesian_mtom_agent import BayesianMToMAgent; print('✓ Core imports OK')"
 
-# ✓ SIQ metric loads
-python -c "from src.metrics.siq import compute_siq; print('✓ SIQ metric OK')"
+# ✓ SIQ module loads
+python -c "from src.metrics.siq import SIQ; print('✓ SIQ class OK')"
 
 # ✓ Config files parse
 python -c "import yaml; yaml.safe_load(open('experiments/config/week5_bayesian_sweep.yaml')); print('✓ Config files OK')"
@@ -209,12 +215,12 @@ python -c "import yaml; yaml.safe_load(open('experiments/config/week5_bayesian_s
 
 ### 4.0.1 Determinism Configuration
 
-All experiments use **fixed random seeds** for reproducibility:
-- Primary seeds: `11, 17, 23, 29, 31` (5-seed average for main results)
-- λ (social weight) sweep: `[0.1, 0.3, 0.5, 0.7]` (Week 3-4) or `[0.985, 0.99, 0.995, 1.0]` (Week 5 fine-grained)
-- Bayesian prior strengths: `[4.1, 4.2, 4.3]` (Week 5 sweep)
+Experiments are **seeded deterministically** from YAML configs.
 
-Set seeds are embedded in YAML configs; reproducibility claims are based on these configurations.
+- Week 4/5 sweeps: the runner uses `seed = 1000 * seed_idx + 7 + run_idx` where `seed_idx ∈ [0, experiment.num_seeds)` and `run_idx ∈ [0, experiment.runs_per_config)`.
+- Robustness suite: the runner uses `seed = 100 * seed_idx + 42 + run_idx` (see the runner implementation).
+
+λ (social weight) values and prior strengths are specified directly in the YAML configs (e.g., Week 5 uses the fine-grained λ sweep `[0.985, 0.99, 0.995, 1.0]` and prior strengths `[4.1, 4.2, 4.3]`).
 
 ### 4.1 Main Results: Week 5 Bayesian Sweep
 
@@ -262,8 +268,11 @@ python -c "import json; print(json.dumps(json.load(open('results/week5/stats_sum
 
 **Command**:
 ```bash
-python experiments/run_experiment.py --config experiments/config/week3_comprehensive.yaml
-python src/experiments/analyze_week3.py
+# Run the Week 3 sweep + basic report/plots
+python src/experiments/run_week3.py --config experiments/config/week3_comprehensive.yaml
+
+# Optional: generate the rigorous Week 3 report + SIQ summary (auto-discovers latest raw JSONL)
+python src/experiments/rigorous_week3.py
 ```
 
 **Runtime**: ~45 minutes
@@ -271,6 +280,7 @@ python src/experiments/analyze_week3.py
 **Expected outputs**:
 ```
 results/week3/
+├── rigorous_analysis_report.md
 ├── siq_summary.json
 └── plots/
     ├── pareto_frontiers.png
@@ -280,17 +290,19 @@ results/week3/
 
 ### 4.3 Week 6: SIQ Validation
 
-**What it reproduces**: SIQ component sensitivity, weight ablations (Table 5, Supplementary Figure S2).
+Week 6 in this repository is primarily the **SIQ definition/config** (weights + normalization rules), not a standalone experiment sweep.
 
-**Command**:
+**SIQ config file**: `experiments/config/week6_siq.yaml`
+
+To (re-)compute SIQ-dependent artifacts, re-run the analysis scripts that consume this config:
+
 ```bash
-python experiments/run_experiment.py --config experiments/config/week6_siq.yaml
-python src/experiments/siq_visualizations.py
+# Recompute Week 5 figures/tables including SIQ plots (uses week6_siq.yaml by default)
+python src/experiments/analyze_week5.py
+
+# Recompute Week 3 SIQ summary inside the rigorous report
+python src/experiments/rigorous_week3.py --siq-config experiments/config/week6_siq.yaml
 ```
-
-**Runtime**: ~30 minutes
-
-**Note**: This experiment validates that SIQ's weighted components correlate with human ratings and remain stable under weight perturbations.
 
 ### 4.4 Week 7: Robustness Suite
 
@@ -298,9 +310,11 @@ python src/experiments/siq_visualizations.py
 
 **Command**:
 ```bash
-python experiments/run_experiment.py --config experiments/config/robustness_suite.yaml
-python experiments/run_experiment.py --config experiments/config/negotiation_generalization.yaml
-python src/experiments/analyze_robustness.py
+# Run the Week 7 robustness suite (writes JSONL to results/week7/robustness_suite/)
+python src/experiments/robustness_runner.py --config experiments/config/robustness_suite.yaml
+
+# (Optional) Validate λ behavior from the saved results
+python tools/validate_lambda.py
 ```
 
 **Runtime**: ~90 minutes (runs across 4 opponent types × 3 cultural templates)
@@ -309,7 +323,6 @@ python src/experiments/analyze_robustness.py
 ```
 results/week7/
 ├── lambda_validation_summary.json
-├── robustness_summary_bar.png
 ├── robustness_suite/robustness_results.jsonl
 └── plots/
     ├── social_score_vs_turn.png
@@ -461,7 +474,7 @@ Notes:
 **Formula**: SIQ is computed as a weighted combination of four normalized components:
 
 ```
-SIQ = w₁·(Social Alignment) + w₂·(ToM Accuracy) + w₃·(Cross-Context) + w₄·(Ethical)
+SIQ = w₁·(Social Alignment) + w₂·(Theory-of-Mind Accuracy) + w₃·(Cross-Context Generalization) + w₄·(Ethical Consistency)
 ```
 
 where:
@@ -470,13 +483,14 @@ where:
 - **Cross-Context**: Robustness across opponent types and cultural templates (0-1 scale)
 - **Ethical Consistency**: Fairness constraint satisfaction (0-1 scale)
 
-**Default weights** (from `week6_siq.yaml`):
+**Default weights** (from `experiments/config/week6_siq.yaml`):
 ```yaml
-siq_weights:
-  social_alignment: 0.35
-  tom_accuracy: 0.30
-  cross_context: 0.20
-  ethical: 0.15
+siq:
+  weights:
+    social_alignment: 0.25
+    theory_of_mind_accuracy: 0.25
+    cross_context_generalization: 0.25
+    ethical_consistency: 0.25
 ```
 
 ### 6.2 Key Properties
@@ -490,10 +504,10 @@ siq_weights:
 To verify SIQ computation:
 
 ```bash
-# Test SIQ function
-python -c "from src.metrics.siq import compute_siq; print('✓ SIQ module loads')"
+# Test SIQ module import
+python -c "from src.metrics.siq import SIQ; print('✓ SIQ module loads')"
 
-# Expected SIQ ranges: 0.6-0.9 (MToM), 0.3-0.6 (baselines)
+# Note: exact SIQ ranges depend on the SIQ config and the dataset being scored.
 ```
 
 ### 6.4 Provenance Guarantee
@@ -654,9 +668,6 @@ source .venv/bin/activate
 
 # Add repo to Python path (temporary)
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-
-# OR: Install as editable package
-pip install -e .
 ```
 
 #### Issue: `yaml.scanner.ScannerError` when loading configs
