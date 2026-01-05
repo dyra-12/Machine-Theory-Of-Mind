@@ -1,35 +1,68 @@
 import numpy as np
 import torch
-from typing import Dict
-from ..models.advanced_neural_tom import AdvancedNeuralToM, AdvancedToMTrainer
+from pathlib import Path
+from typing import Dict, Optional, Tuple
+
 from ..data.conditional_data_generator import ConditionalDataGenerator
+from ..models.advanced_neural_tom import AdvancedNeuralToM, AdvancedToMTrainer
+from ..models.mental_states import MentalState
 from ..models.negotiation_state import NegotiationState
 
-class EnhancedLearnedMToM:
+
+class EnhancedLearnedAgent:
+    """Learned ToM agent backed by a neural ToM model.
+
+    This class matches the common agent interface expected by experiment runners:
+    - choose_action(state) -> (share_agent0, share_agent1)
+    - update_beliefs(...)
+    - get_mental_state() -> object with .warmth/.competence
     """
-    Enhanced Learned MToM agent with advanced neural architecture.
-    Uses conditional reasoning based on social preferences.
-    """
-    
-    def __init__(self, lambda_social: float = 0.5, agent_type: str = "enhanced_learned",
-                 model: AdvancedNeuralToM = None):
-        self.lambda_social = lambda_social
+
+    def __init__(
+        self,
+        lambda_social: float = 0.5,
+        agent_id: int = 0,
+        agent_type: str = "learned_tom",
+        model_path: str = "best_neural_tom.pth",
+        model: Optional[AdvancedNeuralToM] = None,
+        train_if_missing: bool = False,
+        device: Optional[str] = None,
+    ):
+        self.lambda_social = float(lambda_social)
+        self.agent_id = int(agent_id)
         self.agent_type = agent_type
-        
-        # Use provided model or create and train a new one
-        if model is None:
-            self.model = self._train_advanced_model()
-        else:
-            self.model = model
-            
-        # Mental state tracking
-        self.mental_state = {
-            'warmth': 0.5,
-            'competence': 0.5,
-            'uncertainty': 0.3
-        }
-        
+
+        self.model_path = str(model_path) if model_path is not None else "best_neural_tom.pth"
+        self.train_if_missing = bool(train_if_missing)
+        self.device = torch.device(device) if device is not None else torch.device("cpu")
+
+        self.model = model if model is not None else AdvancedNeuralToM()
+        self.model.to(self.device)
+        self._maybe_load_or_train_model()
+
+        self.mental_state = MentalState(warmth=0.5, competence=0.5)
+        self._uncertainty = 0.3
+
         self.decision_history = []
+
+    def _maybe_load_or_train_model(self) -> None:
+        path = Path(self.model_path)
+        if path.exists():
+            state_dict = torch.load(str(path), map_location=self.device)
+            self.model.load_state_dict(state_dict)
+            self.model.eval()
+            return
+
+        if self.train_if_missing:
+            self.model = self._train_advanced_model()
+            self.model.to(self.device)
+            self.model.eval()
+            return
+
+        # Fast, non-blocking fallback: keep randomly initialized weights.
+        # This makes the agent runnable even when the pretrained checkpoint
+        # hasn't been downloaded.
+        self.model.eval()
     
     def _train_advanced_model(self) -> AdvancedNeuralToM:
         """
@@ -39,7 +72,7 @@ class EnhancedLearnedMToM:
         generator = ConditionalDataGenerator()
         X, y = generator.generate_training_data(n_samples=8000)
         
-        model = AdvancedNeuralToM()
+        model = AdvancedNeuralToM().to(self.device)
         trainer = AdvancedToMTrainer(model)
         
         results = trainer.train(X, y, epochs=200, batch_size=64)
@@ -59,14 +92,18 @@ class EnhancedLearnedMToM:
         with torch.no_grad():
             offer_norm = offer_self / negotiation_state.total_resources
             lambda_norm = self.lambda_social / 2.0  # Normalize
-            
-            # Multiple forward passes for uncertainty estimation
+
+            # Multiple forward passes for uncertainty estimation (MC dropout)
             predictions = []
-            for _ in range(10):  # Monte Carlo dropout for uncertainty
-                input_tensor = torch.tensor([[offer_norm, lambda_norm]], dtype=torch.float32)
+            for _ in range(10):
+                input_tensor = torch.tensor(
+                    [[offer_norm, lambda_norm]],
+                    dtype=torch.float32,
+                    device=self.device,
+                )
                 pred = self.model(input_tensor)
-                predictions.append(pred[0].tolist())
-            
+                predictions.append(pred[0].detach().cpu().tolist())
+
             predictions = np.array(predictions)
             warmth_mean = float(np.mean(predictions[:, 0]))
             competence_mean = float(np.mean(predictions[:, 1]))
@@ -99,42 +136,84 @@ class EnhancedLearnedMToM:
         }
     
     def make_offer(self, negotiation_state: NegotiationState) -> int:
-        """
-        Choose offer with exploration based on uncertainty.
-        """
-        best_offer = 1
+        """Compatibility shim: return this agent's integer share."""
+        action = self.choose_action(negotiation_state)
+        return int(action[self.agent_id])
+
+    def choose_action(self, negotiation_state: NegotiationState) -> Tuple[int, int]:
+        """Choose the split that maximizes learned expected utility."""
+        total = negotiation_state.total_resources
+        best_offer_for_self = 1
         best_utility = -float('inf')
         best_evaluation = None
-        
-        evaluations = []
-        
-        # Evaluate all possible offers
-        for offer in range(1, negotiation_state.total_resources):
-            evaluation = self.evaluate_offer(offer, negotiation_state)
-            evaluations.append((offer, evaluation))
-            
-            if evaluation['expected_utility'] > best_utility:
-                best_utility = evaluation['expected_utility']
-                best_offer = offer
+
+        for offer_for_self in range(1, total):
+            evaluation = self.evaluate_offer(offer_for_self, negotiation_state)
+            utility = evaluation.get('expected_utility', -float('inf'))
+            if utility > best_utility:
+                best_utility = utility
+                best_offer_for_self = offer_for_self
                 best_evaluation = evaluation
-        
-        # Update mental state
-        self.mental_state['warmth'] = best_evaluation['predicted_warmth']
-        self.mental_state['competence'] = best_evaluation['predicted_competence']
-        self.mental_state['uncertainty'] = (best_evaluation['warmth_uncertainty'] + 
-                                          best_evaluation['competence_uncertainty']) / 2
-        
-        # Record decision
-        self.decision_history.append({
-            'offer': best_offer,
-            'mental_state': self.mental_state.copy(),
-            'evaluation': best_evaluation
-        })
-        
-        return best_offer
-    
-    def get_mental_state(self) -> Dict:
-        return self.mental_state.copy()
+
+        if best_evaluation is not None:
+            self.mental_state.warmth = float(best_evaluation['predicted_warmth'])
+            self.mental_state.competence = float(best_evaluation['predicted_competence'])
+            self._uncertainty = float(
+                (best_evaluation['warmth_uncertainty'] + best_evaluation['competence_uncertainty']) / 2
+            )
+
+        action = (
+            (best_offer_for_self, total - best_offer_for_self)
+            if self.agent_id == 0
+            else (total - best_offer_for_self, best_offer_for_self)
+        )
+
+        self.decision_history.append(
+            {
+                'offer_for_self': best_offer_for_self,
+                'action': action,
+                'mental_state': {
+                    'warmth': float(self.mental_state.warmth),
+                    'competence': float(self.mental_state.competence),
+                    'uncertainty': float(self._uncertainty),
+                },
+                'evaluation': best_evaluation,
+            }
+        )
+
+        return action
+
+    def update_beliefs(
+        self,
+        state: NegotiationState,
+        action: Tuple[int, int],
+        response: bool,
+        opponent_action: Tuple[int, int] = None,
+        observer_feedback=None,
+        feedback_reliability: Optional[float] = None,
+    ):
+        """Update the agent's internal mental-state estimate.
+
+        The learned agent doesn't maintain a Bayesian belief state; this is a lightweight
+        adapter so it plays nicely with the experiment runners.
+        """
+        if observer_feedback is None:
+            return
+
+        w_delta, c_delta = observer_feedback
+        rel = float(feedback_reliability) if feedback_reliability is not None else 1.0
+        rel = float(np.clip(rel, 0.0, 1.0))
+        gain = 0.25 * (0.4 + 0.6 * rel)
+
+        self.mental_state.warmth = float(np.clip(self.mental_state.warmth + gain * w_delta, 0.0, 1.0))
+        self.mental_state.competence = float(np.clip(self.mental_state.competence + gain * c_delta, 0.0, 1.0))
+
+    def get_mental_state(self):
+        return self.mental_state
     
     def __str__(self):
-        return f"EnhancedLearnedMToM(λ={self.lambda_social})"
+        return f"{self.agent_type}(λ={self.lambda_social}, id={self.agent_id})"
+
+
+# Backwards-compatible alias (older name)
+EnhancedLearnedMToM = EnhancedLearnedAgent
