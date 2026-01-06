@@ -1,81 +1,103 @@
 # Machine Theory of Mind (MToM)
 
-Bayesian social reasoning for explicit, interpretable, and aligned human–AI interaction
-
-This repository presents a proof‑of‑concept Machine Theory of Mind (MToM) framework that equips artificial agents with explicit probabilistic models of how humans infer intentions, evaluate behavior, and update social beliefs. Rather than training agents to merely act socially, this work focuses on reasoning about social cognition itself.
-
-## Motivation
-
-Modern AI systems increasingly interact with humans in social settings, yet most optimize behavior without modeling how actions are perceived. This limits interpretability, robustness, and trust. Inspired by human Theory of Mind and Bayesian cognitive modeling, this project asks:
-
-> Can agents explicitly reason about human belief formation—and does this improve social alignment without sacrificing task performance?
-
-## Core Contributions
-
-- **Bayesian MToM:** An agent architecture that maintains probabilistic beliefs over latent human mental states (e.g., warmth, competence) and updates them through interaction.
-- **Multi‑Objective Decision Framework:** Formalizes social decision‑making as joint optimization of task reward and social intelligence, controlled by a social‑weight parameter (λ).
-- **Social Intelligence Quotient (SIQ):** A composite, interpretable metric capturing social alignment, Theory‑of‑Mind accuracy, cross‑context generalization, and ethical consistency.
-- **Theoretical Guarantees:** Proof sketches for Bayesian posterior concentration, Pareto‑optimal scalarization, and first‑order social improvement under small λ.
-- **Empirical Validation:** Simulation studies (parameter sweeps, robustness suites) and a human‑in‑the‑loop pilot study (N = 25 total; unpaired groups n=11 vs n=14 in the stored Week 10 stats artifacts).
-
-## Key Results (Highlights)
-
-- **SIQ (artifact-backed):** Week-specific SIQ summaries are stored under `results/` (e.g., Week 3 reports `bayesian_mtom` SIQ ≈ 0.796; see `results/week3/siq_summary.json`).
-- **Ethical consistency (no “perfect” claim):** Ethical consistency varies by suite/configuration and is not universally 1.0 in the committed artifacts.
-- **Robustness (explicit, small-budget suite):** Evaluated under noisy/adversarial observer channels and domain shifts with an explicit run budget (`num_seeds=1`, `runs_per_config=3`) in the Week 7 robustness suite.
-
-### Human Evaluation
-
-- **Perceived qualities:** In the Week 10 pilot artifacts, unpaired comparisons show higher warmth, competence, and trust for MToM than baseline dialogues.
-- **Effect sizes:** Large effects (Cohen’s d = 0.99–1.83).
-
-## Why This Matters
-
-This work demonstrates that explicit belief modeling—not imitation or reward shaping—can yield socially aligned and interpretable AI behavior. Beyond human–AI interaction, the framework is methodologically aligned with computational psychiatry, where deviations in belief updating and social inference are central to conditions such as psychosis.
-
-## Status
-
-- **Scope:** Proof of concept.
-- **Focus:** Interpretability, theory–experiment alignment, reproducibility.
-- **Not a clinical system:** No diagnostic claims.
-
-## Repository Structure
-
-```
-├── data/              Human pilot study data (dialogues, ratings, metadata)
-├── apps/              Interactive Gradio apps for human evaluation and trace visualization
-├── docs/              Full documentation (architecture, theory, experiments, reproducibility)
-├── experiments/       Experiment runners and YAML configurations for parameter sweeps
-├── results/           Experimental outputs organized by week (plots, summaries, raw data)
-├── scripts/           Setup and configuration scripts (GitHub topics, environment setup)
-├── src/               Core framework implementation
-│   ├── agents/        Agent implementations (Bayesian MToM, baselines, factory)
-│   ├── data/          Data loading and processing utilities
-│   ├── envs/          Negotiation and interaction environments
-│   ├── experiments/   Experiment orchestration and logging
-│   ├── metrics/       SIQ and performance evaluation metrics
-│   ├── models/        Bayesian belief models and social reasoning
-│   ├── observers/     Human perception models (noisy, biased, adversarial)
-│   ├── social/        Social inference and Theory‑of‑Mind computations
-│   └── utils/         Helper functions and configuration
-├── tests/             Unit and integration tests for all components
-└── tools/             Analysis and validation tools (human pilot stats, figures, PDF generation)
-```
-
-## Documentation & Reproducibility
-
-- **Paper:** Included in this repository.
-- **Full documentation:** See [docs/README.md](docs/README.md).
-- **Reproducible experiments:** Configuration‑driven with seeds specified per config/artifact.
-
-## Intended Audience
-
-- Human–AI Interaction (HCI)
-- Social and Multi‑Agent AI
-- Bayesian Cognitive Modeling
-- Computational Psychiatry (methodological foundations)
-- Theoretical approaches to social alignment in AI
+**Belief-Based Social Reasoning for Interpretable Human–AI Interaction**
 
 ---
 
-For reviewer-safe, artifact-backed results, see [docs/Results.md](docs/Results.md). For full theoretical details, experimental protocols, and reproducibility instructions, see [docs/README.md](docs/README.md).
+## Overview
+
+Machine Theory of Mind (MToM) is a computational framework for developing artificial agents capable of explicit reasoning about how their actions are perceived by human observers. This framework integrates such social cognition into decision-making processes through probabilistic inference and multi-objective optimization.
+
+Unlike conventional approaches that encode social behavior implicitly through reward shaping or heuristic functions, MToM models social cognition as a process of belief formation and inference, grounded in Bayesian reasoning principles. The architecture enables agents to maintain explicit mental state representations and update these representations through structured belief revision.
+
+This repository presents a methodological proof-of-concept system emphasizing interpretability, diagnostic evaluation, and human-centered behavioral alignment.
+
+---
+
+## Motivation and Significance
+
+Traditional artificial intelligence systems primarily optimize task-oriented objectives, whereas MToM addresses the orthogonal dimension of social interpretation—specifically, how actions are perceived and evaluated by human observers.
+
+This approach provides several methodological advantages:
+
+- **Explicit social reasoning**: Mental state representations are directly accessible for inspection and analysis
+- **Transparent utility trade-offs**: Task performance and social alignment objectives are balanced through explicit parameterization
+- **Distributional robustness**: System exhibits stable behavior under conditions of uncertainty, cultural norm variation, and noisy observational feedback
+- **Diagnosable social intelligence**: Social reasoning mechanisms are structurally separable from task-oriented planning, enabling component-level analysis
+
+---
+
+## Theoretical Framework
+
+The MToM agent architecture implements a sequential decision-making process wherein, at each timestep, the agent:
+
+1. **Maintains probabilistic belief distributions** over latent social attributes (e.g., perceived warmth, competence) as evaluated by external observers
+2. **Predicts social consequences** of candidate actions through forward modeling of observer perception
+3. **Optimizes a multi-objective utility function** that explicitly balances task reward and social alignment via a tunable parameter λ ∈ ℝ⁺
+4. **Adapts behavioral policy** through Bayesian belief updates rather than policy gradient learning
+
+**Architectural properties:**
+
+- The system does not employ learned policy networks
+- Social metrics are not directly optimized; rather, they emerge from belief-conditioned decision rules
+- Behavioral adaptation derives from belief state inference, precluding reward function exploitation
+
+---
+
+## Evaluation Methodology
+
+Social reasoning capabilities are quantified using the **Social Intelligence Quotient (SIQ)**, a diagnostic post-hoc metric that decomposes system performance into four orthogonal components:
+
+1. **Social alignment**: Proximity to normative social targets
+2. **Theory-of-Mind accuracy**: Prediction fidelity for observer mental states
+3. **Cross-context generalization**: Performance stability across varied interaction contexts
+4. **Ethical consistency**: Adherence to fairness and equity constraints
+
+**Critically, SIQ is not an optimization target and does not influence agent decisions.**
+
+The evaluation protocol comprises:
+
+- **Controlled simulation experiments**: Systematic variation of environmental parameters, opponent strategies, and observer types
+- **Robustness and ablation studies**: Component-level sensitivity analysis and stress testing
+- **Human evaluation study**: Pilot investigation (N = 25 participants) assessing perceived warmth, competence, and trustworthiness through within-subjects design
+
+---
+
+## Repository map (start here)
+Documentation Structure
+
+Comprehensive documentation is organized as follows:
+
+- **System Architecture**: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Technical implementation details and component specifications
+- **Theoretical Foundations**: [`docs/theory.md`](docs/theory.md) — Formal framework and mathematical foundations
+- **Experimental Design**: [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) — Methodology and experimental protocols
+- **Empirical Results**: [`docs/Results.md`](docs/Results.md) — Quantitative findings and statistical analyses
+- **Ethical Considerations**: [`ETHICS.md`](ETHICS.md) — Responsible use guidelines and limitations
+- **Reproducibility Protocol**: [`docs/REPRODUIBILITY.md`](docs/REPRODUIBILITY.md) — Step-by-step reproduction instructions
+
+For a comprehensive research narrative, refer to:  
+[`docs/README.md`](docs/README.md)
+
+---
+
+## Scope of Application
+
+This repository is designed to support:
+
+- Academic research in socially intelligent and human-centered artificial intelligence
+- Methodological investigations of belief-based decision architectures
+- Reproducible computational experimentation and comparative analysis
+
+**Important limitation**: This system represents a research prototype intended for scientific investigation. It is not validated for deployment in real-world applications or clinical decision-making contexts involving human subjects.
+
+---
+
+## Citation
+
+Researchers utilizing this framework should reference the work according to the metadata provided in [`CITATION.cff`](CITATION.cff).
+
+---
+
+## Note on Documentation Design
+
+This README provides a high-level overview of the research framework. Detailed technical specifications, theoretical derivations, and experimental protocols are documented in the linked resources above

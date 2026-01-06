@@ -20,7 +20,8 @@ Unacceptable behavior includes:
 
 ## Enforcement Responsibilities
 
-Project maintainers are responsible for clarifying and enforcing standards of acceptable behavior and will take appropriate and fair corrective action in response to misconduct.
+Project maintainers are responsible for clarifying and enforcing standards of acceptable behavior and will take appropriate and fair corrective action in response to misconduct.Enforcement actions may include warnings, temporary restrictions on participation, or permanent removal from the project community, depending on the severity and recurrence of the behavior.
+
 
 ## Scope
 
@@ -28,7 +29,7 @@ This Code applies within project spaces and in public spaces when an individual 
 
 ## Enforcement
 
-Concerns about behavior may be reported privately by contacting the project maintainers via GitHub (for example, by opening a confidential issue or using contact information listed in the repository).
+Concerns about behavior may be reported privately by contacting the project maintainers via GitHub (for example, by contacting the project maintainers via GitHub using the contact information listed in the repository).
 
 All reports will be reviewed promptly and handled in a manner consistent with this Code of Conduct.
 
