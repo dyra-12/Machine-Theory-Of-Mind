@@ -16,7 +16,7 @@ This repository presents a methodological proof-of-concept system emphasizing in
 
 ## Motivation and Significance
 
-Traditional artificial intelligence systems primarily optimize task-oriented objectives, whereas MToM addresses the orthogonal dimension of social interpretation—specifically, how actions are perceived and evaluated by human observers.
+Traditional artificial intelligence systems primarily optimize task-oriented objectives, whereas MToM explicitly addresses how actions are socially interpreted by human observers.
 
 This approach provides several methodological advantages:
 
@@ -40,7 +40,7 @@ The MToM agent architecture implements a sequential decision-making process wher
 
 - The system does not employ learned policy networks
 - Social metrics are not directly optimized; rather, they emerge from belief-conditioned decision rules
-- Behavioral adaptation derives from belief state inference, precluding reward function exploitation
+- Behavioral adaptation derives from belief state inference, reducing susceptibility to reward function exploitation
 
 ---
 
