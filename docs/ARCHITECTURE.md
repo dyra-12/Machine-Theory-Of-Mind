@@ -184,3 +184,5 @@ This makes the framework suitable for:
 - Socially aligned decision systems
 - Interpretable agent design
 - Computational social modeling
+
+This architecture is intentionally designed as a research scaffold rather than a production system, prioritizing interpretability, modular analysis, and theoretical grounding over raw performance.
