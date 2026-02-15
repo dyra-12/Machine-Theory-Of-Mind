@@ -68,15 +68,18 @@ Documentation Structure
 
 Comprehensive documentation is organized as follows:
 
+
 - **System Architecture**: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Technical implementation details and component specifications
 - **Theoretical Foundations**: [`docs/theory.md`](docs/theory.md) — Formal framework and mathematical foundations
 - **Experimental Design**: [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) — Methodology and experimental protocols
 - **Empirical Results**: [`docs/Results.md`](docs/Results.md) — Quantitative findings and statistical analyses
-- **Ethical Considerations**: [`ETHICS.md`](ETHICS.md) — Responsible use guidelines and limitations
+- **Ethical Considerations**: [`docs/ETHICS.md`](docs/ETHICS.md) — Responsible use guidelines and limitations
 - **Reproducibility Protocol**: [`docs/REPRODUIBILITY.md`](docs/REPRODUIBILITY.md) — Step-by-step reproduction instructions
+- **Human Pilot Study Protocol & Results**: [`docs/human_pilot.md`](docs/human_pilot.md) — Design, measures, and analysis for the N = 25 pilot
+- **Limitations & Future Work**: [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) — Critical assumptions, constraints, and open problems
 
 For a comprehensive research narrative, refer to:  
-[`docs/README.md`](docs/README.md)
+[`docs/README_RESEARCH.md`](docs/README_RESEARCH.md)
 
 ---
 
